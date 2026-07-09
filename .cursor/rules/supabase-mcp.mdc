@@ -1,0 +1,14 @@
+---
+description: Apply Supabase schema changes via MCP, not CLI
+alwaysApply: true
+---
+
+# Supabase database changes
+
+When applying migrations or DDL to the Supabase project (`ipcafhvrderkivpqtnpb`):
+
+- Use the **Supabase MCP** (`plugin-supabase-supabase`), not `supabase db push` or raw CLI.
+- Prefer `apply_migration` for DDL (schema changes, functions, indexes).
+- Use `execute_sql` only for ad-hoc reads or non-DDL queries.
+- Before applying, call `list_migrations` to avoid duplicate migrations.
+- Keep migration SQL in `supabase/migrations/` in sync with what you apply via MCP.

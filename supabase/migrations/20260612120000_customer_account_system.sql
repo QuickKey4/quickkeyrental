@@ -1,0 +1,2 @@
+-- Customer account system (applied via Supabase MCP)
+-- See remote migrations: customer_account_system, booking_user_linkage, delete_user_account_rpc
