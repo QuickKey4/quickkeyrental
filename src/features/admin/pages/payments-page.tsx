@@ -7,6 +7,7 @@ import { getAdminPayments } from "../api/admin.functions";
 import { AdminBadge, AdminCard, AdminMetricCard, AdminPageHeader } from "../components/admin-ui";
 import { useAdminI18n } from "../hooks/use-admin-i18n";
 import { useAdminSecret } from "../hooks/use-admin-user";
+import { formatAdminDate } from "../lib/admin-utils";
 
 const FILTERS = ["all", "paid", "unpaid", "pending"] as const;
 type PaymentFilter = (typeof FILTERS)[number];
@@ -114,7 +115,8 @@ export function AdminPaymentsPage() {
               <th className="px-4 py-3">{t.payments.columns.pickup}</th>
               <th className="px-4 py-3">{t.payments.columns.amount}</th>
               <th className="px-4 py-3">{t.payments.columns.status}</th>
-              <th className="px-4 py-3">{t.payments.columns.stripe}</th>
+              <th className="px-4 py-3">{t.payments.columns.provider}</th>
+              <th className="px-4 py-3">{t.payments.columns.reference}</th>
             </tr>
           </thead>
           <tbody>
@@ -138,15 +140,16 @@ export function AdminPaymentsPage() {
                     {p.guestName}
                   </Link>
                 </td>
-                <td className="px-4 py-3">{p.pickupDate}</td>
+                <td className="px-4 py-3">{formatAdminDate(p.pickupDate)}</td>
                 <td className="px-4 py-3">{formatPrice(p.total, intlLocale)}</td>
                 <td className="px-4 py-3">
                   <AdminBadge tone={p.paymentStatus === "paid" ? "green" : "amber"}>
                     {paymentStatusLabel(p.paymentStatus)}
                   </AdminBadge>
                 </td>
-                <td className="max-w-[120px] truncate px-4 py-3 text-xs text-muted-foreground">
-                  {p.stripeId ?? "—"}
+                <td className="px-4 py-3 capitalize">{p.paymentProvider ?? "—"}</td>
+                <td className="max-w-[180px] truncate px-4 py-3 text-xs text-muted-foreground">
+                  {p.paymentReference ?? p.sentooStatus ?? "—"}
                 </td>
               </tr>
             ))}

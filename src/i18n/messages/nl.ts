@@ -3,10 +3,10 @@ import { adminNl } from "./admin.nl";
 
 export const nl: Messages = {
   meta: {
-    siteTitle: "QuickKey Rental Curaçao",
+    siteTitle: "Quick Key Rental Curaçao",
     siteDescription:
       "Betaalbare en betrouwbare autoverhuur op Curaçao. Luchthaven-, hotelbezorging en lokale ophaalpunten.",
-    ogTitle: "QuickKey Rental Curaçao",
+    ogTitle: "Quick Key Rental Curaçao",
     ogDescription:
       "Betaalbare en betrouwbare autoverhuur op Curaçao. Luchthaven-, hotelbezorging en lokale ophaalpunten.",
     bookTitle: "Boek je auto | Quick Key Rental",
@@ -33,6 +33,23 @@ export const nl: Messages = {
     colors: "Kleuren",
     previousSlide: "Vorige dia",
     nextSlide: "Volgende dia",
+    pagination: {
+      label: "Paginering",
+      previous: "Vorige",
+      previousAria: "Ga naar vorige pagina",
+      next: "Volgende",
+      nextAria: "Ga naar volgende pagina",
+      more: "Meer pagina's",
+    },
+    sidebar: {
+      title: "Zijbalk",
+      description: "Toont de mobiele zijbalk.",
+      toggle: "Zijbalk wisselen",
+    },
+    breadcrumb: {
+      label: "Broodkruimelpad",
+      more: "Meer",
+    },
   },
   brand: {
     location: "Curaçao Airport (Hato)",
@@ -59,6 +76,16 @@ export const nl: Messages = {
     notFoundBody: "De pagina die je zoekt bestaat niet of is verplaatst.",
     loadTitle: "Deze pagina laadde niet",
     loadBody: "Er ging iets mis aan onze kant. Vernieuw de pagina of ga terug naar home.",
+  },
+  bookingUnavailable: {
+    eyebrow: "Quick Key Rental · Curaçao",
+    title: "Online boeken is tijdelijk niet beschikbaar",
+    body: "We werken ons boekingssysteem bij zodat alles soepel en veilig werkt.",
+    urgent: "Neem voor dringende boekingen contact met ons op via WhatsApp.",
+    cta: "Contact via WhatsApp",
+    pauseLabel: "Tijdelijke pauze",
+    directHelp: "We helpen je direct met boeken.",
+    whatsappMessage: "Hi Quick Key, ik wil graag een auto boeken.",
   },
   hero: {
     eyebrow: "Autoverhuur op Curaçao",
@@ -163,8 +190,7 @@ export const nl: Messages = {
         name: "Jan Thiel",
         tabName: "Jan Thiel",
         cardTeaser: "Beachclubs, rustige baaien en makkelijk parkeren.",
-        description:
-          "Ontspan op Jan Thiel Beach met beachclubs, restaurants en rustig zwemwater.",
+        description: "Ontspan op Jan Thiel Beach met beachclubs, restaurants en rustig zwemwater.",
         minutes: "20",
         km: "18",
         localTip: "Kom voor 10:00 voor de beste parkeerplekken.",
@@ -393,8 +419,7 @@ export const nl: Messages = {
     eyebrow: "Jouw vakantie op het eiland",
     titleLine1: "Zon erbij.",
     titleLine2: "Sleutels in hand.",
-    subtitle:
-      "Strand, Willemstad, kustwegen. We brengen de auto wanneer je landt.",
+    subtitle: "Strand, Willemstad, kustwegen. We brengen de auto wanneer je landt.",
     photoCaption: "Curaçao · zon · open weg",
     pickHint: "Kies een moment, zie waar je auto je brengt",
     imageAlt: "Toyota huurauto op een zonnige dag op Curaçao",
@@ -490,6 +515,7 @@ export const nl: Messages = {
     rating: "5,0 op Google",
     readMore: "Lees verder",
     readLess: "Lees minder",
+    verifiedReview: "Geverifieerde review",
     reviews: {
       kayla: {
         name: "Kayla Orr",
@@ -517,8 +543,7 @@ export const nl: Messages = {
       },
       luciano: {
         name: "Luciano Comenentia",
-        quote:
-          "Goeie communicatie met de klantenservice. Mooie nieuwe auto; Toyota Agya 2026.",
+        quote: "Goeie communicatie met de klantenservice. Mooie nieuwe auto; Toyota Agya 2026.",
         date: "06/02/2026",
       },
     },
@@ -597,7 +622,8 @@ export const nl: Messages = {
     limitedOffer: "Beperkte aanbieding",
     summary: "Overzicht",
     total: "Totaal",
-    cancellation: "Gratis annuleren tot 48 uur voor ophalen. Daarna geldt een annuleringskosten van één huurdag.",
+    cancellation:
+      "Annuleringsvoorwaarden kunnen afhangen van de resterende tijd tot ophalen. Controleer de toepasselijke annuleringsvoorwaarden voordat je je boeking bevestigt.",
     mobileSummary: {
       show: "Details",
       hide: "Sluiten",
@@ -613,11 +639,9 @@ export const nl: Messages = {
       baggage: "Bagage",
     },
     vehicleBaggage: {
-      "agya-1":
-        "276L kofferbak · past 2 middelgrote koffers (20–24″) of 3 handbagagekoffers. Krap met 3 grote koffers.",
-      "agya-2":
-        "276L kofferbak · past 2 middelgrote koffers (20–24″) of 3 handbagagekoffers. Krap met 3 grote koffers.",
-      "yaris-1": "473L kofferbak · past 3 grote of 4 middelgrote koffers comfortabel.",
+      "agya-1": "Past 2 middelgrote koffers of 3 handbagagekoffers. Krap met 3 grote koffers.",
+      "agya-2": "Past 2 middelgrote koffers of 3 handbagagekoffers. Krap met 3 grote koffers.",
+      "yaris-1": "Past 3 grote of 4 middelgrote koffers comfortabel.",
     },
     fuelPolicy: {
       title: "Brandstofbeleid",
@@ -631,7 +655,7 @@ export const nl: Messages = {
       customer: "Jouw gegevens",
       driver: "Bestuurder",
       extras: "Verzekering & extra's",
-      review: "Controleren",
+      review: "Controleren & betalen",
       payment: "Betaling",
       confirmation: "Bevestigd",
     },
@@ -654,6 +678,21 @@ export const nl: Messages = {
       returnDate: "Ophaaldatum",
       pickupTime: "Bezorgtijd",
       returnTime: "Ophaaltijd",
+      guidance: {
+        deliveryEyebrow: "Begin hier",
+        deliveryBody:
+          "Kies waar we je ontmoeten. De adresvelden hieronder passen zich aan je keuze aan.",
+        addressEyebrow: "Afspraakdetails",
+        addressBody:
+          "Houd het praktisch: hotelnaam, luchthaven/cruiseterminal of een volledig adres is genoeg.",
+        datesEyebrow: "Huurdata",
+        datesTitle: "Kies je bezorg- en ophaaldatum",
+        datesBody:
+          "Je geselecteerde periode blijft bewaard terwijl je doorgaat. Als je de data wijzigt, vernieuwen we de beschikbaarheid.",
+        timeEyebrow: "Voorkeurstijden",
+        timeTitle: "Kies bezorg- en ophaaltijd",
+        timeBody: "We gebruiken deze tijden om overdracht en ophalen voor te bereiden.",
+      },
     },
     deliveryTypes: {
       hotel: "Hotel",
@@ -663,46 +702,88 @@ export const nl: Messages = {
     },
     cars: {
       title: "Onze vloot",
-      subtitle: "Alle drie auto's staan hieronder. Uitverkochte units blijven zichtbaar om te vergelijken.",
+      subtitle:
+        "Alle drie auto's staan hieronder. Uitverkochte units blijven zichtbaar om te vergelijken.",
       unavailableHint: "Deze auto is geboekt voor je data. Kies andere data of een andere unit.",
       unavailableHintWithResume:
         "Gereserveerd t/m {blockedThrough}. Weer beschikbaar vanaf {nextAvailable}.",
       trySuggestedDates: "Probeer {pickup} – {return}",
       select: "Selecteer deze auto",
       selected: "Geselecteerd",
+      details: "Details bekijken",
       loadingAvailability: "Beschikbaarheid controleren…",
       checkingAvailability: "Controleren…",
-      availabilityError: "Beschikbaarheid kon niet worden geladen. Vernieuw de pagina of probeer opnieuw.",
+      availabilityError:
+        "Beschikbaarheid kon niet worden geladen. Vernieuw de pagina of probeer opnieuw.",
+      retryAvailability: "Opnieuw proberen",
+    },
+    hold: {
+      reserving: "Je auto reserveren…",
+      active: "Je auto is tijdelijk gereserveerd",
+      remaining: "{time} resterend",
+      reservedUntil: "Gereserveerd tot {time} terwijl je je boeking afrondt.",
+      urgent: "Nog minder dan {time} om je boeking af te ronden.",
+      expired:
+        "Je autoreservering is verlopen. Kies opnieuw een beschikbare auto om verder te gaan.",
+      missing: "Reserveer je auto opnieuw voordat je doorgaat naar betaling.",
     },
     customer: {
       title: "Jouw gegevens",
-      subtitle: "We sturen je boekingsbevestiging naar dit e-mailadres. Geen account nodig om te boeken.",
+      subtitle:
+        "Contactgegevens en gegevens van de hoofdbestuurder voor je boeking. Geen account nodig.",
+      firstName: "Voornaam",
+      lastName: "Achternaam",
       fullName: "Volledige naam (voor- en achternaam)",
       fullNameHint: "Alleen letters. Gebruik de naam op je ID.",
       email: "E-mail",
       phone: "Telefoon / WhatsApp",
-      phoneHint: "Alleen cijfers, 8–15 nummers (landcode optioneel).",
+      phoneHint: "Kies je landcode en vul je lokale nummer in.",
+      driverDateOfBirth: "Geboortedatum hoofdbestuurder",
+      driverLicense: "Rijbewijsnummer",
+      licensePlaceholder: "CW-2026-001",
+      ageConfirm: "Ik bevestig dat de bestuurder minimaal 23 jaar is met 2+ jaar rijervaring.",
+      arrivingByPlane: "Kom je met het vliegtuig aan op Curaçao?",
+      arrivalHint: "Zo kunnen we je aankomst volgen, ook als we de auto bij je hotel bezorgen.",
+      yes: "Ja",
+      no: "Nee",
+      flightNumber: "Vluchtnummer",
+      sections: {
+        contactEyebrow: "Contact",
+        contactTitle: "Met wie bevestigen we?",
+        contactBody: "Gebruik dezelfde naam en contactgegevens die je op de huurbevestiging wilt.",
+        driverEyebrow: "Bestuurder",
+        driverTitle: "Bestuurdersgegevens",
+        driverBody:
+          "We controleren deze gegevens voor overdracht, dus rijbewijs en geboortedatum moeten bij de hoofdbestuurder horen.",
+        arrivalEyebrow: "Aankomst",
+      },
     },
     driver: {
       title: "Bestuurdersgegevens",
       subtitle: "Gegevens van de hoofdbestuurder voor het huurcontract.",
       license: "Rijbewijsnummer",
       licensePlaceholder: "CW-2026-001",
-      ageConfirm:
-        "Ik bevestig dat de bestuurder minimaal 23 jaar is met 2+ jaar rijervaring.",
+      ageConfirm: "Ik bevestig dat de bestuurder minimaal 23 jaar is met 2+ jaar rijervaring.",
       flightNumber: "Vluchtnummer (optioneel)",
     },
     insurance: {
       title: "Kies je dekking",
       subtitle:
         "Kies één optie. Dagelijkse verzekering betaal je online; de borg regel je bij bezorging.",
-      depositTitle: "Optie 1: Borg",
+      depositTitle: "Borg",
       depositBody:
-        "Een terugbetaalbare borg van {amount} is verschuldigd bij bezorging — niet online. We controleren of je kaart {amount} kan dekken bij schade of bijtanken. Terugbetaald na je huur als er geen schade is.",
-      depositAtDelivery: "Verschuldigd bij bezorging — niet in online betaling",
-      dailyTitle: "Optie 2: All-risk upgrade",
-      dailyBodyAgya: "All-risk upgrade: $10/dag (Agya).",
-      dailyBodyYaris: "All-risk upgrade: $13/dag (Yaris).",
+        "Bij ophalen controleren we of je kaart geldig is en de borg kan dekken als dat nodig is.",
+      depositAmount: "{amount} borg",
+      depositAtDelivery: "Niet online in rekening gebracht",
+      depositBenefitNoDaily: "Geen extra dagelijkse verzekeringskosten",
+      depositBenefitNotOnline: "Niet online in rekening gebracht",
+      depositBenefitRefundable: "Terugbetaalbaar als er geen toepasselijke kosten zijn",
+      dailyTitle: "All-risk upgrade",
+      dailyBodyAgya: "Beperk je financiële risico tijdens de huur.",
+      dailyBodyYaris: "Beperk je financiële risico tijdens de huur.",
+      dailyTotal: "{total} totaal voor {days} dagen",
+      dailyBenefitOnline: "Toegevoegd aan online betaling",
+      dailyBenefitAutoTotal: "Totaal past automatisch aan op de huurduur",
       required: "Kies een dekking om verder te gaan.",
     },
     extras: {
@@ -715,6 +796,9 @@ export const nl: Messages = {
       additionalDriverTitle: "Extra bestuurder (gratis)",
       additionalDriverBody:
         "Voeg een tweede bestuurder toe zonder extra kosten. We hebben naam en rijbewijs nodig.",
+      additionalDriverFirstName: "Voornaam extra bestuurder",
+      additionalDriverLastName: "Achternaam extra bestuurder",
+      additionalDriverDateOfBirth: "Geboortedatum extra bestuurder",
       additionalDriverName: "Volledige naam extra bestuurder",
       additionalDriverLicense: "Rijbewijsnummer extra bestuurder",
       enableAdditionalDriver: "Extra bestuurder toevoegen",
@@ -722,15 +806,18 @@ export const nl: Messages = {
     review: {
       title: "Controleer je boeking",
       subtitle: "Bevestig dat alles klopt voordat je betaalt.",
+      edit: "Wijzigen",
       payNow: "Doorgaan naar betaling",
       payNowTotal: "Nu te betalen",
       rental: "Huur",
       coverage: "Dekking",
       deposit: "Borg",
       depositDueAtDelivery:
-        "Betaal bij bezorging wanneer we je auto overhandigen. We controleren alleen of je kaart dit bedrag kan dekken — het wordt niet online met je huur afgerekend.",
+        "Niet online in rekening gebracht. Kaartgeldigheid wordt bij ophalen gecontroleerd.",
       dailyInsurance: "All-risk upgrade",
       optionalExtras: "Optionele extra's",
+      finalCheckEyebrow: "Laatste controle",
+      preCheckoutEyebrow: "Voor betaling",
     },
     payment: {
       title: "Betalen met Sentoo",
@@ -742,7 +829,7 @@ export const nl: Messages = {
       sentooBankTitle: "Lokale bank",
       sentooCardTitle: "Debet- of creditcard",
       sentooBankHint: "MCB, Orco, Banco di Caribe en andere Curaçao-banken",
-      sentooCardHint: "Visa en Mastercard (debet en credit)",
+      sentooCardHint: "Visa, American Express en Maestro-kaarten",
       sentooSecureNote:
         "Betalingen worden veilig verwerkt door Sentoo. Quick Key slaat je kaartgegevens nooit op.",
       secureCheckout: "Versleutelde checkout",
@@ -751,24 +838,48 @@ export const nl: Messages = {
       poweredBySentoo: "Betalingen worden veilig verwerkt door Sentoo.",
       sentooCta: "Doorgaan naar Sentoo",
       redirecting: "Doorsturen naar Sentoo…",
+      syncing: "Betalingsstatus controleren…",
+      recoveryActive:
+        "Er staat al een betaalsessie open. Je kunt de betaling hervatten of terug naar je boeking.",
+      recoveryFailed: "Deze betaling is niet afgerond. Je kunt veilig opnieuw proberen.",
+      resumePayment: "Betaling hervatten",
+      returnToBooking: "Terug naar boeking",
+      cancelCheckout: "Checkout annuleren",
       retry: "Opnieuw proberen",
     },
     confirmation: {
       title: "Boeking bevestigd",
+      checkingTitle: "Betalingsstatus controleren",
+      pendingTitle: "Betaling wordt nog verwerkt",
+      failedTitle: "Betaling niet afgerond",
       subtitle: "Bedankt! Je huur is bevestigd. Een bevestigingsmail volgt snel.",
       subtitlePayAtArrival:
         "Bedankt! Je huur is bevestigd. Betaal wanneer we je auto bezorgen. Een bevestigingsmail volgt snel.",
+      checkingSubtitle:
+        "We controleren de definitieve betalingsstatus bij Sentoo voordat we je boeking bevestigen.",
       subtitlePaymentPending:
         "Je betaling wordt nog verwerkt. We bevestigen je boeking zodra Sentoo de definitieve status ontvangt.",
+      failedSubtitle:
+        "Sentoo heeft deze betaling niet bevestigd. Je boeking is nog niet bevestigd, maar je kunt de betaling veilig opnieuw proberen.",
+      greeting: "Bedankt, {name}. Je boekingsgegevens staan klaar.",
+      vehicle: "Auto",
+      rentalPeriod: "Huurperiode",
+      delivery: "Bezorging",
+      collection: "Ophalen",
+      paidTotal: "Betaald totaal",
+      paymentPendingTotal: "Totaal",
       reference: "Boekingsreferentie",
+      tryPaymentAgain: "Betaling opnieuw proberen",
       deliverCollect: "Bezorgen {pickup} · Ophalen {return}",
       manageAccount: {
-        title: "Wil je je boeking online beheren?",
-        subtitle: "Maak je QuickKey-account aan met één klik. Geen wachtwoord nodig.",
+        title: "Beheer je boeking",
+        subtitle: "Open veilig je QuickKey-account. Geen wachtwoord of registratieformulier nodig.",
         email: "E-mailadres",
-        submit: "Stuur magic link",
+        emailNotice: "De beveiligde toegangslink wordt verstuurd naar",
+        submit: "Bekijk en beheer mijn boeking",
         sentTitle: "Check je e-mail",
-        sentBody: "Klik op de beveiligde link in je e-mail om je account te openen en deze boeking te beheren.",
+        sentBody:
+          "We hebben een beveiligde link gestuurd naar {email}. Open deze om je account en boeking te beheren.",
         signedIn: "Je bent ingelogd. Bekijk en beheer je boeking wanneer je wilt.",
         viewAccount: "Bekijk mijn boeking",
         help: "Hulp nodig met je boeking?",
@@ -783,16 +894,34 @@ export const nl: Messages = {
       bookingNotFound: "Boeking niet gevonden.",
       stripeNoUrl: "Afrekenen kon niet worden gestart. Probeer het opnieuw.",
       sentooNotConfigured: "Online betalen is nu niet beschikbaar. Probeer het later opnieuw.",
-      sentooNoUrl: "Sentoo-afrekenen kon niet worden gestart. Probeer het opnieuw.",
+      sentooNoUrl:
+        "We konden de veilige betaling niet starten. Probeer opnieuw of neem contact op met Quick Key.",
+      holdExpired:
+        "Je autoreservering is verlopen. Kies opnieuw een beschikbare auto om verder te gaan.",
       required: "Dit veld is verplicht.",
+      requiredFields: "Vul {count} verplichte velden in.",
       email: "Vul een geldig e-mailadres in.",
       age: "Je moet de minimumleeftijd bevestigen.",
+      firstName: "Vul de voornaam van de huurder in.",
+      lastName: "Vul de achternaam van de huurder in.",
+      driverDateOfBirth:
+        "Vul een geldige geboortedatum in. De bestuurder moet minimaal 23 jaar zijn.",
+      arrivingByPlane: "Kies of je met het vliegtuig aankomt.",
+      flightNumber: "Vul je vluchtnummer in als je met het vliegtuig aankomt.",
       selectCar: "Selecteer een beschikbare auto om verder te gaan.",
       deliveryAddress: "Vul het adres in waar we je auto moeten bezorgen.",
       collectionAddress: "Vul het adres in waar we je auto moeten ophalen.",
+      pickupInPast: "Kies een bezorgtijd die in Curaçao nog in de toekomst ligt.",
+      holdRateLimited:
+        "Er zijn al actieve reserveringen vanaf deze verbinding. Rond er één af of probeer het later opnieuw.",
+      paymentInProgress: "De betaling wordt al voorbereid. Wacht even en probeer het opnieuw.",
       invalidName: "Vul je echte voor- en achternaam in, alleen letters (geen cijfers).",
-      invalidPhone: "Vul een geldig telefoonnummer in met 8–15 cijfers.",
+      invalidPhone: "Vul een geldig internationaal telefoonnummer in.",
       invalidLicense: "Vul een geldig rijbewijsnummer in (letters, cijfers, streepjes).",
+      additionalDriverFirstName: "Vul de voornaam van de extra bestuurder in.",
+      additionalDriverLastName: "Vul de achternaam van de extra bestuurder in.",
+      additionalDriverDateOfBirth:
+        "Vul een geldige geboortedatum in. De extra bestuurder moet minimaal 23 jaar zijn.",
       additionalDriverName: "Vul de volledige naam van de extra bestuurder in.",
       additionalDriverLicense: "Vul het rijbewijsnummer van de extra bestuurder in.",
     },
@@ -811,7 +940,10 @@ export const nl: Messages = {
       profileTitle: "Profiel | Quick Key Rental",
       driversTitle: "Bestuurders | Quick Key Rental",
       documentsTitle: "Documenten | Quick Key Rental",
+      rewardsTitle: "Rewards | Quick Key Rental",
       settingsTitle: "Instellingen | Quick Key Rental",
+      supportTitle: "Support | Quick Key Rental",
+      manageBookingTitle: "Boeking beheren | Quick Key Rental",
     },
     nav: {
       title: "Mijn account",
@@ -821,17 +953,49 @@ export const nl: Messages = {
       profile: "Profiel",
       drivers: "Bestuurders",
       documents: "Documenten",
+      rewards: "Rewards",
+      support: "Support",
       settings: "Instellingen",
+      logout: "Uitloggen",
     },
     support: { whatsapp: "WhatsApp-support" },
+    supportPage: {
+      title: "Hulp nodig?",
+      subtitle: "Bereik ons team met één tik. We zijn er voor je huurauto.",
+      call: "Bel ons",
+      email: "Mail ons",
+      note: "Voor wijzigingen, annuleringen of luchthavenbezorging is WhatsApp meestal het snelst.",
+    },
     auth: {
       login: {
         title: "Boeking openen",
         subtitle: "Vul je e-mail in en we sturen je een beveiligde inloglink.",
         email: "E-mailadres",
+        continue: "Doorgaan",
+        sendMagicLink: "Magic link versturen",
         submit: "Stuur magic link",
         sentTitle: "Check je e-mail",
-        sentBody: "Klik op de beveiligde link in je e-mail om je account te openen. Geen wachtwoord nodig.",
+        sentBody:
+          "Klik op de beveiligde link in je e-mail om je account te openen. Geen wachtwoord nodig.",
+        sentBodyLinked:
+          "Klik op de link in je e-mail om je account aan te maken. Je boekingen worden automatisch gekoppeld.",
+        existingAccount:
+          "We hebben je account gevonden. We sturen een beveiligde inloglink naar je e-mail.",
+        existingWithBookings:
+          "Welkom terug. Nieuwe gastboekingen op dit e-mailadres worden aan je account toegevoegd wanneer je inlogt.",
+        bookingsFoundTitle: "We hebben boeking(en) gevonden voor dit e-mailadres",
+        bookingsFoundBody:
+          "Je hebt {count} actieve boeking(en) op dit e-mailadres. Maak je account aan om ze online te beheren.",
+        createAccount: "Account aanmaken",
+        createAccountHint:
+          "We sturen je een beveiligde link per e-mail. Geen wachtwoord nodig. Je boekingen worden gekoppeld wanneer je inlogt.",
+        noBookingTitle: "Geen boeking gevonden voor dit e-mailadres",
+        noBookingBody:
+          "We konden geen huurauto vinden die aan dit adres is gekoppeld. Boek eerst een auto en kom daarna terug.",
+        bookACar: "Auto boeken",
+        useDifferentEmail: "Een ander e-mailadres gebruiken",
+        lookupError: "We konden dit e-mailadres niet controleren. Probeer het opnieuw.",
+        sendError: "We konden de inloglink niet versturen. Probeer het opnieuw.",
         bookInstead: "Boek liever een auto",
       },
       register: {
@@ -871,12 +1035,23 @@ export const nl: Messages = {
       noUpcoming: "Nog geen komende huur.",
       bookNow: "Auto boeken",
       quickActions: "Snelle acties",
+      nextStepsTitle: "Voor je reis",
       actions: {
         book: "Auto boeken",
         drivers: "Bestuurders beheren",
         documents: "Documenten uploaden",
         bookings: "Boekingen bekijken",
         profile: "Profiel bijwerken",
+        support: "Support vragen",
+        whatsapp: "WhatsApp ons",
+      },
+      nextSteps: {
+        confirmedTitle: "Controleer je reservering",
+        confirmedBody: "Bekijk ophalen, terugbrengen en de autogegevens voor aankomst.",
+        documentsTitle: "Documenten klaarleggen",
+        documentsBody: "Houd je rijbewijs klaar of upload documenten wanneer nodig.",
+        supportTitle: "Iets wijzigen?",
+        supportBody: "Stuur Quick Key een WhatsApp voor persoonlijke hulp.",
       },
       welcomeBack: "Welkom terug, {name}",
       pickupLabel: "Ophalen",
@@ -885,6 +1060,12 @@ export const nl: Messages = {
       totalLabel: "Totaal",
       viewBooking: "Boeking bekijken",
       manageBooking: "Boeking beheren",
+      tripReadyHint: "Je reisgegevens voor Curaçao staan hier klaar.",
+      statusItems: {
+        booking: "Boekingsgegevens",
+        documents: "Documenten",
+        support: "WhatsApp-support",
+      },
       accountOverview: "Accountoverzicht",
       memberSince: "Lid sinds",
       totalBookings: "Totaal boekingen",
@@ -892,6 +1073,7 @@ export const nl: Messages = {
       supportTitle: "Hulp nodig?",
       contactUs: "Neem contact op",
       pastRentalsTitle: "Eerdere huur",
+      recentTitle: "Recente huur",
       viewAll: "Alles bekijken",
       loading: "Boekingen laden…",
       newsletterTitle: "Reisaanbiedingen & updates",
@@ -909,15 +1091,19 @@ export const nl: Messages = {
       unknownVehicle: "Huurauto",
       loading: "Boekingen laden…",
       empty: "Nog geen boekingen in dit tabblad.",
+      emptyUpcoming: "Geen komende boekingen.",
+      emptyCompleted: "Nog geen afgeronde boekingen.",
+      emptyCancelled: "Geen geannuleerde boekingen.",
       cancelConfirm: "Deze boeking annuleren? Dit kan niet ongedaan worden gemaakt.",
       cancelError: "Annuleren mislukt. Neem contact op met support.",
       modifyWindowClosed:
-        "Wijzigingen zijn alleen mogelijk tot 48 uur voor ophalen. Annuleren kan nog wel, maar binnen 48 uur geldt een annuleringskosten van één huurdag.",
+        "Online wijzigingen kunnen afhangen van de resterende tijd tot ophalen. Neem contact op met support om de opties voor deze boeking te bekijken.",
       cancellationDialog: {
         title: "Boeking annuleren?",
-        freeBody: "Je annuleert meer dan 48 uur voor ophalen, dus er zijn geen annuleringskosten.",
+        freeBody:
+          "Volgens de toepasselijke annuleringsvoorwaarden voor deze boeking worden nu geen annuleringskosten getoond.",
         feeBody:
-          "Je annuleert binnen 48 uur voor ophalen. Er geldt een annuleringskosten van {fee} (één huurdag).",
+          "Volgens de toepasselijke annuleringsvoorwaarden voor deze boeking worden annuleringskosten van {fee} getoond.",
         feeAmount: "Annuleringskosten: {fee}",
         feeNotice:
           "Deze kosten dekken de voorbereiding van je gereserveerde auto. Ze worden geïnd volgens je betaalmethode.",
@@ -944,19 +1130,24 @@ export const nl: Messages = {
       returnDate: "Retourdatum",
       pickupLocation: "Ophaal- / bezorgadres",
       dropoffLocation: "Inlever- / ophaaladres",
+      sameAsPickup: "Laat leeg als dit hetzelfde is als ophalen",
       vehicle: "Voertuig",
       vehicleHint: "Alleen voertuigen die beschikbaar zijn voor je data worden getoond.",
       unavailable: "niet beschikbaar",
       save: "Wijzigingen opslaan",
       saved: "Je boeking is bijgewerkt.",
       saveError: "Boeking bijwerken mislukt. Probeer andere data of neem contact op.",
+      addExtras: "Extra's toevoegen",
+      currentTotal: "Huidig totaal",
+      priceDelta: "Extra kosten",
+      newTotal: "Nieuw totaal",
       cancelBooking: "Boeking annuleren",
       cancelling: "Annuleren…",
       cancelConfirm: "Deze boeking annuleren? Dit kan niet ongedaan worden gemaakt.",
       cancelError: "Annuleren mislukt.",
       cancelEdit: "Annuleren",
       notModifiable:
-        "Deze boeking kan niet meer online worden gewijzigd. Neem contact op als je hulp nodig hebt.",
+        "Online wijzigen kan alleen als ophalen meer dan 7 dagen weg is. Wijzigingen kunnen soms nog, afhankelijk van beschikbaarheid en goedkeuring.",
       loading: "Boeking laden…",
       notFound: "Boeking niet gevonden.",
       loadError: "Boeking laden mislukt.",
@@ -971,6 +1162,7 @@ export const nl: Messages = {
       },
       driverName: "Hoofdbestuurder",
       driverPhone: "Telefoon",
+      timeLabel: "Ophaal- en retourtijd",
       licenseNumber: "Rijbewijsnummer",
       additionalDriver: "Extra bestuurder",
       noExtras: "Geen extra's geselecteerd voor deze boeking.",
@@ -984,8 +1176,7 @@ export const nl: Messages = {
           title: "Optie 1: Borg",
           amount: "Tot {amount} op je kaart",
           payAtDelivery: "Gecontroleerd bij aflevering op Curaçao",
-          body:
-            "Deze borg wordt niet online in rekening gebracht. Bij aflevering op Curaçao controleren we alleen of je kaart tot {amount} kan dekken. We brengen het volledige bedrag niet in rekening bij ophalen. Bij terugbrengen brengen we alleen het uiteindelijke bedrag in rekening voor schade of bijtanken (bijvoorbeeld $100 of $200). Als alles in orde is, betaal je niets extra.",
+          body: "Deze borg wordt niet online in rekening gebracht. Bij aflevering op Curaçao controleren we alleen of je kaart tot {amount} kan dekken. We brengen het volledige bedrag niet in rekening bij ophalen. Bij terugbrengen brengen we alleen het uiteindelijke bedrag in rekening voor schade of bijtanken (bijvoorbeeld $100 of $200). Als alles in orde is, betaal je niets extra.",
           reminder:
             "Belangrijk: neem een creditcard op naam van de hoofdbestuurder mee. We controleren bij overdracht of deze tot {amount} kan dekken, niet tijdens online afrekenen.",
         },
@@ -993,8 +1184,7 @@ export const nl: Messages = {
           title: "Optie 2: All-risk upgrade",
           amount: "{total} ({rate}/dag × {days} dagen)",
           paidOnline: "Betaald bij je online boeking",
-          body:
-            "Je hebt gekozen voor all-risk dekking. Dit is meegenomen in je online betaling, dus er zijn geen aparte verzekeringskosten bij aankomst op Curaçao.",
+          body: "Je hebt gekozen voor all-risk dekking. Dit is meegenomen in je online betaling, dus er zijn geen aparte verzekeringskosten bij aankomst op Curaçao.",
         },
       },
     },
@@ -1006,10 +1196,12 @@ export const nl: Messages = {
       communicationPrefs: "Communicatievoorkeuren",
       fullName: "Volledige naam",
       email: "E-mail",
-      emailHint: "Om je e-mail te wijzigen, vul een nieuw adres in en bevestig via de link die we sturen.",
+      emailHint:
+        "Om je e-mail te wijzigen, vul een nieuw adres in en bevestig via de link die we sturen.",
       newEmail: "Nieuw e-mailadres",
       changeEmail: "Verificatielink versturen",
       emailSent: "Check je nieuwe inbox voor een bevestigingslink.",
+      emailChangeError: "We konden de verificatielink niet versturen. Probeer het opnieuw.",
       phone: "Telefoon / WhatsApp",
       marketingTitle: "Blijf op de hoogte",
       marketingEmail: "Stuur mij aanbiedingen en updates per e-mail",
@@ -1020,7 +1212,8 @@ export const nl: Messages = {
     },
     drivers: {
       title: "Bestuurders",
-      subtitle: "Bewaar bestuurders voor sneller afrekenen. Gegevens moeten overeenkomen met het huurcontract.",
+      subtitle:
+        "Bewaar bestuurders voor sneller afrekenen. Gegevens moeten overeenkomen met het huurcontract.",
       notice:
         "Opgeslagen bestuurders zijn voor je gemak. De hoofdbestuurder op elk contract moet overeenkomen met het rijbewijs bij ophalen.",
       add: "Bestuurder toevoegen",
@@ -1040,24 +1233,54 @@ export const nl: Messages = {
     documents: {
       title: "Documenten",
       subtitle: "Upload je rijbewijs of ID voor snellere check-in.",
+      privacyTitle: "Privé documentcontrole",
+      privacyBody:
+        "We gebruiken deze documenten alleen om de overdracht voor te bereiden en de hoofd- of extra bestuurder te controleren. Bevoegd personeel kan ze privé bekijken; geüploade bestanden blijven privé tijdens de documentcyclus.",
+      guidance: [
+        "Upload een geldig paspoort, ID-kaart of rijbewijs.",
+        "Zorg dat het volledige document zichtbaar is.",
+        "Zorg dat de tekst en foto leesbaar zijn.",
+        "Upload het document dat past bij het gekozen documenttype.",
+        "Deze documenten helpen Quick Key de overdracht en het huurcontract voor te bereiden.",
+      ],
+      pickupAlternative:
+        "Liever niet online uploaden? Je kunt je originele geldige documenten tonen bij het ophalen van de auto.",
       type: "Documenttype",
       upload: "Document uploaden",
       uploadError: "Uploaden mislukt.",
       delete: "Verwijderen",
       deleteConfirm: "Dit document verwijderen?",
+      deletedOn: "Verwijderd door Quick Key op {date}.",
+      deletedSecurely: "Dit document is veilig verwijderd door Quick Key.",
+      deletedReason: "Reden",
+      rejectedReason: "Reden",
+      reuploadGuidance: "Upload een vervangend document als dit nog nodig is.",
       loading: "Documenten laden…",
       empty: "Nog geen documenten geüpload.",
       types: {
-        drivers_license: "Rijbewijs",
-        passport: "Paspoort",
+        driver_license: "Rijbewijs",
+        passport_id: "Paspoort",
         id_card: "ID-kaart",
-        other: "Overig",
       },
       verification: {
+        uploaded: "In beoordeling",
         pending: "In beoordeling",
+        verified: "Goedgekeurd",
         approved: "Goedgekeurd",
         rejected: "Afgewezen",
+        deleted: "Verwijderd door Quick Key",
       },
+    },
+    rewards: {
+      title: "QuickKey Rewards",
+      subtitle: "Verdien punten met afgeronde huurperiodes en wissel ze later in voor huurkorting.",
+      balance: "Huidig saldo",
+      points: "punten",
+      rewards: "Beloningen",
+      credit: "{amount} huurkorting",
+      activity: "Recente activiteit",
+      loading: "Rewards laden…",
+      empty: "Nog geen puntenactiviteit.",
     },
     settings: {
       title: "Instellingen",
@@ -1066,7 +1289,8 @@ export const nl: Messages = {
       sessionBody: "Log uit op dit apparaat.",
       signOut: "Uitloggen",
       deleteTitle: "Account verwijderen",
-      deleteBody: "Verwijder je account en persoonsgegevens permanent. Dit kan niet ongedaan worden.",
+      deleteBody:
+        "Verwijder je account en persoonsgegevens permanent. Dit kan niet ongedaan worden.",
       deleteConfirmLabel: "Typ",
       deletePhrase: "DELETE",
       deletePhraseError: "Typ DELETE om te bevestigen.",
@@ -1077,5 +1301,11 @@ export const nl: Messages = {
     },
   },
   admin: adminNl,
-  logo: { quick: "Quick", key: "Key", rental: "Rental", curacao: "Curaçao", aria: "Quick Key Rental" },
+  logo: {
+    quick: "Quick",
+    key: "Key",
+    rental: "Rental",
+    curacao: "Curaçao",
+    aria: "Quick Key Rental",
+  },
 };

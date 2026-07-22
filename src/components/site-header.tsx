@@ -60,12 +60,7 @@ export function SiteHeader({ appearance = "brand", overlay = false }: SiteHeader
       )}
     >
       <div className="mx-auto grid h-[5.25rem] max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-4 px-5 md:px-8">
-        <Link
-          to="/"
-          className="shrink-0"
-          onClick={closeMenu}
-          aria-label={messages.nav.homeAria}
-        >
+        <Link to="/" className="shrink-0" onClick={closeMenu} aria-label={messages.nav.homeAria}>
           <Logo size="md" />
         </Link>
 

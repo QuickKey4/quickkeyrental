@@ -2,7 +2,10 @@ import { useCallback, useState } from "react";
 
 import { cancelUserBooking, type BookingWithCar } from "../account-queries";
 
-export function useCancelBookingFlow(onCancelled: () => void | Promise<void>) {
+export function useCancelBookingFlow(
+  onCancelled: () => void | Promise<void>,
+  fallbackError: string,
+) {
   const [target, setTarget] = useState<BookingWithCar | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -28,13 +31,13 @@ export function useCancelBookingFlow(onCancelled: () => void | Promise<void>) {
         await cancelUserBooking(target, { acceptCancellationFee });
         setTarget(null);
         await onCancelled();
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Could not cancel booking.");
+      } catch {
+        setError(fallbackError);
       } finally {
         setLoading(false);
       }
     },
-    [onCancelled, target],
+    [fallbackError, onCancelled, target],
   );
 
   return {

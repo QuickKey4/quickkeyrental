@@ -8,7 +8,6 @@ export function stepIndex(step: BookingStep): number {
     "dates",
     "cars",
     "customer",
-    "driver",
     "extras",
     "review",
     "payment",

@@ -9,7 +9,7 @@ export const CRUISE_TERMINAL_ADDRESS =
 const LEGACY_HATO_AIRPORT_ADDRESS =
   "Curaçao International Airport (Hato), Plasa Margaret Abraham, Willemstad, Curaçao";
 
-const PERSON_NAME_PATTERN = /^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[ '\-][A-Za-zÀ-ÖØ-öø-ÿ]+)+$/;
+const PERSON_NAME_PART_PATTERN = /^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[ '-][A-Za-zÀ-ÖØ-öø-ÿ]+)*$/;
 
 export function normalizePersonName(value: string): string {
   return value.trim().replace(/\s+/g, " ");
@@ -19,7 +19,15 @@ export function isValidPersonName(value: string): boolean {
   const trimmed = normalizePersonName(value);
   if (trimmed.length < 3) return false;
   if (/\d/.test(trimmed)) return false;
-  return PERSON_NAME_PATTERN.test(trimmed);
+  if (trimmed.split(" ").length < 2) return false;
+  return PERSON_NAME_PART_PATTERN.test(trimmed);
+}
+
+export function isValidPersonNamePart(value: string): boolean {
+  const trimmed = normalizePersonName(value);
+  if (trimmed.length < 2) return false;
+  if (/\d/.test(trimmed)) return false;
+  return PERSON_NAME_PART_PATTERN.test(trimmed);
 }
 
 export function sanitizePersonNameInput(value: string): string {
@@ -49,10 +57,23 @@ export function isValidLicenseNumber(value: string): boolean {
   return /^[A-Za-z0-9-]{3,24}$/.test(trimmed);
 }
 
+export function maskLicenseNumber(value: string): string {
+  const normalized = value.trim();
+  if (normalized.length <= 4) return normalized;
+  return `${"*".repeat(normalized.length - 4)}${normalized.slice(-4)}`;
+}
+
 export function fixedDeliveryAddress(type: DeliveryType): string | null {
   if (type === "airport") return HATO_AIRPORT_ADDRESS;
   if (type === "cruise") return CRUISE_TERMINAL_ADDRESS;
   return null;
+}
+
+export function compactDeliveryLocation(type: DeliveryType, address: string): string {
+  if (type === "airport" || isAirportDeliveryAddress(address))
+    return "Curaçao International Airport";
+  if (type === "cruise" || isCruiseTerminalAddress(address)) return "Mega Pier Cruise Terminal";
+  return address.trim();
 }
 
 export function isFixedDeliveryType(type: DeliveryType): boolean {

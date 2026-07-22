@@ -24,20 +24,24 @@ export function SupportPage() {
         <AccountCard>
           <a
             href={`tel:${BRAND.phoneTel}`}
-            className="flex min-h-14 items-center justify-center gap-3 text-base font-semibold text-[var(--logo-black)] transition-colors hover:text-[var(--logo-red)]"
+            className="flex min-h-14 min-w-0 items-center justify-center gap-3 text-center text-base font-semibold text-[var(--logo-black)] transition-colors hover:text-[var(--logo-red)]"
           >
             <Phone className="size-5 text-[var(--logo-red)]" />
-            {copy.call} · {BRAND.phone}
+            <span className="min-w-0 break-words">
+              {copy.call} · {BRAND.phone}
+            </span>
           </a>
         </AccountCard>
 
         <AccountCard>
           <a
             href={contactHrefs.email}
-            className="flex min-h-14 items-center justify-center gap-3 text-base font-semibold text-[var(--logo-black)] transition-colors hover:text-[var(--logo-red)]"
+            className="flex min-h-14 min-w-0 items-center justify-center gap-3 text-center text-base font-semibold text-[var(--logo-black)] transition-colors hover:text-[var(--logo-red)]"
           >
             <Mail className="size-5 text-[var(--logo-red)]" />
-            {copy.email} · {BRAND.email}
+            <span className="min-w-0 break-words">
+              {copy.email} · {BRAND.email}
+            </span>
           </a>
         </AccountCard>
       </div>

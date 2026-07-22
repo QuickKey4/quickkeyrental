@@ -32,9 +32,19 @@ type VehicleDetailSheetProps = {
   vehicle: Vehicle | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  ctaLabel?: string;
+  onCtaClick?: (vehicle: Vehicle) => void;
+  ctaDisabled?: boolean;
 };
 
-export function VehicleDetailSheet({ vehicle, open, onOpenChange }: VehicleDetailSheetProps) {
+export function VehicleDetailSheet({
+  vehicle,
+  open,
+  onOpenChange,
+  ctaLabel,
+  onCtaClick,
+  ctaDisabled = false,
+}: VehicleDetailSheetProps) {
   const { messages } = useI18n();
 
   if (!vehicle) return null;
@@ -140,7 +150,9 @@ export function VehicleDetailSheet({ vehicle, open, onOpenChange }: VehicleDetai
                     <dt className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                       {label}
                     </dt>
-                    <dd className="mt-1 text-sm font-medium leading-snug text-foreground">{value}</dd>
+                    <dd className="mt-1 text-sm font-medium leading-snug text-foreground">
+                      {value}
+                    </dd>
                   </div>
                 ))}
               </dl>
@@ -201,11 +213,15 @@ export function VehicleDetailSheet({ vehicle, open, onOpenChange }: VehicleDetai
               </h3>
               <ul className="space-y-3 text-sm leading-relaxed text-muted-foreground">
                 <li>
-                  <p className="font-semibold text-foreground">{messages.fleet.insurance.depositTitle}</p>
+                  <p className="font-semibold text-foreground">
+                    {messages.fleet.insurance.depositTitle}
+                  </p>
                   <p className="mt-1">{messages.fleet.insurance.depositBody}</p>
                 </li>
                 <li>
-                  <p className="font-semibold text-foreground">{messages.fleet.insurance.noDepositTitle}</p>
+                  <p className="font-semibold text-foreground">
+                    {messages.fleet.insurance.noDepositTitle}
+                  </p>
                   <p className="mt-1">{messages.fleet.insurance.noDepositBody}</p>
                 </li>
               </ul>
@@ -232,15 +248,30 @@ export function VehicleDetailSheet({ vehicle, open, onOpenChange }: VehicleDetai
         </div>
 
         <div className="shrink-0 border-t border-border bg-surface/95 px-5 py-4 backdrop-blur-md supports-[backdrop-filter]:bg-surface/90 pb-[max(1rem,env(safe-area-inset-bottom))]">
-          <Link
-            to="/book"
-            search={{ car: vehicle.key }}
-            onClick={() => onOpenChange(false)}
-            className="group inline-flex h-12 w-full items-center justify-center gap-2 rounded-[4px] bg-[var(--logo-red)] text-xs font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-[#c92228]"
-          >
-            {messages.fleet.specs.bookVehicle}
-            <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-          </Link>
+          {onCtaClick ? (
+            <button
+              type="button"
+              disabled={ctaDisabled}
+              onClick={() => {
+                onCtaClick(vehicle);
+                onOpenChange(false);
+              }}
+              className="group inline-flex h-12 w-full items-center justify-center gap-2 rounded-[4px] bg-[var(--logo-red)] text-xs font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-[#c92228] disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
+            >
+              {ctaLabel ?? messages.fleet.specs.bookVehicle}
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+            </button>
+          ) : (
+            <Link
+              to="/book"
+              search={{ car: vehicle.key }}
+              onClick={() => onOpenChange(false)}
+              className="group inline-flex h-12 w-full items-center justify-center gap-2 rounded-[4px] bg-[var(--logo-red)] text-xs font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-[#c92228]"
+            >
+              {ctaLabel ?? messages.fleet.specs.bookVehicle}
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          )}
         </div>
       </SheetContent>
     </Sheet>

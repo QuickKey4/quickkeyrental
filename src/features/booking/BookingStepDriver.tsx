@@ -26,7 +26,7 @@ export function BookingStepDriver({ draft, onChange, errors }: BookingStepDriver
             onChange({ driverLicense: event.target.value.replace(/[^A-Za-z0-9-]/g, "") })
           }
           error={errors.driverLicense}
-          placeholder="CW-2026-001"
+          placeholder={copy.licensePlaceholder}
         />
         <Input
           icon={<User className="size-4" />}

@@ -1,7 +1,10 @@
 import { defaultLocale, supportedLocales, type SupportedLocale } from "@/i18n/config";
 
 function normalizeLanguageTag(tag: string): string {
-  return tag.trim().toLowerCase().split("-")[0] ?? "";
+  const value = tag.trim().toLowerCase();
+  if (value === "pap" || value.startsWith("pap-")) return "pap";
+  if (value === "pt" || value.startsWith("pt-")) return "pt";
+  return value.split("-")[0] ?? "";
 }
 
 export function isSupportedLocale(value: string): value is SupportedLocale {

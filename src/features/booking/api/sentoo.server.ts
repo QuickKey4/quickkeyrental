@@ -37,6 +37,13 @@ export type SentooStatusResult = {
   data?: Record<string, unknown>;
 };
 
+const SENTOO_STATUS_RECHECK_ATTEMPTS = 3;
+const SENTOO_STATUS_RECHECK_DELAY_MS = 750;
+
+const SENTOO_TERMINAL_FAILURE_STATUSES = new Set(["cancelled", "expired", "failed", "rejected"]);
+const SENTOO_SUCCESS_STATUSES = new Set(["success"]);
+const SENTOO_ACTIVE_STATUSES = new Set(["issued", "pending"]);
+
 function getSentooConfig() {
   const config = getServerConfig();
   const apiHost = config.sentooApiHost?.replace(/\/$/, "");
@@ -77,9 +84,8 @@ function formatSentooError(error: SentooErrorEnvelope["error"], currency: string
   if (error.code === 402) {
     const apiHost =
       getSentooConfig()?.apiHost ?? process.env.SENTOO_API_HOST ?? "your Sentoo API host";
-    return (
-      `Sentoo could not start checkout. In the Sentoo merchant portal, add ${SITE_URL} under Valid hostnames (include https://), confirm currency ${currency} is enabled for your merchant, and verify sandbox credentials match ${apiHost}.${reference} Contact support@sentoo.io with the reference if it still fails.`
-    );
+    const returnBaseUrl = resolveSentooReturnBaseUrl();
+    return `Sentoo could not start checkout. In the Sentoo merchant portal, add ${returnBaseUrl} under Valid hostnames (include https://), confirm currency ${currency} is enabled for your merchant, and verify sandbox credentials match ${apiHost}.${reference} Contact support@sentoo.io with the reference if it still fails.`;
   }
 
   return `${error.message || "Sentoo request failed."}${reference}`;
@@ -108,15 +114,29 @@ export function resolveSentooReturnBaseUrl(): string {
   if (override?.startsWith("https://") && !override.includes("localhost")) {
     return override;
   }
+  const vercelUrl = process.env.VERCEL_URL?.trim().replace(/\/$/, "");
+  if (process.env.VERCEL_ENV !== "production" && vercelUrl) {
+    return vercelUrl.startsWith("https://") ? vercelUrl : `https://${vercelUrl}`;
+  }
   return SITE_URL;
 }
 
-export function buildSentooReturnUrl(bookingId: string): string {
+export function buildSentooReturnUrl(bookingId: string, bookingTestCode?: string | null): string {
   const explicit = process.env.SENTOO_RETURN_URL?.trim();
   if (explicit) return explicit;
 
   const siteUrl = resolveSentooReturnBaseUrl().replace(/\/$/, "");
-  return `${siteUrl}/book?step=confirmation&bookingId=${bookingId}&attempt=`;
+  const params = new URLSearchParams({
+    step: "confirmation",
+    bookingId,
+    attempt: "",
+  });
+
+  if (bookingTestCode?.trim()) {
+    params.set("code", bookingTestCode.trim());
+  }
+
+  return `${siteUrl}/book?${params.toString()}`;
 }
 
 /** Sentoo-hosted return page — works without merchant hostname allowlist (sandbox testing). */
@@ -240,9 +260,82 @@ export async function getSentooTransactionStatus(
   );
 
   return {
-    status: json.success.message,
+    status: extractSentooStatus(json.success.message, json.success.data),
     data: json.success.data,
   };
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => globalThis.setTimeout(resolve, ms));
+}
+
+function normalizeSentooStatus(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  return (
+    value
+      .trim()
+      .toLowerCase()
+      .replace(/[\s-]+/g, "_") || null
+  );
+}
+
+function collectStatusFields(value: unknown, statuses: string[] = []): string[] {
+  if (!value || typeof value !== "object") return statuses;
+
+  if (Array.isArray(value)) {
+    value.forEach((item) => collectStatusFields(item, statuses));
+    return statuses;
+  }
+
+  Object.entries(value as Record<string, unknown>).forEach(([key, nestedValue]) => {
+    const keyLower = key.toLowerCase();
+    if (keyLower.includes("status") || keyLower.includes("result")) {
+      const normalized = normalizeSentooStatus(nestedValue);
+      if (normalized) statuses.push(normalized);
+    }
+    collectStatusFields(nestedValue, statuses);
+  });
+
+  return statuses;
+}
+
+export function extractSentooStatus(
+  message: string | null | undefined,
+  data?: Record<string, unknown>,
+): SentooTransactionStatus {
+  const messageStatus = normalizeSentooStatus(message) ?? "issued";
+  const nestedStatuses = collectStatusFields(data);
+
+  if (SENTOO_SUCCESS_STATUSES.has(messageStatus)) return messageStatus;
+  const successfulNestedStatus = nestedStatuses.find((status) =>
+    SENTOO_SUCCESS_STATUSES.has(status),
+  );
+  if (successfulNestedStatus) return successfulNestedStatus;
+
+  if (SENTOO_TERMINAL_FAILURE_STATUSES.has(messageStatus)) return messageStatus;
+  const terminalNestedStatus = nestedStatuses
+    .slice()
+    .reverse()
+    .find((status) => SENTOO_TERMINAL_FAILURE_STATUSES.has(status));
+  if (terminalNestedStatus) return terminalNestedStatus;
+
+  return messageStatus;
+}
+
+export async function getSettledSentooTransactionStatus(
+  transactionId: string,
+  options: { attempts?: number; delayMs?: number } = {},
+): Promise<SentooStatusResult> {
+  const attempts = Math.max(1, options.attempts ?? SENTOO_STATUS_RECHECK_ATTEMPTS);
+  const delayMs = Math.max(0, options.delayMs ?? SENTOO_STATUS_RECHECK_DELAY_MS);
+  let result = await getSentooTransactionStatus(transactionId);
+
+  for (let attempt = 1; attempt < attempts && isSentooStatusReusable(result.status); attempt += 1) {
+    if (delayMs > 0) await sleep(delayMs);
+    result = await getSentooTransactionStatus(transactionId);
+  }
+
+  return result;
 }
 
 export async function cancelSentooTransaction(transactionId: string): Promise<void> {
@@ -266,9 +359,15 @@ export async function cancelSentooTransaction(transactionId: string): Promise<vo
 }
 
 export function isSentooStatusFinal(status: string | null | undefined): boolean {
-  return status === "success" || status === "cancelled" || status === "expired" || status === "failed";
+  return (
+    status === "success" ||
+    status === "cancelled" ||
+    status === "expired" ||
+    status === "failed" ||
+    status === "rejected"
+  );
 }
 
 export function isSentooStatusReusable(status: string | null | undefined): boolean {
-  return status === "issued" || status === "pending" || status == null;
+  return status == null || SENTOO_ACTIVE_STATUSES.has(status);
 }

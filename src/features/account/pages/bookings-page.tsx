@@ -1,10 +1,15 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useI18n } from "@/i18n/provider";
 import { cn } from "@/lib/utils";
 
 import { fetchUserBookings, type BookingWithCar } from "../account-queries";
-import { isCancelledBooking, isPastBooking, isUpcomingBooking } from "../account-utils";
+import {
+  isCancelledBooking,
+  isPastBooking,
+  isUpcomingBooking,
+  sortUpcomingBookings,
+} from "../account-utils";
 import { linkBookingsToUser } from "../auth";
 import { useAuth } from "../auth-provider";
 import { AccountContent } from "../account-layout";
@@ -24,7 +29,7 @@ export function BookingsPage() {
   const [bookings, setBookings] = useState<BookingWithCar[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadBookings = async () => {
+  const loadBookings = useCallback(async () => {
     if (!user?.id) return;
     setLoading(true);
     try {
@@ -33,13 +38,13 @@ export function BookingsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.id]);
 
   useEffect(() => {
     void loadBookings();
-  }, [user?.id]);
+  }, [loadBookings]);
 
-  const cancelFlow = useCancelBookingFlow(loadBookings);
+  const cancelFlow = useCancelBookingFlow(loadBookings, copy.cancelError);
 
   const filtered = useMemo(() => {
     if (tab === "cancelled") {
@@ -48,8 +53,15 @@ export function BookingsPage() {
     if (tab === "completed") {
       return bookings.filter((booking) => isPastBooking(booking));
     }
-    return bookings.filter((booking) => isUpcomingBooking(booking));
+    return sortUpcomingBookings(bookings.filter((booking) => isUpcomingBooking(booking)));
   }, [bookings, tab]);
+
+  const emptyCopy =
+    tab === "upcoming"
+      ? copy.emptyUpcoming
+      : tab === "completed"
+        ? copy.emptyCompleted
+        : copy.emptyCancelled;
 
   const tabs: { id: Tab; label: string }[] = [
     { id: "upcoming", label: copy.tabs.upcoming },
@@ -83,7 +95,7 @@ export function BookingsPage() {
         <p className="text-sm text-muted-foreground">{copy.loading}</p>
       ) : filtered.length === 0 ? (
         <p className="rounded-3xl border border-dashed border-black/10 bg-white p-12 text-center text-sm text-muted-foreground">
-          {copy.empty}
+          {emptyCopy}
         </p>
       ) : (
         <div className="space-y-4">
@@ -93,7 +105,7 @@ export function BookingsPage() {
               booking={booking}
               showActions={tab === "upcoming"}
               onCancel={tab === "upcoming" ? cancelFlow.requestCancel : undefined}
-              cancellingId={cancelFlow.loading ? cancelFlow.target?.id ?? null : null}
+              cancellingId={cancelFlow.loading ? (cancelFlow.target?.id ?? null) : null}
             />
           ))}
         </div>

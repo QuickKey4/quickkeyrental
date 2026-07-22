@@ -9,6 +9,8 @@ export function useBookingAvailability(pickupDate: string, returnDate: string) {
     queryKey: ["booking-availability", pickupDate, returnDate],
     enabled: datesValid,
     queryFn: () => getCarAvailability({ data: { pickupDate, returnDate } }),
+    retry: (failureCount) => failureCount < 2,
+    retryDelay: (attempt) => Math.min(750 * 2 ** attempt, 3_000),
     staleTime: 15_000,
   });
 }

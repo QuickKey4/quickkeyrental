@@ -16,18 +16,20 @@ import { FleetPhoto } from "@/components/fleet-photo";
 import { useFleet } from "@/hooks/use-fleet";
 import { useI18n } from "@/i18n/provider";
 import { formatDateRange } from "@/i18n/format";
-import { getCarAvailability } from "@/features/booking/api/availability.functions";
-import type { CarAvailability } from "@/features/booking/bookingTypes";
+import { getBookingExtras } from "@/features/booking/api/availability.functions";
 import { formatPrice } from "@/lib/brand";
 import { getVehicle } from "@/lib/fleet";
 import type { VehicleKey } from "@/lib/fleet";
 
+import { fetchUserBooking, updateUserBookingRental, type BookingWithCar } from "../account-queries";
 import {
-  fetchUserBooking,
-  updateUserBookingRental,
-  type BookingWithCar,
-} from "../account-queries";
-import { bookingReference, canCancelBooking, canModifyBooking, pickupLocationLabel } from "../account-utils";
+  bookingReference,
+  canCancelBooking,
+  canModifyBooking,
+  formatAccountDate,
+  maskLicenseNumber,
+  pickupLocationLabel,
+} from "../account-utils";
 import { AccountContent } from "../account-layout";
 import { BookingInsuranceSummary } from "../components/booking-insurance-summary";
 import {
@@ -55,12 +57,14 @@ export function ManageBookingPage({ bookingId, editMode = false }: ManageBooking
 
   const [booking, setBooking] = useState<BookingWithCar | null>(null);
   const [editing, setEditing] = useState(editMode);
-  const [pickupDate, setPickupDate] = useState("");
-  const [returnDate, setReturnDate] = useState("");
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [collectionAddress, setCollectionAddress] = useState("");
-  const [carId, setCarId] = useState("");
-  const [availability, setAvailability] = useState<CarAvailability[]>([]);
+  const [additionalDriverName, setAdditionalDriverName] = useState("");
+  const [additionalDriverLicense, setAdditionalDriverLicense] = useState("");
+  const [availableExtras, setAvailableExtras] = useState<
+    Awaited<ReturnType<typeof getBookingExtras>>
+  >([]);
+  const [addedExtras, setAddedExtras] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -68,7 +72,7 @@ export function ManageBookingPage({ bookingId, editMode = false }: ManageBooking
 
   const cancelFlow = useCancelBookingFlow(async () => {
     void navigate({ to: "/account/bookings" });
-  });
+  }, copy.cancelError);
 
   useEffect(() => {
     setEditing(editMode);
@@ -79,35 +83,44 @@ export function ManageBookingPage({ bookingId, editMode = false }: ManageBooking
       .then((data) => {
         if (!data) throw new Error(copy.notFound);
         setBooking(data);
-        setPickupDate(data.pickup_date);
-        setReturnDate(data.return_date);
         setDeliveryAddress(data.delivery_address ?? pickupLocationLabel(data));
         setCollectionAddress(data.collection_address ?? "");
-        setCarId(data.car_id);
+        setAdditionalDriverName(data.additional_driver_name ?? "");
+        setAdditionalDriverLicense(data.additional_driver_license ?? "");
       })
-      .catch((err) => setError(err instanceof Error ? err.message : copy.loadError))
+      .catch(() => setError(copy.loadError))
       .finally(() => setLoading(false));
   }, [bookingId, copy.loadError, copy.notFound]);
 
   useEffect(() => {
-    if (!pickupDate || !returnDate || !editing) return;
-    void getCarAvailability({ data: { pickupDate, returnDate } })
-      .then((rows) => {
-        const merged = rows.map((item) =>
-          item.car.id === booking?.car_id ? { ...item, available: true } : item,
-        );
-        setAvailability(merged);
-      })
-      .catch(() => setAvailability([]));
-  }, [pickupDate, returnDate, booking?.car_id, editing]);
+    if (!editing) return;
+    void getBookingExtras()
+      .then(setAvailableExtras)
+      .catch(() => setAvailableExtras([]));
+  }, [editing]);
 
   const modifiable = booking ? canModifyBooking(booking) : false;
   const cancellable = booking ? canCancelBooking(booking) : false;
-
-  const availableCars = useMemo(
-    () => availability.filter((item) => item.available || item.car.id === carId),
-    [availability, carId],
+  const freeExtras = useMemo(
+    () => availableExtras.filter((extra) => Number(extra.price_per_day) === 0),
+    [availableExtras],
   );
+
+  const addedExtrasTotal = useMemo(() => {
+    if (!booking) return 0;
+    const days = Math.max(
+      1,
+      Math.round(
+        (new Date(`${booking.return_date}T12:00:00`).getTime() -
+          new Date(`${booking.pickup_date}T12:00:00`).getTime()) /
+          86_400_000,
+      ),
+    );
+    return freeExtras.reduce((sum, extra) => {
+      const quantity = addedExtras[extra.id] ?? 0;
+      return sum + Number(extra.price_per_day) * quantity * days;
+    }, 0);
+  }, [addedExtras, freeExtras, booking]);
 
   const handleSave = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -120,18 +133,23 @@ export function ManageBookingPage({ bookingId, editMode = false }: ManageBooking
     try {
       await updateUserBookingRental({
         bookingId: booking.id,
-        pickupDate,
-        returnDate,
         deliveryAddress: deliveryAddress.trim(),
         collectionAddress: collectionAddress.trim(),
-        carId,
+        addExtras: Object.entries(addedExtras)
+          .filter(([, quantity]) => quantity > 0)
+          .map(([id, quantity]) => ({ id, quantity })),
+        additionalDriverName: additionalDriverName.trim(),
+        additionalDriverLicense: additionalDriverLicense.trim(),
       });
       const refreshed = await fetchUserBooking(booking.id);
       if (refreshed) setBooking(refreshed);
       setSaved(true);
       setEditing(false);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : copy.saveError);
+      setAddedExtras({});
+    } catch (saveError) {
+      setError(
+        saveError instanceof Error && saveError.message ? saveError.message : copy.saveError,
+      );
     } finally {
       setSaving(false);
     }
@@ -155,6 +173,8 @@ export function ManageBookingPage({ bookingId, editMode = false }: ManageBooking
   const fleetKey = booking.cars?.image_url as VehicleKey | undefined;
   const vehicle = fleetKey ? getVehicle(fleet, fleetKey) : null;
   const dateRange = formatDateRange(intlLocale, booking.pickup_date, booking.return_date);
+  const pickupDate = formatAccountDate(booking.pickup_date, intlLocale);
+  const returnDate = formatAccountDate(booking.return_date, intlLocale);
   const statusKey = booking.status as keyof typeof messages.account.bookings.status;
   const statusLabel = messages.account.bookings.status[statusKey] ?? booking.status;
   const pickupLocation = pickupLocationLabel(booking);
@@ -212,6 +232,7 @@ export function ManageBookingPage({ bookingId, editMode = false }: ManageBooking
       {!modifiable && !editing ? (
         <AccountCard>
           <p className="text-sm leading-relaxed text-muted-foreground">{copy.notModifiable}</p>
+          <WhatsAppSupportButton className="mt-4" />
         </AccountCard>
       ) : null}
 
@@ -219,27 +240,6 @@ export function ManageBookingPage({ bookingId, editMode = false }: ManageBooking
         <AccountCard>
           <AccountSectionTitle title={copy.changeTitle} />
           <form onSubmit={(event) => void handleSave(event)} className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label={copy.pickupDate}>
-                <input
-                  type="date"
-                  value={pickupDate}
-                  onChange={(event) => setPickupDate(event.target.value)}
-                  required
-                  className="field-input"
-                />
-              </Field>
-              <Field label={copy.returnDate}>
-                <input
-                  type="date"
-                  value={returnDate}
-                  onChange={(event) => setReturnDate(event.target.value)}
-                  required
-                  className="field-input"
-                />
-              </Field>
-            </div>
-
             <Field label={copy.pickupLocation}>
               <input
                 type="text"
@@ -255,35 +255,81 @@ export function ManageBookingPage({ bookingId, editMode = false }: ManageBooking
                 type="text"
                 value={collectionAddress}
                 onChange={(event) => setCollectionAddress(event.target.value)}
-                required
+                placeholder={copy.sameAsPickup}
                 className="field-input"
               />
             </Field>
 
-            <Field label={copy.vehicle}>
-              <select
-                value={carId}
-                onChange={(event) => setCarId(event.target.value)}
-                className="field-input"
-              >
-                {availableCars.map((item) => {
-                  const fleetVehicle = fleet.find((v) => v.key === item.fleetKey);
-                  return (
-                    <option key={item.car.id} value={item.car.id} disabled={!item.available}>
-                      {fleetVehicle?.name ?? item.car.name}
-                      {!item.available ? ` (${copy.unavailable})` : ""}
-                    </option>
-                  );
-                })}
-              </select>
-            </Field>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label={copy.additionalDriver}>
+                <input
+                  type="text"
+                  value={additionalDriverName}
+                  onChange={(event) => setAdditionalDriverName(event.target.value)}
+                  className="field-input"
+                />
+              </Field>
+              <Field label={copy.licenseNumber}>
+                <input
+                  type="text"
+                  value={additionalDriverLicense}
+                  onChange={(event) => setAdditionalDriverLicense(event.target.value)}
+                  className="field-input"
+                />
+              </Field>
+            </div>
+
+            {freeExtras.length > 0 ? (
+              <div className="space-y-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                  {copy.addExtras}
+                </p>
+                {freeExtras.map((extra) => (
+                  <label
+                    key={extra.id}
+                    className="flex items-center justify-between gap-3 rounded-xl border border-black/[0.08] bg-white px-4 py-3 text-sm"
+                  >
+                    <span>
+                      <span className="font-semibold">{extra.name}</span>
+                      <span className="ml-2 text-muted-foreground">
+                        {formatPrice(Number(extra.price_per_day), intlLocale)}
+                      </span>
+                    </span>
+                    <input
+                      type="number"
+                      min={0}
+                      max={5}
+                      value={addedExtras[extra.id] ?? 0}
+                      onChange={(event) =>
+                        setAddedExtras((current) => ({
+                          ...current,
+                          [extra.id]: Math.max(0, Number(event.target.value)),
+                        }))
+                      }
+                      className="h-10 w-20 rounded-lg border border-black/10 px-3 text-right text-base sm:text-sm"
+                    />
+                  </label>
+                ))}
+              </div>
+            ) : null}
+
+            <div className="rounded-xl border border-black/[0.08] bg-white px-4 py-3 text-sm">
+              <div className="flex justify-between">
+                <span>{copy.currentTotal}</span>
+                <strong>{formatPrice(Number(booking.total), intlLocale)}</strong>
+              </div>
+              <div className="mt-2 flex justify-between text-muted-foreground">
+                <span>{copy.priceDelta}</span>
+                <strong>{formatPrice(addedExtrasTotal, intlLocale)}</strong>
+              </div>
+              <div className="mt-2 flex justify-between">
+                <span>{copy.newTotal}</span>
+                <strong>{formatPrice(Number(booking.total) + addedExtrasTotal, intlLocale)}</strong>
+              </div>
+            </div>
 
             <div className="flex flex-col gap-2 pt-2 sm:flex-row">
-              <AccountPrimaryButton
-                type="submit"
-                disabled={saving}
-                className="flex-1"
-              >
+              <AccountPrimaryButton type="submit" disabled={saving} className="flex-1">
                 {saving ? <Loader2 className="size-4 animate-spin" /> : null}
                 {copy.save}
               </AccountPrimaryButton>
@@ -309,12 +355,22 @@ export function ManageBookingPage({ bookingId, editMode = false }: ManageBooking
               />
               <AccountDetailRow
                 icon={<Calendar className="size-4" />}
+                label={copy.pickupDate}
+                value={pickupDate}
+              />
+              <AccountDetailRow
+                icon={<Calendar className="size-4" />}
+                label={copy.returnDate}
+                value={returnDate}
+              />
+              <AccountDetailRow
+                icon={<Clock className="size-4" />}
                 label={copy.sections.rentalDetails}
                 value={dateRange}
               />
               <AccountDetailRow
                 icon={<Clock className="size-4" />}
-                label={copy.pickupDate}
+                label={copy.timeLabel}
                 value={`${booking.pickup_time.slice(0, 5)} – ${booking.return_time.slice(0, 5)}`}
               />
             </div>
@@ -326,7 +382,7 @@ export function ManageBookingPage({ bookingId, editMode = false }: ManageBooking
               <div className="space-y-3 text-sm">
                 <p className="flex items-center gap-2 font-semibold text-[var(--logo-black)]">
                   <Calendar className="size-4 text-[var(--logo-red)]" />
-                  {booking.pickup_date}
+                  {pickupDate}
                 </p>
                 <p className="flex items-center gap-2 text-muted-foreground">
                   <Clock className="size-4 text-[var(--logo-red)]" />
@@ -344,7 +400,7 @@ export function ManageBookingPage({ bookingId, editMode = false }: ManageBooking
               <div className="space-y-3 text-sm">
                 <p className="flex items-center gap-2 font-semibold text-[var(--logo-black)]">
                   <Calendar className="size-4 text-[var(--logo-red)]" />
-                  {booking.return_date}
+                  {returnDate}
                 </p>
                 <p className="flex items-center gap-2 text-muted-foreground">
                   <Clock className="size-4 text-[var(--logo-red)]" />
@@ -374,7 +430,7 @@ export function ManageBookingPage({ bookingId, editMode = false }: ManageBooking
               {booking.driver_license_number ? (
                 <AccountDetailRow
                   label={copy.licenseNumber}
-                  value={booking.driver_license_number}
+                  value={maskLicenseNumber(booking.driver_license_number)}
                 />
               ) : null}
               {booking.additional_driver_name ? (
@@ -405,7 +461,9 @@ export function ManageBookingPage({ bookingId, editMode = false }: ManageBooking
 
           <AccountCard>
             <AccountSectionTitle title={copy.sections.support} />
-            <p className="mb-4 text-sm text-muted-foreground">{messages.account.supportPage.subtitle}</p>
+            <p className="mb-4 text-sm text-muted-foreground">
+              {messages.account.supportPage.subtitle}
+            </p>
             <div className="flex flex-col gap-2 sm:flex-row">
               <WhatsAppSupportButton className="flex-1 justify-center rounded-xl py-3" />
               <Link

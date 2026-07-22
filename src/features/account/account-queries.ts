@@ -1,15 +1,27 @@
 import type { Tables, TablesInsert, TablesUpdate } from "@/lib/supabase/database.types";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
-import { sendBookingCancellationEmailsFn } from "./api/booking-management.functions";
 import {
-  canCancelBooking,
-  requiresCancellationFee,
-} from "./account-utils";
+  sendBookingCancellationEmailsFn,
+  sendDocumentUploadedNotificationFn,
+} from "./api/booking-management.functions";
+import { canCancelBooking, requiresCancellationFee } from "./account-utils";
 
 export type Profile = Tables<"profiles">;
 export type Driver = Tables<"drivers">;
 export type Document = Tables<"documents">;
+export type RewardTransaction = {
+  id: string;
+  points_delta: number;
+  transaction_type: string;
+  reason: string;
+  created_at: string;
+  status: string;
+};
+export type RewardTier = {
+  points: number;
+  credit: number;
+};
 
 export type BookingWithCar = Tables<"bookings"> & {
   cars: Pick<Tables<"cars">, "id" | "name" | "category" | "image_url" | "daily_price"> | null;
@@ -21,9 +33,7 @@ export async function fetchUserBookings(): Promise<BookingWithCar[]> {
 
   const { data, error } = await supabase
     .from("bookings")
-    .select(
-      "*, cars ( id, name, category, image_url, daily_price )",
-    )
+    .select("*, cars ( id, name, category, image_url, daily_price )")
     .order("pickup_date", { ascending: false });
 
   if (error) throw new Error(error.message);
@@ -75,24 +85,24 @@ export async function cancelUserBooking(
 
 export type UpdateBookingRentalInput = {
   bookingId: string;
-  pickupDate?: string;
-  returnDate?: string;
   deliveryAddress?: string;
   collectionAddress?: string;
-  carId?: string;
+  addExtras?: { id: string; quantity: number }[];
+  additionalDriverName?: string;
+  additionalDriverLicense?: string;
 };
 
 export async function updateUserBookingRental(input: UpdateBookingRentalInput): Promise<void> {
   const supabase = getSupabaseBrowserClient();
   if (!supabase) throw new Error("Account is not configured yet.");
 
-  const { error } = await supabase.rpc("update_booking_rental", {
+  const { error } = await supabase.rpc("update_booking_service_items", {
     p_booking_id: input.bookingId,
-    p_pickup_date: input.pickupDate ?? null,
-    p_return_date: input.returnDate ?? null,
     p_delivery_address: input.deliveryAddress ?? null,
     p_collection_address: input.collectionAddress ?? null,
-    p_car_id: input.carId ?? null,
+    p_add_extras: input.addExtras ?? [],
+    p_additional_driver_name: input.additionalDriverName ?? null,
+    p_additional_driver_license: input.additionalDriverLicense ?? null,
   });
 
   if (error) throw new Error(error.message);
@@ -102,7 +112,11 @@ export async function fetchProfile(userId: string): Promise<Profile | null> {
   const supabase = getSupabaseBrowserClient();
   if (!supabase) return null;
 
-  const { data, error } = await supabase.from("profiles").select("*").eq("id", userId).maybeSingle();
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", userId)
+    .maybeSingle();
   if (error) throw new Error(error.message);
   return data;
 }
@@ -137,7 +151,10 @@ export async function hydrateProfileFromBookings(userId: string): Promise<Profil
   return updateProfile(userId, patch);
 }
 
-export async function updateProfile(userId: string, patch: TablesUpdate<"profiles">): Promise<Profile> {
+export async function updateProfile(
+  userId: string,
+  patch: TablesUpdate<"profiles">,
+): Promise<Profile> {
   const supabase = getSupabaseBrowserClient();
   if (!supabase) throw new Error("Account is not configured yet.");
 
@@ -207,7 +224,11 @@ export async function deleteDriver(driverId: string, userId: string): Promise<vo
   const supabase = getSupabaseBrowserClient();
   if (!supabase) throw new Error("Account is not configured yet.");
 
-  const { error } = await supabase.from("drivers").delete().eq("id", driverId).eq("user_id", userId);
+  const { error } = await supabase
+    .from("drivers")
+    .delete()
+    .eq("id", driverId)
+    .eq("user_id", userId);
   if (error) throw new Error(error.message);
 }
 
@@ -215,14 +236,42 @@ export async function fetchDocuments(userId: string): Promise<Document[]> {
   const supabase = getSupabaseBrowserClient();
   if (!supabase) return [];
 
-  const { data, error } = await supabase
-    .from("documents")
-    .select("*")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false });
+  const [{ data, error }, { data: deletedDocuments, error: deletedError }] = await Promise.all([
+    supabase
+      .from("documents")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false }),
+    supabase.rpc("get_my_deleted_document_tombstones"),
+  ]);
 
   if (error) throw new Error(error.message);
-  return data ?? [];
+  if (deletedError) throw new Error(deletedError.message);
+
+  const tombstones: Document[] = (deletedDocuments ?? []).map((doc) => ({
+    id: doc.document_id,
+    user_id: userId,
+    document_type: doc.document_type,
+    verification_status: doc.verification_status,
+    deleted_at: doc.deleted_at,
+    deletion_due_at: null,
+    deletion_reason: null,
+    file_url: "",
+    file_name: doc.file_name,
+    file_path: null,
+    file_size: null,
+    mime_type: null,
+    uploaded_at: doc.uploaded_at,
+    created_at: doc.uploaded_at,
+    verified_at: null,
+    verified_by: null,
+  }));
+
+  return [...(data ?? []), ...tombstones].sort((a, b) => {
+    const aTime = new Date(a.deleted_at ?? a.created_at).getTime();
+    const bTime = new Date(b.deleted_at ?? b.created_at).getTime();
+    return bTime - aTime;
+  });
 }
 
 export async function uploadDocument(
@@ -232,6 +281,16 @@ export async function uploadDocument(
 ): Promise<Document> {
   const supabase = getSupabaseBrowserClient();
   if (!supabase) throw new Error("Account is not configured yet.");
+
+  const allowedTypes = new Set(["image/jpeg", "image/png", "image/webp", "application/pdf"]);
+  const maxSize = 8 * 1024 * 1024;
+
+  if (!allowedTypes.has(file.type)) {
+    throw new Error("Unsupported document file type.");
+  }
+  if (file.size > maxSize) {
+    throw new Error("Document file is too large.");
+  }
 
   const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
   const path = `${userId}/${type}/${Date.now()}-${safeName}`;
@@ -249,36 +308,85 @@ export async function uploadDocument(
       document_type: type,
       file_path: path,
       file_name: file.name,
+      file_size: file.size,
+      mime_type: file.type,
       verification_status: "pending",
     })
     .select("*")
     .single();
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    await supabase.storage.from("customer-documents").remove([path]);
+    throw new Error(error.message);
+  }
+
+  try {
+    await sendDocumentUploadedNotificationFn({ data: { documentId: data.id } });
+  } catch {
+    // Document upload succeeded even if email provider is not configured.
+  }
+
   return data;
 }
 
-export async function deleteDocument(documentId: string, userId: string): Promise<void> {
+export async function deleteDocument(documentId: string): Promise<void> {
   const supabase = getSupabaseBrowserClient();
   if (!supabase) throw new Error("Account is not configured yet.");
 
-  const { data: doc, error: fetchError } = await supabase
-    .from("documents")
-    .select("file_path")
-    .eq("id", documentId)
-    .eq("user_id", userId)
-    .maybeSingle();
-
-  if (fetchError) throw new Error(fetchError.message);
-  if (!doc) return;
-
-  await supabase.storage.from("customer-documents").remove([doc.file_path]);
-
-  const { error } = await supabase
-    .from("documents")
-    .delete()
-    .eq("id", documentId)
-    .eq("user_id", userId);
+  const { error } = await supabase.rpc("delete_own_pending_document", {
+    p_document_id: documentId,
+  });
 
   if (error) throw new Error(error.message);
+}
+
+export async function fetchRewards(userId: string): Promise<{
+  balance: number;
+  transactions: RewardTransaction[];
+  tiers: RewardTier[];
+}> {
+  const supabase = getSupabaseBrowserClient();
+  if (!supabase) return { balance: 0, transactions: [], tiers: defaultRewardTiers() };
+
+  const [{ data, error }, { data: config }] = await Promise.all([
+    supabase
+      .from("reward_transactions")
+      .select("id, points_delta, transaction_type, reason, created_at, status")
+      .eq("customer_id", userId)
+      .eq("status", "posted")
+      .order("created_at", { ascending: false })
+      .limit(50),
+    supabase.from("reward_config").select("value").eq("key", "redemption_tiers").maybeSingle(),
+  ]);
+
+  if (error) throw new Error(error.message);
+  const transactions = (data ?? []) as RewardTransaction[];
+  return {
+    balance: transactions.reduce((sum, row) => sum + Number(row.points_delta), 0),
+    transactions,
+    tiers: parseRewardTiers(config?.value),
+  };
+}
+
+function defaultRewardTiers(): RewardTier[] {
+  return [
+    { points: 500, credit: 10 },
+    { points: 1000, credit: 20 },
+    { points: 2500, credit: 50 },
+    { points: 5000, credit: 100 },
+  ];
+}
+
+function parseRewardTiers(value: unknown): RewardTier[] {
+  if (!Array.isArray(value)) return defaultRewardTiers();
+  const tiers = value.flatMap((item) => {
+    if (!item || typeof item !== "object") return [];
+    const candidate = item as { points?: unknown; credit?: unknown };
+    const points = Number(candidate.points);
+    const credit = Number(candidate.credit);
+    return Number.isFinite(points) && Number.isFinite(credit) && points > 0 && credit > 0
+      ? [{ points, credit }]
+      : [];
+  });
+  return tiers.length > 0 ? tiers : defaultRewardTiers();
 }

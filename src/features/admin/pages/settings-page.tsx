@@ -9,11 +9,48 @@ export function AdminSettingsPage() {
   const adminSecret = useAdminSecret();
   const { t } = useAdminI18n();
   const [settings, setSettings] = useState<Record<string, unknown> | null>(null);
+  const [smokeStatus, setSmokeStatus] = useState<string | null>(null);
+  const [smokeIsSending, setSmokeIsSending] = useState(false);
 
   useEffect(() => {
     if (!adminSecret) return;
     void getAdminSettings({ data: { adminSecret } }).then(setSettings);
   }, [adminSecret]);
+
+  async function sendEmailSmokeTest() {
+    if (!adminSecret || smokeIsSending) return;
+
+    setSmokeIsSending(true);
+    setSmokeStatus(null);
+    try {
+      const response = await fetch("/api/admin/email-smoke-test", {
+        method: "POST",
+        headers: {
+          "x-quickkey-admin-secret": adminSecret,
+        },
+      });
+      const result = (await response.json()) as {
+        ok?: boolean;
+        status?: string;
+        error?: string;
+        recipientEnv?: string;
+      };
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.error ?? "Could not send email smoke test.");
+      }
+
+      setSmokeStatus(
+        result.status === "skipped"
+          ? "Already sent. Idempotency prevented a duplicate email."
+          : `Sent through ${result.recipientEnv ?? "BOOKING_NOTIFICATION_EMAIL"}.`,
+      );
+    } catch (error) {
+      setSmokeStatus(error instanceof Error ? error.message : "Could not send email smoke test.");
+    } finally {
+      setSmokeIsSending(false);
+    }
+  }
 
   if (!settings) {
     return <p className="text-sm text-muted-foreground">{t.settings.loading}</p>;
@@ -45,6 +82,23 @@ export function AdminSettingsPage() {
             {(settings.newsletter as { enabled?: boolean })?.enabled ? t.enabled : t.disabled}
           </span>
         </p>
+      </AdminCard>
+
+      <AdminCard>
+        <h2 className="font-display text-lg font-bold">Email smoke test</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Sends one protected internal test email to BOOKING_NOTIFICATION_EMAIL using the logged
+          delivery path.
+        </p>
+        <button
+          type="button"
+          onClick={() => void sendEmailSmokeTest()}
+          disabled={smokeIsSending}
+          className="mt-4 rounded-full bg-[var(--logo-red)] px-5 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {smokeIsSending ? "Sending..." : "Send internal test email"}
+        </button>
+        {smokeStatus ? <p className="mt-3 text-sm text-muted-foreground">{smokeStatus}</p> : null}
       </AdminCard>
 
       <AdminCard>

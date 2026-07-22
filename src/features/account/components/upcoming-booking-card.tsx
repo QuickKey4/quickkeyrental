@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Calendar, Clock, MapPin } from "lucide-react";
+import { Calendar, CheckCircle2, Clock, FileText, MapPin, MessageCircle } from "lucide-react";
 
 import { FleetPhoto } from "@/components/fleet-photo";
 import { useFleet } from "@/hooks/use-fleet";
@@ -26,11 +26,7 @@ type UpcomingBookingCardProps = {
   cancellingId?: string | null;
 };
 
-export function UpcomingBookingCard({
-  booking,
-  onCancel,
-  cancellingId,
-}: UpcomingBookingCardProps) {
+export function UpcomingBookingCard({ booking, onCancel, cancellingId }: UpcomingBookingCardProps) {
   const { messages, intlLocale } = useI18n();
   const { fleet } = useFleet();
   const copy = messages.account.dashboard;
@@ -49,7 +45,7 @@ export function UpcomingBookingCard({
 
   return (
     <AccountCard padding="none" className="overflow-hidden">
-      <div className="border-b border-black/[0.05] bg-gradient-to-br from-white to-[#fafafa] px-5 py-4 sm:px-8 sm:py-5">
+      <div className="border-b border-black/[0.05] bg-gradient-to-br from-white to-[#fafafa] px-4 py-4 sm:px-8 sm:py-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
@@ -63,7 +59,7 @@ export function UpcomingBookingCard({
         </div>
       </div>
 
-      <div className="grid gap-6 p-5 sm:p-8 lg:grid-cols-[240px_1fr] lg:items-start">
+      <div className="grid gap-6 p-4 sm:p-8 lg:grid-cols-[240px_1fr] lg:items-start">
         {vehicle ? (
           <FleetPhoto
             src={vehicle.image}
@@ -81,11 +77,13 @@ export function UpcomingBookingCard({
           <h3 className="font-display text-2xl font-bold tracking-tight text-[var(--logo-black)] sm:text-3xl">
             {booking.cars?.name ?? bookingsCopy.unknownVehicle}
           </h3>
-          {vehicle ? (
-            <p className="mt-1 text-sm text-muted-foreground">
-              {vehicle.transmission} · {vehicle.seats} seats · Air conditioning
-            </p>
-          ) : null}
+          <p className="mt-1 text-sm text-muted-foreground">{copy.tripReadyHint}</p>
+
+          <div className="mt-5 grid gap-2 sm:grid-cols-3">
+            <StatusPill icon={CheckCircle2} label={copy.statusItems.booking} />
+            <StatusPill icon={FileText} label={copy.statusItems.documents} />
+            <StatusPill icon={MessageCircle} label={copy.statusItems.support} />
+          </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <TripBlock
@@ -149,11 +147,15 @@ export function UpcomingBookingCard({
               onClick={() => onCancel(booking)}
               className="mt-3 text-sm font-medium text-muted-foreground underline-offset-4 transition-colors hover:text-[var(--logo-red)] hover:underline disabled:opacity-60"
             >
-              {cancellingId === booking.id ? bookingsCopy.actions.cancelling : bookingsCopy.actions.cancel}
+              {cancellingId === booking.id
+                ? bookingsCopy.actions.cancelling
+                : bookingsCopy.actions.cancel}
             </button>
           ) : null}
           {!modifiable && cancellable ? (
-            <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{bookingsCopy.modifyWindowClosed}</p>
+            <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+              {bookingsCopy.modifyWindowClosed}
+            </p>
           ) : null}
         </div>
       </div>
@@ -174,7 +176,9 @@ function TripBlock({
 }) {
   return (
     <div className="rounded-2xl bg-[#f8f8f6] p-4">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+        {label}
+      </p>
       <div className="mt-2 space-y-1.5 text-sm">
         <p className="flex items-center gap-2 font-semibold text-[var(--logo-black)]">
           <Calendar className="size-4 text-[var(--logo-red)]" />
@@ -189,6 +193,21 @@ function TripBlock({
           <span className="line-clamp-2">{location}</span>
         </p>
       </div>
+    </div>
+  );
+}
+
+function StatusPill({
+  icon: Icon,
+  label,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+}) {
+  return (
+    <div className="flex items-center gap-2 rounded-2xl border border-black/[0.06] bg-white px-3 py-2 text-sm font-semibold text-[var(--logo-black)] shadow-[0_2px_10px_rgba(16,16,16,0.04)]">
+      <Icon className="size-4 shrink-0 text-[var(--logo-red)]" />
+      <span className="min-w-0 leading-tight">{label}</span>
     </div>
   );
 }

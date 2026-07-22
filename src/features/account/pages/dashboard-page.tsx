@@ -1,14 +1,11 @@
 import { Link } from "@tanstack/react-router";
-import { CalendarPlus, Car, FileText, User } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { CalendarPlus, Car, CheckCircle2, FileText, MessageCircle, User } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useI18n } from "@/i18n/provider";
 
-import {
-  fetchUserBookings,
-  type BookingWithCar,
-} from "../account-queries";
-import { isPastBooking, isUpcomingBooking } from "../account-utils";
+import { fetchUserBookings, type BookingWithCar } from "../account-queries";
+import { isPastBooking, isUpcomingBooking, sortUpcomingBookings } from "../account-utils";
 import { linkBookingsToUser } from "../auth";
 import { useAuth } from "../auth-provider";
 import { AccountDashboardGrid } from "../account-layout";
@@ -27,7 +24,7 @@ export function DashboardPage() {
   const [bookings, setBookings] = useState<BookingWithCar[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadBookings = async () => {
+  const loadBookings = useCallback(async () => {
     if (!user?.id) return;
     setLoading(true);
     try {
@@ -36,14 +33,14 @@ export function DashboardPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.id]);
 
   useEffect(() => {
     void loadBookings();
-  }, [user?.id]);
+  }, [loadBookings]);
 
   const upcoming = useMemo(
-    () => bookings.find((booking) => isUpcomingBooking(booking)),
+    () => sortUpcomingBookings(bookings.filter((booking) => isUpcomingBooking(booking)))[0],
     [bookings],
   );
 
@@ -52,9 +49,8 @@ export function DashboardPage() {
     [bookings],
   );
 
-  const firstName =
-    profile?.full_name?.split(" ")[0] ?? user?.email?.split("@")[0] ?? copy.guest;
-  const cancelFlow = useCancelBookingFlow(loadBookings);
+  const firstName = profile?.full_name?.split(" ")[0] ?? user?.email?.split("@")[0] ?? copy.guest;
+  const cancelFlow = useCancelBookingFlow(loadBookings, messages.account.bookings.cancelError);
 
   return (
     <AccountDashboardGrid
@@ -72,7 +68,7 @@ export function DashboardPage() {
             <UpcomingBookingCard
               booking={upcoming}
               onCancel={cancelFlow.requestCancel}
-              cancellingId={cancelFlow.loading ? cancelFlow.target?.id ?? null : null}
+              cancellingId={cancelFlow.loading ? (cancelFlow.target?.id ?? null) : null}
             />
           ) : (
             <AccountCard className="border-dashed text-center">
@@ -90,10 +86,35 @@ export function DashboardPage() {
           <section>
             <AccountSectionTitle title={copy.quickActions} />
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <QuickAction to="/book" icon={Car} label={copy.actions.book} />
-              <QuickAction to="/account/bookings" icon={CalendarPlus} label={copy.actions.bookings} />
-              <QuickAction to="/account/profile" icon={User} label={copy.actions.profile} />
+              <QuickAction to="/account/bookings" icon={Car} label={copy.actions.bookings} />
               <QuickAction to="/account/documents" icon={FileText} label={copy.actions.documents} />
+              <QuickAction to="/account/profile" icon={User} label={copy.actions.profile} />
+              <QuickAction
+                to="/account/support"
+                icon={MessageCircle}
+                label={copy.actions.whatsapp}
+              />
+            </div>
+          </section>
+
+          <section>
+            <AccountSectionTitle title={copy.nextStepsTitle} />
+            <div className="grid gap-3 sm:grid-cols-3">
+              <NextStepCard
+                icon={CheckCircle2}
+                title={copy.nextSteps.confirmedTitle}
+                body={copy.nextSteps.confirmedBody}
+              />
+              <NextStepCard
+                icon={FileText}
+                title={copy.nextSteps.documentsTitle}
+                body={copy.nextSteps.documentsBody}
+              />
+              <NextStepCard
+                icon={MessageCircle}
+                title={copy.nextSteps.supportTitle}
+                body={copy.nextSteps.supportBody}
+              />
             </div>
           </section>
 
@@ -130,6 +151,26 @@ export function DashboardPage() {
       }
       sidebar={<AccountSidebarWidgets bookingCount={bookings.length} />}
     />
+  );
+}
+
+function NextStepCard({
+  icon: Icon,
+  title,
+  body,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  body: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-black/[0.06] bg-white p-4 shadow-[0_2px_12px_rgba(16,16,16,0.04)]">
+      <span className="inline-grid size-10 place-items-center rounded-2xl bg-[var(--logo-red)]/10 text-[var(--logo-red)]">
+        <Icon className="size-5" />
+      </span>
+      <h3 className="mt-3 text-sm font-bold text-[var(--logo-black)]">{title}</h3>
+      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{body}</p>
+    </div>
   );
 }
 

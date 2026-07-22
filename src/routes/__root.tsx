@@ -13,7 +13,7 @@ import { lazy, Suspense, type ReactNode, useEffect, useState } from "react";
 import { STICKY_TRUST_OFFSET_CLASS } from "@/components/sticky-trust-strip";
 import { ScrollToTop } from "@/components/scroll-to-top";
 import { ThemeProvider } from "@/components/theme-provider";
-import { defaultLocale, supportedLocales, type SupportedLocale } from "@/i18n/config";
+import { defaultLocale, localeToIntl, supportedLocales, type SupportedLocale } from "@/i18n/config";
 import { detectClientLocale, detectLocale } from "@/i18n/detect-locale";
 import { getMessages } from "@/i18n/messages";
 import { AuthProvider } from "@/features/account/auth-provider";
@@ -28,7 +28,7 @@ const scrollBootstrapScript = `(function(){try{if("scrollRestoration"in history)
 
 const themeBootstrapScript = `(function(){try{document.documentElement.setAttribute("data-theme","${defaultThemeId}");localStorage.setItem("${THEME_STORAGE_KEY}","${defaultThemeId}");}catch(e){}})();`;
 
-const localeBootstrapScript = `(function(){try{var s=${JSON.stringify(supportedLocales)};var langs=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||"en"];for(var i=0;i<langs.length;i++){var l=langs[i].split("-")[0].toLowerCase();if(s.indexOf(l)!==-1){document.documentElement.lang=l;break;}}}catch(e){}})();`;
+const localeBootstrapScript = `(function(){try{localStorage.removeItem("quickkey-locale");var s=${JSON.stringify(supportedLocales)};var langs=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||"en"];for(var i=0;i<langs.length;i++){var v=(langs[i]||"").toLowerCase();var l=v==="pap"||v.indexOf("pap-")===0?"pap":v==="pt"||v.indexOf("pt-")===0?"pt":v.split("-")[0];if(s.indexOf(l)!==-1){document.documentElement.lang=l;break;}}}catch(e){}})();`;
 
 const ContactFab = lazy(() =>
   import("@/components/contact-fab").then((module) => ({ default: module.ContactFab })),
@@ -44,7 +44,8 @@ function DeferredContactFab() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const idle = window.requestIdleCallback ?? ((cb: IdleRequestCallback) => window.setTimeout(cb, 1));
+    const idle =
+      window.requestIdleCallback ?? ((cb: IdleRequestCallback) => window.setTimeout(cb, 1));
     const cancel = window.cancelIdleCallback ?? window.clearTimeout;
     const id = idle(() => setReady(true), { timeout: 2500 });
     return () => cancel(id);
@@ -68,7 +69,8 @@ async function resolveRequestLocale(): Promise<SupportedLocale> {
 }
 
 function NotFoundComponent() {
-  const messages = getMessages(defaultLocale);
+  const locale = detectClientLocale();
+  const messages = getMessages(locale);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -94,7 +96,8 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  const messages = getMessages(defaultLocale);
+  const locale = detectClientLocale();
+  const messages = getMessages(locale);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -150,7 +153,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
         { property: "og:image:alt", content: SITE_METADATA.ogImageAlt },
-        { property: "og:locale", content: "en_US" },
+        { property: "og:locale", content: localeToIntl[locale].replace("-", "_") },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: messages.meta.ogTitle },
         { name: "twitter:description", content: messages.meta.ogDescription },
@@ -170,7 +173,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
           rel: "stylesheet",
           href: "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap",
           media: "print",
-          onload: "this.media='all'",
+          onLoad: "this.media='all'",
         },
         { rel: "stylesheet", href: appCss },
       ],
@@ -183,8 +186,15 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 });
 
 function RootShell({ children }: { children: ReactNode }) {
+  const locale = useRouterState({
+    select: (state) =>
+      (state.matches.find((match) => match.routeId === "__root__")?.context.locale as
+        | SupportedLocale
+        | undefined) ?? defaultLocale,
+  });
+
   return (
-    <html lang={defaultLocale} data-theme={defaultThemeId}>
+    <html lang={locale} data-theme={defaultThemeId}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: scrollBootstrapScript }} />
         <script dangerouslySetInnerHTML={{ __html: localeBootstrapScript }} />
@@ -203,27 +213,29 @@ function RootComponent() {
   const { queryClient, locale } = Route.useRouteContext();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isAdmin = pathname.startsWith("/admin");
+  const isAccount = pathname.startsWith("/account");
+  const showPublicChrome = !isAdmin && !isAccount;
 
   return (
     <QueryClientProvider client={queryClient}>
       <I18nProvider initialLocale={locale}>
         <AuthProvider>
-        <ThemeProvider>
-          <ScrollToTop />
-          <div
-            className={`${isAdmin ? "" : STICKY_TRUST_OFFSET_CLASS} w-full overflow-x-clip`}
-          >
-            <Outlet />
-          </div>
-          {!isAdmin ? (
-            <>
-              <Suspense fallback={null}>
-                <StickyTrustStrip />
-              </Suspense>
-              <DeferredContactFab />
-            </>
-          ) : null}
-        </ThemeProvider>
+          <ThemeProvider>
+            <ScrollToTop />
+            <div
+              className={`${showPublicChrome ? STICKY_TRUST_OFFSET_CLASS : ""} w-full overflow-x-clip`}
+            >
+              <Outlet />
+            </div>
+            {showPublicChrome ? (
+              <>
+                <Suspense fallback={null}>
+                  <StickyTrustStrip />
+                </Suspense>
+                <DeferredContactFab />
+              </>
+            ) : null}
+          </ThemeProvider>
         </AuthProvider>
       </I18nProvider>
     </QueryClientProvider>

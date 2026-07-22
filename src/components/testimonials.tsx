@@ -50,11 +50,13 @@ function ReviewCard({
   review,
   readMore,
   readLess,
+  verifiedReview,
   className,
 }: {
   review: ReviewCopy;
   readMore: string;
   readLess: string;
+  verifiedReview: string;
   className?: string;
 }) {
   const [expanded, setExpanded] = useState(false);
@@ -98,7 +100,7 @@ function ReviewCard({
         </div>
         <span
           className="inline-grid size-5 place-items-center rounded-full bg-[#4285F4]"
-          aria-label="Verified review"
+          aria-label={verifiedReview}
         >
           <Check className="size-3 text-white" strokeWidth={3} />
         </span>
@@ -132,7 +134,10 @@ export function Testimonials() {
   const reviews = reviewKeys.map((key) => t.reviews[key]);
 
   return (
-    <section id="reviews" className="relative scroll-mt-28 bg-[#f7f7f7] px-5 py-14 md:px-8 md:py-24">
+    <section
+      id="reviews"
+      className="relative scroll-mt-28 bg-[#f7f7f7] px-5 py-14 md:px-8 md:py-24"
+    >
       <div className="mx-auto max-w-7xl">
         <div className="mb-10 flex flex-wrap items-end justify-between gap-6 md:mb-16">
           <div>
@@ -174,7 +179,12 @@ export function Testimonials() {
             <CarouselContent className="-ml-4">
               {reviews.map((review) => (
                 <CarouselItem key={review.name} className="basis-[88%] pl-4 sm:basis-[75%]">
-                  <ReviewCard review={review} readMore={t.readMore} readLess={t.readLess} />
+                  <ReviewCard
+                    review={review}
+                    readMore={t.readMore}
+                    readLess={t.readLess}
+                    verifiedReview={t.verifiedReview}
+                  />
                 </CarouselItem>
               ))}
             </CarouselContent>
@@ -198,6 +208,7 @@ export function Testimonials() {
               review={review}
               readMore={t.readMore}
               readLess={t.readLess}
+              verifiedReview={t.verifiedReview}
             />
           ))}
         </div>

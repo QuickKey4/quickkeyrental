@@ -1,17 +1,15 @@
 import { Link } from "@tanstack/react-router";
+import type React from "react";
 import { ArrowRight, Calendar, Car, ChevronDown } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
+import { PremiumDateCalendar } from "@/components/premium-date-calendar";
 import { useI18n } from "@/i18n/provider";
 import {
   addDays,
   getDefaultPickupDate,
   getDefaultReturnDate,
-  normalizePickupDate,
-  normalizeReturnDate,
-  openDatePicker,
   formatDisplayDate,
-  parseDateKey,
   startOfToday,
   toDateKey,
 } from "@/lib/booking";
@@ -35,11 +33,15 @@ export function BookingWidget({ variant = "brand" }: BookingWidgetProps) {
   const { messages, intlLocale } = useI18n();
   const m = messages.bookingWidget;
   const today = useMemo(() => startOfToday(), []);
+  const vehicleSelectRef = useRef<HTMLSelectElement>(null);
 
   const [deliveryType, setDeliveryType] = useState<DeliveryType>("hotel");
   const [pickupDate, setPickupDate] = useState(() => getDefaultPickupDate(today));
-  const [returnDate, setReturnDate] = useState(() => getDefaultReturnDate(getDefaultPickupDate(today)));
+  const [returnDate, setReturnDate] = useState(() =>
+    getDefaultReturnDate(getDefaultPickupDate(today)),
+  );
   const [vehicleType, setVehicleType] = useState("all");
+  const [openDateField, setOpenDateField] = useState<"pickup" | "return" | null>(null);
 
   const carSearch =
     vehicleType === "compact" ? "agya-1" : vehicleType === "sedan" ? "yaris-1" : undefined;
@@ -49,6 +51,13 @@ export function BookingWidget({ variant = "brand" }: BookingWidgetProps) {
     if (returnDate <= date) {
       setReturnDate(addDays(date, 1));
     }
+    setOpenDateField("return");
+  };
+
+  const handleReturnDateChange = (date: Date) => {
+    setReturnDate(date);
+    setOpenDateField(null);
+    window.setTimeout(() => vehicleSelectRef.current?.focus(), 120);
   };
 
   const isBrand = variant === "brand" || variant === "default";
@@ -57,7 +66,7 @@ export function BookingWidget({ variant = "brand" }: BookingWidgetProps) {
 
   return (
     <form
-      className="relative z-10 flex w-full flex-col overflow-hidden rounded-lg border border-black/[0.08] bg-white shadow-[0_16px_48px_rgb(0_0_0_0.12)] lg:flex-row lg:items-stretch"
+      className="relative z-10 flex w-full flex-col overflow-visible rounded-lg border border-black/[0.08] bg-white shadow-[0_16px_48px_rgb(0_0_0_0.12)] lg:flex-row lg:items-stretch"
       onSubmit={(event) => event.preventDefault()}
     >
       <label className={cn(brandFieldClass, "lg:min-w-[15rem] lg:flex-[1.15]")}>
@@ -65,7 +74,10 @@ export function BookingWidget({ variant = "brand" }: BookingWidgetProps) {
         <span className="relative block">
           <select
             value={deliveryType}
-            onChange={(event) => setDeliveryType(event.target.value as DeliveryType)}
+            onChange={(event) => {
+              setDeliveryType(event.target.value as DeliveryType);
+              window.setTimeout(() => setOpenDateField("pickup"), 120);
+            }}
             aria-label={m.deliveryType}
             className={cn(brandValueClass, "pr-7")}
           >
@@ -78,57 +90,40 @@ export function BookingWidget({ variant = "brand" }: BookingWidgetProps) {
         </span>
       </label>
 
-      <label className={brandFieldClass}>
-        <span className={brandLabelClass}>
-          <Calendar className="size-3.5 text-[var(--logo-red)]" strokeWidth={2.25} />
-          {m.pickupDate}
-        </span>
-        <span className="relative block min-h-[1.35rem]">
-          <span className="pointer-events-none absolute inset-0 flex items-center pr-7 text-sm font-semibold text-[var(--logo-black)] sm:text-[15px]">
-            {formatDisplayDate(pickupDate, intlLocale)}
-          </span>
-          <input
-            type="date"
-            value={toDateKey(pickupDate)}
-            min={toDateKey(today)}
-            onChange={(event) => {
-              const next = parseDateKey(event.target.value);
-              if (!next) return;
-              handlePickupDateChange(next);
-            }}
-            onClick={(event) => openDatePicker(event.currentTarget)}
-            aria-label={m.pickupDate}
-            className="absolute inset-0 h-full w-full cursor-pointer opacity-0 [color-scheme:light]"
+      <WidgetDateField
+        label={m.pickupDate}
+        value={formatDisplayDate(pickupDate, intlLocale)}
+        open={openDateField === "pickup"}
+        onOpenChange={(open) => setOpenDateField(open ? "pickup" : null)}
+        calendar={
+          <PremiumDateCalendar
+            label={m.pickupDate}
+            selected={pickupDate}
+            minDate={today}
+            onSelect={handlePickupDateChange}
+            compact
+            showIntro={false}
           />
-          <ChevronDown className="pointer-events-none absolute right-0 top-1/2 size-4 -translate-y-1/2 text-black/35" />
-        </span>
-      </label>
+        }
+      />
 
-      <label className={brandFieldClass}>
-        <span className={brandLabelClass}>
-          <Calendar className="size-3.5 text-[var(--logo-red)]" strokeWidth={2.25} />
-          {m.returnDate}
-        </span>
-        <span className="relative block min-h-[1.35rem]">
-          <span className="pointer-events-none absolute inset-0 flex items-center pr-7 text-sm font-semibold text-[var(--logo-black)] sm:text-[15px]">
-            {formatDisplayDate(returnDate, intlLocale)}
-          </span>
-          <input
-            type="date"
-            value={toDateKey(returnDate)}
-            min={toDateKey(addDays(pickupDate, 1))}
-            onChange={(event) => {
-              const next = parseDateKey(event.target.value);
-              if (!next) return;
-              setReturnDate(next);
-            }}
-            onClick={(event) => openDatePicker(event.currentTarget)}
-            aria-label={m.returnDate}
-            className="absolute inset-0 h-full w-full cursor-pointer opacity-0 [color-scheme:light]"
+      <WidgetDateField
+        label={m.returnDate}
+        value={formatDisplayDate(returnDate, intlLocale)}
+        open={openDateField === "return"}
+        onOpenChange={(open) => setOpenDateField(open ? "return" : null)}
+        calendar={
+          <PremiumDateCalendar
+            label={m.returnDate}
+            selected={returnDate}
+            defaultMonth={returnDate}
+            minDate={addDays(pickupDate, 1)}
+            onSelect={handleReturnDateChange}
+            compact
+            showIntro={false}
           />
-          <ChevronDown className="pointer-events-none absolute right-0 top-1/2 size-4 -translate-y-1/2 text-black/35" />
-        </span>
-      </label>
+        }
+      />
 
       <label className={cn(brandFieldClass, "border-b-0 lg:min-w-[11rem]")}>
         <span className={brandLabelClass}>
@@ -137,6 +132,7 @@ export function BookingWidget({ variant = "brand" }: BookingWidgetProps) {
         </span>
         <span className="relative block">
           <select
+            ref={vehicleSelectRef}
             value={vehicleType}
             onChange={(event) => setVehicleType(event.target.value)}
             aria-label={m.vehicleType}
@@ -161,8 +157,48 @@ export function BookingWidget({ variant = "brand" }: BookingWidgetProps) {
         className="group inline-flex min-h-[3.25rem] items-center justify-center gap-2 bg-[var(--logo-red)] px-6 py-3.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-[#c92228] sm:min-h-[3.75rem] sm:text-xs lg:min-h-0 lg:min-w-[12.75rem] lg:shrink-0 lg:px-8"
       >
         {m.searchVehicles}
-        <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" strokeWidth={2.5} />
+        <ArrowRight
+          className="size-4 transition-transform group-hover:translate-x-0.5"
+          strokeWidth={2.5}
+        />
       </Link>
     </form>
+  );
+}
+
+function WidgetDateField({
+  label,
+  value,
+  open,
+  calendar,
+  onOpenChange,
+}: {
+  label: string;
+  value: string;
+  open: boolean;
+  calendar: React.ReactNode;
+  onOpenChange: (open: boolean) => void;
+}) {
+  return (
+    <div className={cn(brandFieldClass, "overflow-visible")}>
+      <span className={brandLabelClass}>
+        <Calendar className="size-3.5 text-[var(--logo-red)]" strokeWidth={2.25} />
+        {label}
+      </span>
+      <button
+        type="button"
+        aria-label={label}
+        onClick={() => onOpenChange(!open)}
+        className="group relative flex min-h-[1.35rem] w-full min-w-0 items-center justify-between gap-3 pr-7 text-left text-sm font-semibold text-[var(--logo-black)] outline-none transition-colors hover:text-[var(--logo-red)] focus-visible:text-[var(--logo-red)] sm:text-[15px]"
+      >
+        <span>{value}</span>
+        <ChevronDown className="pointer-events-none absolute right-0 top-1/2 size-4 -translate-y-1/2 text-black/35 transition group-hover:text-[var(--logo-red)]" />
+      </button>
+      {open ? (
+        <div className="absolute bottom-[calc(100%-0.5rem)] left-3 right-3 z-50 w-[min(21rem,calc(100vw-2rem))] rounded-[1.35rem] border border-border/80 bg-white p-3 shadow-[0_18px_48px_rgba(16,16,16,0.16)] lg:left-4 lg:right-auto">
+          {calendar}
+        </div>
+      ) : null}
+    </div>
   );
 }

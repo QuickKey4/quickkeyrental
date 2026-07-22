@@ -31,6 +31,7 @@ export function AdminFleetPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [plateDraft, setPlateDraft] = useState("");
   const [mileageDraft, setMileageDraft] = useState("");
+  const [error, setError] = useState("");
 
   const load = () => {
     if (!adminSecret) return;
@@ -43,8 +44,23 @@ export function AdminFleetPage() {
 
   const updateStatus = async (carId: string, fleetStatus: FleetStatus) => {
     if (!adminSecret) return;
-    await updateAdminFleetVehicle({ data: { adminSecret, carId, fleetStatus } });
-    load();
+    const car = cars.find((item) => item.id === carId);
+    const message =
+      fleetStatus === "maintenance"
+        ? t.fleet.confirmMaintenance
+        : fleetStatus === "disabled"
+          ? t.fleet.confirmDisable
+          : t.fleet.confirmAvailable;
+
+    if (!window.confirm(message.replace("{vehicle}", car?.name ?? t.vehicle))) return;
+
+    setError("");
+    try {
+      await updateAdminFleetVehicle({ data: { adminSecret, carId, fleetStatus } });
+      load();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : t.fleet.statusUpdateError);
+    }
   };
 
   const startEdit = (car: FleetCar) => {
@@ -73,6 +89,12 @@ export function AdminFleetPage() {
   return (
     <div className="space-y-6">
       <AdminPageHeader title={t.fleet.title} subtitle={t.fleet.subtitle} />
+
+      {error ? (
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+          {error}
+        </div>
+      ) : null}
 
       <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {cars.map((car) => {
@@ -152,7 +174,9 @@ export function AdminFleetPage() {
                   <dl className="mt-3 space-y-1 text-sm text-muted-foreground">
                     <div className="flex justify-between">
                       <span>{t.fleet.plate}</span>
-                      <span className="font-medium text-foreground">{car.license_plate ?? "—"}</span>
+                      <span className="font-medium text-foreground">
+                        {car.license_plate ?? "—"}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span>{t.fleet.year}</span>
@@ -179,10 +203,16 @@ export function AdminFleetPage() {
                   >
                     {t.fleet.maintenance}
                   </AdminButton>
-                  <AdminButton variant="ghost" onClick={() => void updateStatus(car.id, "disabled")}>
+                  <AdminButton
+                    variant="ghost"
+                    onClick={() => void updateStatus(car.id, "disabled")}
+                  >
                     {t.fleet.disable}
                   </AdminButton>
-                  <AdminButton variant="primary" onClick={() => void updateStatus(car.id, "available")}>
+                  <AdminButton
+                    variant="primary"
+                    onClick={() => void updateStatus(car.id, "available")}
+                  >
                     {t.fleet.markAvailable}
                   </AdminButton>
                 </div>

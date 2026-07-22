@@ -15,9 +15,9 @@ export function AccountCard({
   return (
     <div
       className={cn(
-        "account-inner-card overflow-hidden rounded-3xl border border-black/[0.06] bg-[#fafafa] shadow-[0_2px_12px_rgba(16,16,16,0.04)]",
-        padding === "lg" && "p-6 sm:p-8",
-        padding === "default" && "p-5 sm:p-6",
+        "account-inner-card min-w-0 overflow-hidden rounded-2xl border border-black/[0.06] bg-[#fafafa] shadow-[0_2px_12px_rgba(16,16,16,0.04)] sm:rounded-3xl",
+        padding === "lg" && "p-5 sm:p-8",
+        padding === "default" && "p-4 sm:p-6",
         padding === "none" && "p-0",
         className,
       )}
@@ -46,21 +46,19 @@ export function AccountPageHeader({
       <h1 className="font-display text-2xl font-bold tracking-tight text-[var(--logo-black)] sm:text-3xl">
         {title}
       </h1>
-      {subtitle ? <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">{subtitle}</p> : null}
+      {subtitle ? (
+        <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">{subtitle}</p>
+      ) : null}
     </header>
   );
 }
 
-export function AccountSectionTitle({
-  title,
-  action,
-}: {
-  title: string;
-  action?: ReactNode;
-}) {
+export function AccountSectionTitle({ title, action }: { title: string; action?: ReactNode }) {
   return (
     <div className="mb-4 flex items-end justify-between gap-3">
-      <h2 className="font-display text-lg font-bold text-[var(--logo-black)] sm:text-xl">{title}</h2>
+      <h2 className="font-display text-lg font-bold text-[var(--logo-black)] sm:text-xl">
+        {title}
+      </h2>
       {action}
     </div>
   );
@@ -83,7 +81,9 @@ export function AccountDetailRow({
         </span>
       ) : null}
       <div className="min-w-0 flex-1">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+          {label}
+        </p>
         <div className="mt-1 text-sm font-medium text-[var(--logo-black)]">{value}</div>
       </div>
     </div>

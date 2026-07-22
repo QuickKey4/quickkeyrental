@@ -42,6 +42,7 @@ export function getServerConfig() {
     sentooMerchantId: process.env.SENTOO_MERCHANT_ID,
     sentooMerchantSecret: process.env.SENTOO_MERCHANT_SECRET,
     sentooCurrency: process.env.SENTOO_CURRENCY ?? "USD",
+    maintenanceSecret: process.env.MAINTENANCE_SECRET,
     siteUrl: resolveSiteUrl(),
   };
 }

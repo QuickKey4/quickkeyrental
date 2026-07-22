@@ -3,6 +3,7 @@ import type { VehicleKey } from "@/lib/fleet";
 
 import { rentalPeriodsOverlap } from "./bookingAvailability";
 import {
+  ALL_RISK_INSURANCE_DAILY_RATE,
   SECURITY_DEPOSIT_AMOUNT,
   type DbCar,
   type InsuranceOption,
@@ -26,16 +27,19 @@ export function rentalDays(pickupDate: string, returnDate: string): number {
   return Math.max(1, diff);
 }
 
-export function dailyInsuranceRate(fleetKey: VehicleKey | null): number {
-  if (fleetKey === "yaris-1") return 13;
-  return 10;
+export function dailyInsuranceRate(_fleetKey: VehicleKey | null): number {
+  return ALL_RISK_INSURANCE_DAILY_RATE;
 }
 
 export function calculateSubtotal(dailyPrice: number, pickupDate: string, returnDate: string) {
   return dailyPrice * rentalDays(pickupDate, returnDate);
 }
 
-export function calculateExtrasTotal(extras: SelectedExtra[], pickupDate: string, returnDate: string) {
+export function calculateExtrasTotal(
+  extras: SelectedExtra[],
+  pickupDate: string,
+  returnDate: string,
+) {
   const days = rentalDays(pickupDate, returnDate);
   return extras.reduce((sum, extra) => sum + extra.pricePerDay * extra.quantity * days, 0);
 }
@@ -66,7 +70,12 @@ export function calculateBookingTotal(
   const days = rentalDays(pickupDate, returnDate);
   const subtotal = calculateSubtotal(dailyPrice, pickupDate, returnDate);
   const extrasTotal = calculateExtrasTotal(extras, pickupDate, returnDate);
-  const insuranceCharge = calculateInsuranceCharge(insuranceOption, fleetKey, pickupDate, returnDate);
+  const insuranceCharge = calculateInsuranceCharge(
+    insuranceOption,
+    fleetKey,
+    pickupDate,
+    returnDate,
+  );
   const securityDeposit = calculateSecurityDeposit(insuranceOption);
   const total = subtotal + extrasTotal + insuranceCharge;
   return {

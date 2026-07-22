@@ -62,7 +62,7 @@ export function ProfilePage() {
     setChangingEmail(false);
 
     if (!result.ok) {
-      setEmailError(result.error);
+      setEmailError(copy.emailChangeError);
       return;
     }
 
@@ -86,8 +86,8 @@ export function ProfilePage() {
       });
       await refreshProfile();
       setSaved(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : copy.saveError);
+    } catch {
+      setError(copy.saveError);
     } finally {
       setSaving(false);
     }
@@ -118,7 +118,9 @@ export function ProfilePage() {
             {initials}
           </span>
           <div className="min-w-0">
-            <h2 className="font-display text-lg font-bold text-[var(--logo-black)]">{displayName}</h2>
+            <h2 className="font-display text-lg font-bold text-[var(--logo-black)]">
+              {displayName}
+            </h2>
             <p className="truncate text-sm text-muted-foreground">{user?.email}</p>
             {phone ? <p className="truncate text-sm text-muted-foreground">{phone}</p> : null}
           </div>
@@ -204,7 +206,9 @@ export function ProfilePage() {
 
         {error ? <p className="text-sm text-destructive">{error}</p> : null}
         {saved ? (
-          <p className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{copy.saved}</p>
+          <p className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+            {copy.saved}
+          </p>
         ) : null}
 
         <AccountPrimaryButton type="submit" disabled={saving} className="w-full sm:w-auto">
@@ -236,7 +240,7 @@ function ProfileField({
         {label}
       </span>
       <span
-        className={`flex h-11 items-center gap-3 rounded-xl border border-black/[0.08] bg-[#f8f8f6] px-4 transition-colors focus-within:border-[var(--logo-red)] focus-within:bg-white ${disabled ? "opacity-60" : ""}`}
+        className={`flex h-12 min-w-0 items-center gap-3 rounded-xl border border-black/[0.08] bg-[#f8f8f6] px-4 transition-colors focus-within:border-[var(--logo-red)] focus-within:bg-white ${disabled ? "opacity-60" : ""}`}
       >
         <span className="text-[var(--logo-red)]">{icon}</span>
         <input
@@ -244,7 +248,7 @@ function ProfileField({
           value={value}
           disabled={disabled}
           onChange={(event) => onChange(event.target.value)}
-          className="flex-1 bg-transparent text-sm outline-none disabled:cursor-not-allowed"
+          className="min-w-0 flex-1 bg-transparent text-base outline-none disabled:cursor-not-allowed"
         />
       </span>
     </label>
@@ -267,7 +271,9 @@ function PreferenceToggle({
       <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-[var(--logo-red)]/8 text-[var(--logo-red)]">
         {icon}
       </span>
-      <span className="min-w-0 flex-1 text-sm leading-relaxed text-[var(--logo-black)]">{label}</span>
+      <span className="min-w-0 flex-1 text-base leading-relaxed text-[var(--logo-black)] sm:text-sm">
+        {label}
+      </span>
       <input
         type="checkbox"
         checked={checked}

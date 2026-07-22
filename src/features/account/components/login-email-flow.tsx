@@ -43,8 +43,8 @@ export function LoginEmailFlow({ redirectPath = "/account" }: LoginEmailFlowProp
       } else {
         setStep("not_found");
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : copy.lookupError);
+    } catch {
+      setError(copy.lookupError);
     } finally {
       setLoading(false);
     }
@@ -58,7 +58,7 @@ export function LoginEmailFlow({ redirectPath = "/account" }: LoginEmailFlowProp
     setLoading(false);
 
     if (!result.ok) {
-      setError(result.error);
+      setError(copy.sendError);
       return;
     }
 
@@ -70,9 +70,11 @@ export function LoginEmailFlow({ redirectPath = "/account" }: LoginEmailFlowProp
     const sentBody = linkedOnCreate ? copy.sentBodyLinked : copy.sentBody;
 
     return (
-      <div className="rounded-xl border border-primary/25 bg-primary/5 p-5 text-left">
+      <div className="rounded-xl border border-primary/25 bg-primary/5 p-4 text-left sm:p-5">
         <p className="font-semibold text-foreground">{copy.sentTitle}</p>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{sentBody}</p>
+        <p className="mt-2 text-base leading-relaxed text-muted-foreground sm:text-sm">
+          {sentBody}
+        </p>
       </div>
     );
   }
@@ -80,7 +82,7 @@ export function LoginEmailFlow({ redirectPath = "/account" }: LoginEmailFlowProp
   if (step === "existing_account") {
     return (
       <div className="space-y-4">
-        <p className="rounded-xl border border-border bg-background-secondary/50 p-4 text-sm leading-relaxed text-muted-foreground">
+        <p className="rounded-xl border border-border bg-background-secondary/50 p-4 text-base leading-relaxed text-muted-foreground sm:text-sm">
           {bookingCount > 0 ? copy.existingWithBookings : copy.existingAccount}
         </p>
         {error ? <p className="text-sm text-destructive">{error}</p> : null}
@@ -108,8 +110,10 @@ export function LoginEmailFlow({ redirectPath = "/account" }: LoginEmailFlowProp
     return (
       <div className="space-y-4">
         <div className="rounded-xl border border-[var(--logo-red)]/20 bg-[var(--logo-red)]/5 p-4">
-          <p className="text-sm font-semibold text-[var(--logo-black)]">{copy.bookingsFoundTitle}</p>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+          <p className="text-base font-semibold text-[var(--logo-black)] sm:text-sm">
+            {copy.bookingsFoundTitle}
+          </p>
+          <p className="mt-2 text-base leading-relaxed text-muted-foreground sm:text-sm">
             {copy.bookingsFoundBody.replace("{count}", String(bookingCount))}
           </p>
         </div>
@@ -139,8 +143,10 @@ export function LoginEmailFlow({ redirectPath = "/account" }: LoginEmailFlowProp
     return (
       <div className="space-y-4">
         <div className="rounded-xl border border-dashed border-border p-5 text-center">
-          <p className="text-sm font-semibold text-[var(--logo-black)]">{copy.noBookingTitle}</p>
-          <p className="mt-2 text-sm text-muted-foreground">{copy.noBookingBody}</p>
+          <p className="text-base font-semibold text-[var(--logo-black)] sm:text-sm">
+            {copy.noBookingTitle}
+          </p>
+          <p className="mt-2 text-base text-muted-foreground sm:text-sm">{copy.noBookingBody}</p>
         </div>
         <Link
           to="/book"
@@ -165,7 +171,7 @@ export function LoginEmailFlow({ redirectPath = "/account" }: LoginEmailFlowProp
         <span className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
           {copy.email}
         </span>
-        <span className="flex h-12 items-center gap-3 rounded-xl border border-border bg-background-secondary px-4 focus-within:border-[var(--logo-red)]">
+        <span className="flex h-12 min-w-0 items-center gap-3 rounded-xl border border-border bg-background-secondary px-4 focus-within:border-[var(--logo-red)]">
           <Mail className="size-4 shrink-0 text-[var(--logo-red)]" />
           <input
             type="email"
@@ -173,7 +179,7 @@ export function LoginEmailFlow({ redirectPath = "/account" }: LoginEmailFlowProp
             onChange={(event) => setEmail(event.target.value)}
             autoComplete="email"
             required
-            className="flex-1 bg-transparent text-sm outline-none"
+            className="min-w-0 flex-1 bg-transparent text-base outline-none"
           />
         </span>
       </label>

@@ -1,15 +1,12 @@
 import { Loader2, Pencil, Plus, Trash2, User } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useI18n } from "@/i18n/provider";
 import type { Driver } from "@/features/account/account-queries";
 
-import {
-  createDriver,
-  deleteDriver,
-  fetchDrivers,
-  updateDriver,
-} from "../account-queries";
+import { AccountContent } from "../account-layout";
+import { createDriver, deleteDriver, fetchDrivers, updateDriver } from "../account-queries";
+import { formatAccountDate, maskLicenseNumber } from "../account-utils";
 import { useAuth } from "../auth-provider";
 
 type DriverForm = {
@@ -25,7 +22,7 @@ const emptyForm: DriverForm = {
 };
 
 export function DriversPage() {
-  const { messages } = useI18n();
+  const { messages, intlLocale } = useI18n();
   const { user } = useAuth();
   const copy = messages.account.drivers;
 
@@ -37,7 +34,7 @@ export function DriversPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  const loadDrivers = async () => {
+  const loadDrivers = useCallback(async () => {
     if (!user?.id) return;
     setLoading(true);
     try {
@@ -45,11 +42,11 @@ export function DriversPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.id]);
 
   useEffect(() => {
     void loadDrivers();
-  }, [user?.id]);
+  }, [loadDrivers]);
 
   const resetForm = () => {
     setForm(emptyForm);
@@ -91,8 +88,8 @@ export function DriversPage() {
       }
       await loadDrivers();
       resetForm();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : copy.saveError);
+    } catch {
+      setError(copy.saveError);
     } finally {
       setSaving(false);
     }
@@ -104,13 +101,13 @@ export function DriversPage() {
     try {
       await deleteDriver(driverId, user.id);
       await loadDrivers();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : copy.saveError);
+    } catch {
+      setError(copy.saveError);
     }
   };
 
   return (
-    <div className="space-y-6">
+    <AccountContent className="space-y-6">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="font-display text-3xl font-bold uppercase text-[var(--logo-black)]">
@@ -137,7 +134,7 @@ export function DriversPage() {
       {showForm ? (
         <form
           onSubmit={(event) => void handleSubmit(event)}
-          className="max-w-xl space-y-4 rounded-2xl border border-border bg-white p-6"
+          className="w-full space-y-4 rounded-2xl border border-border bg-white p-4 sm:max-w-xl sm:p-6"
         >
           <h2 className="font-semibold text-[var(--logo-black)]">
             {editingId ? copy.editTitle : copy.addTitle}
@@ -163,11 +160,11 @@ export function DriversPage() {
 
           {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
-          <div className="flex gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row">
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex h-11 items-center gap-2 rounded-[4px] bg-[var(--logo-red)] px-5 text-xs font-bold uppercase tracking-[0.1em] text-white disabled:opacity-60"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-[4px] bg-[var(--logo-red)] px-5 text-xs font-bold uppercase tracking-[0.1em] text-white disabled:opacity-60"
             >
               {saving ? <Loader2 className="size-4 animate-spin" /> : null}
               {copy.save}
@@ -194,17 +191,23 @@ export function DriversPage() {
           {drivers.map((driver) => (
             <li
               key={driver.id}
-              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-white p-4"
+              className="flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-white p-4"
             >
-              <div className="flex items-start gap-3">
+              <div className="flex min-w-0 items-start gap-3">
                 <span className="inline-grid size-10 place-items-center rounded-xl bg-[var(--logo-red)]/10 text-[var(--logo-red)]">
                   <User className="size-5" />
                 </span>
-                <div>
-                  <p className="font-semibold text-[var(--logo-black)]">{driver.full_name}</p>
-                  <p className="text-sm text-muted-foreground">{driver.license_number}</p>
+                <div className="min-w-0">
+                  <p className="break-words font-semibold text-[var(--logo-black)]">
+                    {driver.full_name}
+                  </p>
+                  <p className="break-words text-sm text-muted-foreground">
+                    {maskLicenseNumber(driver.license_number)}
+                  </p>
                   {driver.date_of_birth ? (
-                    <p className="text-xs text-muted-foreground">{driver.date_of_birth}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {formatAccountDate(driver.date_of_birth, intlLocale)}
+                    </p>
                   ) : null}
                 </div>
               </div>
@@ -230,7 +233,7 @@ export function DriversPage() {
           ))}
         </ul>
       )}
-    </div>
+    </AccountContent>
   );
 }
 
@@ -253,7 +256,7 @@ function DriverInput({
         {...props}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="h-12 rounded-xl border border-border bg-background-secondary px-4 text-sm outline-none focus:border-[var(--logo-red)]"
+        className="h-12 rounded-xl border border-border bg-background-secondary px-4 text-base outline-none focus:border-[var(--logo-red)] sm:text-sm"
       />
     </label>
   );

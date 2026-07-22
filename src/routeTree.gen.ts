@@ -18,6 +18,7 @@ import { Route as AccountIndexRouteImport } from './routes/account/index'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 import { Route as AdminSupportRouteImport } from './routes/admin/support'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
+import { Route as AdminRewardsRouteImport } from './routes/admin/rewards'
 import { Route as AdminPaymentsRouteImport } from './routes/admin/payments'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminFleetRouteImport } from './routes/admin/fleet'
@@ -28,6 +29,7 @@ import { Route as AdminCalendarRouteImport } from './routes/admin/calendar'
 import { Route as AdminBookingsRouteImport } from './routes/admin/bookings'
 import { Route as AccountSupportRouteImport } from './routes/account/support'
 import { Route as AccountSettingsRouteImport } from './routes/account/settings'
+import { Route as AccountRewardsRouteImport } from './routes/account/rewards'
 import { Route as AccountResetPasswordRouteImport } from './routes/account/reset-password'
 import { Route as AccountRegisterRouteImport } from './routes/account/register'
 import { Route as AccountProfileRouteImport } from './routes/account/profile'
@@ -88,6 +90,11 @@ const AdminSettingsRoute = AdminSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const AdminRewardsRoute = AdminRewardsRouteImport.update({
+  id: '/rewards',
+  path: '/rewards',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const AdminPaymentsRoute = AdminPaymentsRouteImport.update({
   id: '/payments',
   path: '/payments',
@@ -136,6 +143,11 @@ const AccountSupportRoute = AccountSupportRouteImport.update({
 const AccountSettingsRoute = AccountSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => AccountRouteRoute,
+} as any)
+const AccountRewardsRoute = AccountRewardsRouteImport.update({
+  id: '/rewards',
+  path: '/rewards',
   getParentRoute: () => AccountRouteRoute,
 } as any)
 const AccountResetPasswordRoute = AccountResetPasswordRouteImport.update({
@@ -223,6 +235,7 @@ export interface FileRoutesByFullPath {
   '/account/profile': typeof AccountProfileRoute
   '/account/register': typeof AccountRegisterRoute
   '/account/reset-password': typeof AccountResetPasswordRoute
+  '/account/rewards': typeof AccountRewardsRoute
   '/account/settings': typeof AccountSettingsRoute
   '/account/support': typeof AccountSupportRoute
   '/admin/bookings': typeof AdminBookingsRouteWithChildren
@@ -233,6 +246,7 @@ export interface FileRoutesByFullPath {
   '/admin/fleet': typeof AdminFleetRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/payments': typeof AdminPaymentsRoute
+  '/admin/rewards': typeof AdminRewardsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/support': typeof AdminSupportRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -255,6 +269,7 @@ export interface FileRoutesByTo {
   '/account/profile': typeof AccountProfileRoute
   '/account/register': typeof AccountRegisterRoute
   '/account/reset-password': typeof AccountResetPasswordRoute
+  '/account/rewards': typeof AccountRewardsRoute
   '/account/settings': typeof AccountSettingsRoute
   '/account/support': typeof AccountSupportRoute
   '/admin/calendar': typeof AdminCalendarRoute
@@ -263,6 +278,7 @@ export interface FileRoutesByTo {
   '/admin/fleet': typeof AdminFleetRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/payments': typeof AdminPaymentsRoute
+  '/admin/rewards': typeof AdminRewardsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/support': typeof AdminSupportRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -289,6 +305,7 @@ export interface FileRoutesById {
   '/account/profile': typeof AccountProfileRoute
   '/account/register': typeof AccountRegisterRoute
   '/account/reset-password': typeof AccountResetPasswordRoute
+  '/account/rewards': typeof AccountRewardsRoute
   '/account/settings': typeof AccountSettingsRoute
   '/account/support': typeof AccountSupportRoute
   '/admin/bookings': typeof AdminBookingsRouteWithChildren
@@ -299,6 +316,7 @@ export interface FileRoutesById {
   '/admin/fleet': typeof AdminFleetRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/payments': typeof AdminPaymentsRoute
+  '/admin/rewards': typeof AdminRewardsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/support': typeof AdminSupportRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -326,6 +344,7 @@ export interface FileRouteTypes {
     | '/account/profile'
     | '/account/register'
     | '/account/reset-password'
+    | '/account/rewards'
     | '/account/settings'
     | '/account/support'
     | '/admin/bookings'
@@ -336,6 +355,7 @@ export interface FileRouteTypes {
     | '/admin/fleet'
     | '/admin/login'
     | '/admin/payments'
+    | '/admin/rewards'
     | '/admin/settings'
     | '/admin/support'
     | '/auth/callback'
@@ -358,6 +378,7 @@ export interface FileRouteTypes {
     | '/account/profile'
     | '/account/register'
     | '/account/reset-password'
+    | '/account/rewards'
     | '/account/settings'
     | '/account/support'
     | '/admin/calendar'
@@ -366,6 +387,7 @@ export interface FileRouteTypes {
     | '/admin/fleet'
     | '/admin/login'
     | '/admin/payments'
+    | '/admin/rewards'
     | '/admin/settings'
     | '/admin/support'
     | '/auth/callback'
@@ -391,6 +413,7 @@ export interface FileRouteTypes {
     | '/account/profile'
     | '/account/register'
     | '/account/reset-password'
+    | '/account/rewards'
     | '/account/settings'
     | '/account/support'
     | '/admin/bookings'
@@ -401,6 +424,7 @@ export interface FileRouteTypes {
     | '/admin/fleet'
     | '/admin/login'
     | '/admin/payments'
+    | '/admin/rewards'
     | '/admin/settings'
     | '/admin/support'
     | '/auth/callback'
@@ -487,6 +511,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSettingsRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/rewards': {
+      id: '/admin/rewards'
+      path: '/rewards'
+      fullPath: '/admin/rewards'
+      preLoaderRoute: typeof AdminRewardsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/payments': {
       id: '/admin/payments'
       path: '/payments'
@@ -555,6 +586,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/account/settings'
       preLoaderRoute: typeof AccountSettingsRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/rewards': {
+      id: '/account/rewards'
+      path: '/rewards'
+      fullPath: '/account/rewards'
+      preLoaderRoute: typeof AccountRewardsRouteImport
       parentRoute: typeof AccountRouteRoute
     }
     '/account/reset-password': {
@@ -681,6 +719,7 @@ interface AccountRouteRouteChildren {
   AccountProfileRoute: typeof AccountProfileRoute
   AccountRegisterRoute: typeof AccountRegisterRoute
   AccountResetPasswordRoute: typeof AccountResetPasswordRoute
+  AccountRewardsRoute: typeof AccountRewardsRoute
   AccountSettingsRoute: typeof AccountSettingsRoute
   AccountSupportRoute: typeof AccountSupportRoute
   AccountIndexRoute: typeof AccountIndexRoute
@@ -695,6 +734,7 @@ const AccountRouteRouteChildren: AccountRouteRouteChildren = {
   AccountProfileRoute: AccountProfileRoute,
   AccountRegisterRoute: AccountRegisterRoute,
   AccountResetPasswordRoute: AccountResetPasswordRoute,
+  AccountRewardsRoute: AccountRewardsRoute,
   AccountSettingsRoute: AccountSettingsRoute,
   AccountSupportRoute: AccountSupportRoute,
   AccountIndexRoute: AccountIndexRoute,
@@ -741,6 +781,7 @@ interface AdminRouteRouteChildren {
   AdminFleetRoute: typeof AdminFleetRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminPaymentsRoute: typeof AdminPaymentsRoute
+  AdminRewardsRoute: typeof AdminRewardsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSupportRoute: typeof AdminSupportRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -755,6 +796,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminFleetRoute: AdminFleetRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminPaymentsRoute: AdminPaymentsRoute,
+  AdminRewardsRoute: AdminRewardsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminSupportRoute: AdminSupportRoute,
   AdminIndexRoute: AdminIndexRoute,

@@ -4,7 +4,7 @@ import type { Tables } from "@/lib/supabase/database.types";
 import { cn } from "@/lib/utils";
 
 import { useAdminI18n, fleetStatusLabel } from "../hooks/use-admin-i18n";
-import { bookingRef, dateRangeKeys, type FleetStatus } from "../lib/admin-utils";
+import { bookingRef, dateRangeKeys, formatAdminDate, type FleetStatus } from "../lib/admin-utils";
 import { AdminBadge } from "./admin-ui";
 
 type CalendarBooking = Pick<
@@ -39,7 +39,7 @@ export function FleetCalendar({ startDate, days, cars, bookings }: FleetCalendar
               style={{ width: DAY_WIDTH }}
             >
               <div>{formatDay(date, intlLocale)}</div>
-              <div className="text-[10px]">{date.slice(5)}</div>
+              <div className="text-[10px]">{formatAdminDate(date).slice(0, 5)}</div>
             </div>
           ))}
         </div>
@@ -68,8 +68,7 @@ export function FleetCalendar({ startDate, days, cars, bookings }: FleetCalendar
                   const endIdx = dates.indexOf(booking.return_date);
                   if (startIdx === -1 && endIdx === -1) return null;
                   const left = Math.max(0, startIdx) * DAY_WIDTH + 4;
-                  const span =
-                    (endIdx === -1 ? days - 1 : endIdx) - Math.max(0, startIdx) + 1;
+                  const span = (endIdx === -1 ? days - 1 : endIdx) - Math.max(0, startIdx) + 1;
                   const width = span * DAY_WIDTH - 8;
                   return (
                     <Link
@@ -81,9 +80,11 @@ export function FleetCalendar({ startDate, days, cars, bookings }: FleetCalendar
                         "bg-[var(--logo-red)]",
                       )}
                       style={{ left, width: Math.max(width, 60) }}
-                      title={`${booking.guest_name} · ${booking.pickup_date} – ${booking.return_date}`}
+                      title={`${booking.guest_name} · ${formatAdminDate(booking.pickup_date)} – ${formatAdminDate(booking.return_date)}`}
                     >
-                      <span className="truncate text-[11px] font-semibold">{booking.guest_name}</span>
+                      <span className="truncate text-[11px] font-semibold">
+                        {booking.guest_name}
+                      </span>
                       <span className="truncate text-[9px] opacity-90">
                         {bookingRef(booking.id)} · {booking.pickup_time.slice(0, 5)}
                       </span>

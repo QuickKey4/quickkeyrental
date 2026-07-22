@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { formatPrice } from "@/lib/brand";
 
 import { getAdminCustomer } from "../api/admin.functions";
+import { AdminDocumentCard } from "../components/admin-document-card";
 import { AdminCard, AdminContactButtons, AdminPageHeader } from "../components/admin-ui";
 import { useAdminI18n, operationalStatusLabel } from "../hooks/use-admin-i18n";
 import { useAdminSecret } from "../hooks/use-admin-user";
-import { bookingRef, getOperationalStatus } from "../lib/admin-utils";
+import { bookingRef, formatAdminDate, getOperationalStatus } from "../lib/admin-utils";
 
 type AdminCustomerDetailPageProps = {
   email: string;
@@ -57,11 +58,7 @@ export function AdminCustomerDetailPage({ email }: AdminCustomerDetailPageProps)
 
         <AdminCard>
           <h2 className="font-display text-lg font-bold">{t.customers.quickContact}</h2>
-          <AdminContactButtons
-            className="mt-4"
-            phone={customer.phone}
-            email={customer.email}
-          />
+          <AdminContactButtons className="mt-4" phone={customer.phone} email={customer.email} />
         </AdminCard>
       </div>
 
@@ -85,9 +82,12 @@ export function AdminCustomerDetailPage({ email }: AdminCustomerDetailPageProps)
         <h2 className="font-display text-lg font-bold">{t.customers.history}</h2>
         <ul className="mt-4 space-y-2">
           {bookings.map((b) => (
-            <li key={b.id} className="flex items-center justify-between rounded-xl bg-[#fafafa] px-3 py-2 text-sm">
+            <li
+              key={b.id}
+              className="flex items-center justify-between rounded-xl bg-[#fafafa] px-3 py-2 text-sm"
+            >
               <Link to="/admin/bookings/$bookingId" params={{ bookingId: b.id }}>
-                {bookingRef(b.id)} · {b.pickup_date}
+                {bookingRef(b.id)} · {formatAdminDate(b.pickup_date)}
               </Link>
               <span>{formatPrice(Number(b.total), intlLocale)}</span>
             </li>
@@ -98,14 +98,22 @@ export function AdminCustomerDetailPage({ email }: AdminCustomerDetailPageProps)
       {documents.length > 0 ? (
         <AdminCard>
           <h2 className="font-display text-lg font-bold">{t.nav.documents}</h2>
-          <ul className="mt-4 space-y-2 text-sm">
+          <div className="mt-4 grid gap-3">
             {documents.map((d) => (
-              <li key={d.id} className="flex justify-between">
-                <span>{d.file_name}</span>
-                <span className="capitalize text-muted-foreground">{d.verification_status}</span>
-              </li>
+              <AdminDocumentCard
+                key={d.id}
+                doc={d}
+                adminSecret={adminSecret}
+                onChanged={() => {
+                  if (!adminSecret) return;
+                  void getAdminCustomer({
+                    data: { adminSecret, email: decodeURIComponent(email) },
+                  }).then(setData);
+                }}
+                compact
+              />
             ))}
-          </ul>
+          </div>
         </AdminCard>
       ) : null}
     </div>

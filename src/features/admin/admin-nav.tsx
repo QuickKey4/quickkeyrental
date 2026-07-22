@@ -7,6 +7,7 @@ import {
   Headphones,
   LayoutDashboard,
   LogOut,
+  Gift,
   Settings,
   Tag,
   Users,
@@ -28,6 +29,7 @@ const NAV = [
   { to: "/admin/payments", icon: CreditCard, labelKey: "payments" },
   { to: "/admin/discounts", icon: Tag, labelKey: "discounts" },
   { to: "/admin/documents", icon: FileText, labelKey: "documents" },
+  { to: "/admin/rewards", icon: Gift, labelKey: "rewards" },
   { to: "/admin/support", icon: Headphones, labelKey: "support" },
   { to: "/admin/settings", icon: Settings, labelKey: "settings" },
 ] as const;

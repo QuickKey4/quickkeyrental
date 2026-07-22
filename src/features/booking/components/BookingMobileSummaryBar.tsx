@@ -11,13 +11,7 @@ import { calculateBookingTotal } from "../bookingUtils";
 import { useBookingCopy } from "../useBookingCopy";
 import { BookingOrderSummary } from "./BookingOrderSummary";
 
-const COMPACT_SUMMARY_STEPS: BookingStep[] = [
-  "dates",
-  "cars",
-  "customer",
-  "driver",
-  "extras",
-];
+const COMPACT_SUMMARY_STEPS: BookingStep[] = ["dates", "cars", "customer", "extras"];
 
 type BookingMobileSummaryBarProps = {
   draft: BookingDraft;
@@ -25,11 +19,7 @@ type BookingMobileSummaryBarProps = {
   step: BookingStep;
 };
 
-export function BookingMobileSummaryBar({
-  draft,
-  dailyPrice,
-  step,
-}: BookingMobileSummaryBarProps) {
+export function BookingMobileSummaryBar({ draft, dailyPrice, step }: BookingMobileSummaryBarProps) {
   const book = useBookingCopy();
   const [expanded, setExpanded] = useState(false);
 

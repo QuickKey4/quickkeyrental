@@ -1,4 +1,5 @@
-import { BRAND } from "@/lib/brand";
+import { BRAND, formatPrice } from "@/lib/brand";
+import { resolveEmailLocale, sendLoggedTemplateEmail } from "@/lib/email.server";
 
 export type CancellationBooking = {
   id: string;
@@ -10,80 +11,62 @@ export type CancellationBooking = {
   pickup_time: string;
   return_time: string;
   delivery_address: string | null;
+  collection_address?: string | null;
   total: number;
   cancellation_fee?: number | null;
+  locale?: string | null;
+  user_id?: string | null;
   cars?: { name?: string | null } | null;
 };
 
-function formatCancellationHtml(booking: CancellationBooking, forOwner: boolean): string {
+function emailInput(booking: CancellationBooking) {
   const carName = booking.cars?.name ?? "Rental car";
   const ref = booking.id.slice(0, 8).toUpperCase();
-  const location = booking.delivery_address ?? "See booking details";
   const fee = Number(booking.cancellation_fee ?? 0);
-  const feeRow =
-    fee > 0
-      ? `<tr><td style="padding:6px 0;color:#666">Cancellation fee</td><td style="padding:6px 0"><strong>$${fee.toFixed(0)}</strong></td></tr>`
-      : "";
 
-  const intro = forOwner
-    ? `<p>A customer has cancelled their booking.${fee > 0 ? ` A cancellation fee of $${fee.toFixed(0)} was accepted.` : ""}</p>`
-    : `<p>Your Quick Key Rental booking has been cancelled as requested.${fee > 0 ? ` The cancellation fee of $${fee.toFixed(0)} will be collected as agreed.` : ""}</p>`;
-
-  return `<!DOCTYPE html><html><body style="font-family:system-ui,sans-serif;color:#111;line-height:1.5">
-    <div style="max-width:520px;margin:0 auto;padding:24px">
-      <p style="font-weight:700;color:#e5252a;margin:0 0 16px">QUICKKEY RENTAL</p>
-      ${intro}
-      <table style="width:100%;border-collapse:collapse;margin:16px 0;font-size:14px">
-        <tr><td style="padding:6px 0;color:#666">Reference</td><td style="padding:6px 0"><strong>${ref}</strong></td></tr>
-        <tr><td style="padding:6px 0;color:#666">Vehicle</td><td style="padding:6px 0">${carName}</td></tr>
-        <tr><td style="padding:6px 0;color:#666">Guest</td><td style="padding:6px 0">${booking.guest_name}</td></tr>
-        <tr><td style="padding:6px 0;color:#666">Email</td><td style="padding:6px 0">${booking.guest_email}</td></tr>
-        <tr><td style="padding:6px 0;color:#666">Phone</td><td style="padding:6px 0">${booking.guest_phone}</td></tr>
-        <tr><td style="padding:6px 0;color:#666">Dates</td><td style="padding:6px 0">${booking.pickup_date} → ${booking.return_date}</td></tr>
-        <tr><td style="padding:6px 0;color:#666">Location</td><td style="padding:6px 0">${location}</td></tr>
-        <tr><td style="padding:6px 0;color:#666">Total</td><td style="padding:6px 0">$${Number(booking.total).toFixed(0)}</td></tr>
-        ${feeRow}
-      </table>
-      <p style="font-size:13px;color:#666">Questions? WhatsApp ${BRAND.phone} or email ${BRAND.email}</p>
-    </div>
-  </body></html>`;
-}
-
-async function sendResendEmail(to: string, subject: string, html: string): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) return;
-
-  const from = process.env.BOOKING_FROM_EMAIL ?? `Quick Key Rental <onboarding@resend.dev>`;
-
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ from, to: [to], subject, html }),
-  });
-
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(`Email failed: ${body}`);
-  }
+  return {
+    bookingRef: ref,
+    guestName: booking.guest_name,
+    customerName: booking.guest_name,
+    customerEmail: booking.guest_email,
+    customerPhone: booking.guest_phone,
+    vehicle: carName,
+    pickup: `${booking.pickup_date} ${booking.pickup_time}`,
+    return: `${booking.return_date} ${booking.return_time}`,
+    delivery: booking.delivery_address ?? "See booking details",
+    collection: booking.collection_address ?? booking.delivery_address ?? "See booking details",
+    total: formatPrice(Number(booking.total)),
+    paymentStatus: "Cancelled",
+    cancellationFee: fee > 0 ? formatPrice(fee) : null,
+    cancellationFeeStatus: fee > 0 ? "Accepted by customer; manual handling required" : null,
+    adminUrl: `${BRAND.website}/admin/bookings/${booking.id}`,
+    accountUrl: `${BRAND.website}/account/bookings/${booking.id}`,
+  };
 }
 
 export async function sendBookingCancellationEmails(booking: CancellationBooking): Promise<void> {
   const ref = booking.id.slice(0, 8).toUpperCase();
   const ownerEmail = process.env.BOOKING_NOTIFICATION_EMAIL ?? BRAND.email;
+  const input = emailInput(booking);
 
   await Promise.all([
-    sendResendEmail(
-      booking.guest_email,
-      `Booking ${ref} cancelled — Quick Key Rental`,
-      formatCancellationHtml(booking, false),
-    ),
-    sendResendEmail(
-      ownerEmail,
-      `Cancelled booking ${ref} — ${booking.guest_name}`,
-      formatCancellationHtml(booking, true),
-    ),
+    sendLoggedTemplateEmail({
+      templateKey: "cancellation",
+      locale: resolveEmailLocale(booking.locale),
+      to: booking.guest_email,
+      input,
+      bookingId: booking.id,
+      customerId: booking.user_id ?? null,
+      idempotencyKey: `booking_cancellation:customer:${booking.id}`,
+    }),
+    sendLoggedTemplateEmail({
+      templateKey: "admin_booking_cancelled",
+      locale: "en",
+      to: ownerEmail,
+      input,
+      bookingId: booking.id,
+      customerId: booking.user_id ?? null,
+      idempotencyKey: `booking_cancellation:admin:${booking.id}`,
+    }),
   ]);
 }

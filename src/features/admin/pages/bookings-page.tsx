@@ -15,19 +15,22 @@ import { useAdminI18n, operationalStatusLabel } from "../hooks/use-admin-i18n";
 import { useAdminSecret } from "../hooks/use-admin-user";
 import {
   bookingRef,
+  formatAdminDate,
   getOperationalStatus,
+  isArchivedBooking,
   pickupLabel,
   type AdminBooking,
 } from "../lib/admin-utils";
 
 const FILTERS = [
-  "all",
-  "today",
   "upcoming",
+  "today",
   "active",
+  "pending",
   "completed",
   "cancelled",
-  "pending",
+  "archived",
+  "all",
 ] as const;
 
 type Filter = (typeof FILTERS)[number];
@@ -35,11 +38,20 @@ type Filter = (typeof FILTERS)[number];
 export function AdminBookingsPage() {
   const adminSecret = useAdminSecret();
   const { t, intlLocale } = useAdminI18n();
-  const [filter, setFilter] = useState<Filter>("all");
+  const [filter, setFilter] = useState<Filter>("upcoming");
   const [search, setSearch] = useState("");
   const [view, setView] = useState<"cards" | "table">("cards");
   const [bookings, setBookings] = useState<AdminBooking[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const paymentStatusLabel = (status: string) => {
+    if (status === "paid" || status === "unpaid" || status === "pending") return t.filters[status];
+    return status;
+  };
+
+  const emptyMessage = search.trim()
+    ? t.bookings.empty.search
+    : (t.bookings.empty[filter] ?? t.bookings.empty.all);
 
   useEffect(() => {
     if (!adminSecret) return;
@@ -56,10 +68,16 @@ export function AdminBookingsPage() {
         subtitle={t.bookings.subtitle}
         action={
           <div className="flex gap-2">
-            <AdminButton variant={view === "cards" ? "primary" : "secondary"} onClick={() => setView("cards")}>
+            <AdminButton
+              variant={view === "cards" ? "primary" : "secondary"}
+              onClick={() => setView("cards")}
+            >
               {t.cards}
             </AdminButton>
-            <AdminButton variant={view === "table" ? "primary" : "secondary"} onClick={() => setView("table")}>
+            <AdminButton
+              variant={view === "table" ? "primary" : "secondary"}
+              onClick={() => setView("table")}
+            >
               {t.table}
             </AdminButton>
           </div>
@@ -94,23 +112,31 @@ export function AdminBookingsPage() {
 
       {loading ? (
         <p className="text-sm text-muted-foreground">{t.bookings.loading}</p>
+      ) : bookings.length === 0 ? (
+        <AdminCard>
+          <p className="text-sm text-muted-foreground">{emptyMessage}</p>
+        </AdminCard>
       ) : view === "table" ? (
         <AdminCard padding="none" className="overflow-x-auto">
-          <table className="w-full min-w-[900px] text-left text-sm">
+          <table className="w-full min-w-[1120px] text-left text-sm">
             <thead className="border-b border-black/[0.06] bg-[#fafafa] text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">{t.bookings.columns.ref}</th>
                 <th className="px-4 py-3">{t.bookings.columns.customer}</th>
+                <th className="px-4 py-3">{t.bookings.columns.contact}</th>
                 <th className="px-4 py-3">{t.bookings.columns.vehicle}</th>
                 <th className="px-4 py-3">{t.bookings.columns.pickup}</th>
                 <th className="px-4 py-3">{t.bookings.columns.return}</th>
+                <th className="px-4 py-3">{t.bookings.columns.pickupLocation}</th>
                 <th className="px-4 py-3">{t.bookings.columns.total}</th>
+                <th className="px-4 py-3">{t.bookings.columns.payment}</th>
                 <th className="px-4 py-3">{t.bookings.columns.status}</th>
               </tr>
             </thead>
             <tbody>
               {bookings.map((b) => {
                 const op = getOperationalStatus(b);
+                const archived = isArchivedBooking(b);
                 return (
                   <tr key={b.id} className="border-b border-black/[0.04] hover:bg-[#fafafa]">
                     <td className="px-4 py-3 font-mono text-xs text-[var(--logo-red)]">
@@ -118,15 +144,40 @@ export function AdminBookingsPage() {
                         {bookingRef(b.id)}
                       </Link>
                     </td>
-                    <td className="px-4 py-3">{b.guest_name}</td>
+                    <td className="px-4 py-3">
+                      <Link
+                        to="/admin/bookings/$bookingId"
+                        params={{ bookingId: b.id }}
+                        className="font-medium hover:text-[var(--logo-red)]"
+                      >
+                        {b.guest_name}
+                      </Link>
+                      <p className="mt-0.5 text-xs text-muted-foreground">{b.guest_email}</p>
+                    </td>
+                    <td className="px-4 py-3">
+                      <a href={`tel:${b.guest_phone}`} className="hover:text-[var(--logo-red)]">
+                        {b.guest_phone}
+                      </a>
+                    </td>
                     <td className="px-4 py-3">{b.cars?.name}</td>
-                    <td className="px-4 py-3">{b.pickup_date}</td>
-                    <td className="px-4 py-3">{b.return_date}</td>
+                    <td className="px-4 py-3">{formatAdminDate(b.pickup_date)}</td>
+                    <td className="px-4 py-3">{formatAdminDate(b.return_date)}</td>
+                    <td className="max-w-[180px] truncate px-4 py-3" title={pickupLabel(b)}>
+                      {pickupLabel(b)}
+                    </td>
                     <td className="px-4 py-3">{formatPrice(Number(b.total), intlLocale)}</td>
                     <td className="px-4 py-3">
-                      <AdminBadge tone={operationalBadgeTone(op)}>
-                        {operationalStatusLabel(op, t.status)}
+                      <AdminBadge tone={b.payment_status === "paid" ? "green" : "amber"}>
+                        {paymentStatusLabel(b.payment_status)}
                       </AdminBadge>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-wrap gap-1.5">
+                        <AdminBadge tone={operationalBadgeTone(op)}>
+                          {operationalStatusLabel(op, t.status)}
+                        </AdminBadge>
+                        {archived ? <AdminBadge>{t.filters.archived}</AdminBadge> : null}
+                      </div>
                     </td>
                   </tr>
                 );
@@ -138,6 +189,7 @@ export function AdminBookingsPage() {
         <div className="grid min-w-0 gap-4 lg:grid-cols-2">
           {bookings.map((b) => {
             const op = getOperationalStatus(b);
+            const archived = isArchivedBooking(b);
             return (
               <AdminCard key={b.id} className="min-w-0">
                 <div className="flex items-start justify-between gap-3">
@@ -145,20 +197,31 @@ export function AdminBookingsPage() {
                     <p className="font-mono text-xs text-[var(--logo-red)]">{bookingRef(b.id)}</p>
                     <h3 className="truncate font-display text-lg font-bold">{b.guest_name}</h3>
                     <p className="truncate text-sm text-muted-foreground">{b.guest_email}</p>
+                    <p className="truncate text-sm text-muted-foreground">{b.guest_phone}</p>
                   </div>
                   <span className="shrink-0">
-                    <AdminBadge tone={operationalBadgeTone(op)}>
-                      {operationalStatusLabel(op, t.status)}
-                    </AdminBadge>
+                    <span className="flex flex-wrap justify-end gap-1.5">
+                      <AdminBadge tone={operationalBadgeTone(op)}>
+                        {operationalStatusLabel(op, t.status)}
+                      </AdminBadge>
+                      {archived ? <AdminBadge>{t.filters.archived}</AdminBadge> : null}
+                    </span>
                   </span>
                 </div>
                 <dl className="mt-4 space-y-2.5 text-sm">
                   <BookingDetailRow label={t.bookings.vehicle} value={b.cars?.name ?? "—"} />
                   <BookingDetailRow
                     label={t.bookings.dates}
-                    value={`${b.pickup_date} – ${b.return_date}`}
+                    value={`${formatAdminDate(b.pickup_date)} – ${formatAdminDate(b.return_date)}`}
                   />
                   <BookingDetailRow label={t.bookings.pickup} value={pickupLabel(b)} clamp />
+                  <BookingDetailRow
+                    label={t.bookings.payment}
+                    value={paymentStatusLabel(b.payment_status)}
+                    valueClassName={
+                      b.payment_status === "paid" ? "text-emerald-700" : "text-amber-800"
+                    }
+                  />
                   <BookingDetailRow
                     label={t.bookings.total}
                     value={formatPrice(Number(b.total), intlLocale)}

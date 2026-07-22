@@ -1,121 +1,145 @@
-import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-import { getAdminDocuments, getAdminDocumentUrl, updateAdminDocumentStatus } from "../api/admin.functions";
-import { AdminBadge, AdminButton, AdminCard, AdminPageHeader } from "../components/admin-ui";
+import { getAdminDocuments } from "../api/admin.functions";
+import { AdminButton, AdminCard, AdminPageHeader } from "../components/admin-ui";
+import { AdminDocumentCard } from "../components/admin-document-card";
 import { useAdminI18n } from "../hooks/use-admin-i18n";
 import { useAdminSecret } from "../hooks/use-admin-user";
 
+type DocumentResponse = Awaited<ReturnType<typeof getAdminDocuments>>;
+type DocumentStatusFilter = "pending" | "approved" | "rejected" | "deleted" | "all";
+type DocumentSort = "newest" | "oldest_pending" | "pickup_date" | "customer_name";
+
+const statusFilters: DocumentStatusFilter[] = ["pending", "approved", "rejected", "deleted", "all"];
+const sortOptions: DocumentSort[] = ["newest", "oldest_pending", "pickup_date", "customer_name"];
+
 export function AdminDocumentsPage() {
   const adminSecret = useAdminSecret();
-  const { t, translateError } = useAdminI18n();
-  const [documents, setDocuments] = useState<Awaited<ReturnType<typeof getAdminDocuments>>>([]);
+  const { t } = useAdminI18n();
+  const [response, setResponse] = useState<DocumentResponse>({
+    documents: [],
+    total: 0,
+    page: 1,
+    pageSize: 12,
+    totalPages: 1,
+  });
+  const [status, setStatus] = useState<DocumentStatusFilter>("pending");
+  const [sort, setSort] = useState<DocumentSort>("oldest_pending");
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [openingId, setOpeningId] = useState<string | null>(null);
-  const [error, setError] = useState("");
 
-  const load = () => {
+  const load = useCallback(() => {
     if (!adminSecret) return;
-    void getAdminDocuments({ data: { adminSecret } })
-      .then(setDocuments)
+    setLoading(true);
+    void getAdminDocuments({
+      data: { adminSecret, status, sort, search: search || undefined, page, pageSize: 12 },
+    })
+      .then(setResponse)
       .finally(() => setLoading(false));
-  };
+  }, [adminSecret, page, search, sort, status]);
 
-  useEffect(load, [adminSecret]);
+  useEffect(load, [load]);
 
-  const setStatus = async (documentId: string, status: "approved" | "rejected") => {
-    if (!adminSecret) return;
-    await updateAdminDocumentStatus({ data: { adminSecret, documentId, status } });
-    load();
-  };
-
-  const openDocument = async (documentId: string, download = false) => {
-    if (!adminSecret) return;
-    setOpeningId(documentId);
-    setError("");
-    try {
-      const { url, fileName } = await getAdminDocumentUrl({ data: { adminSecret, documentId } });
-      if (download) {
-        const anchor = document.createElement("a");
-        anchor.href = url;
-        anchor.download = fileName;
-        anchor.target = "_blank";
-        anchor.rel = "noreferrer";
-        anchor.click();
-      } else {
-        window.open(url, "_blank", "noopener,noreferrer");
-      }
-    } catch (e) {
-      setError(e instanceof Error ? translateError(e.message) : t.documents.openError);
-    } finally {
-      setOpeningId(null);
-    }
+  const updateStatus = (next: DocumentStatusFilter) => {
+    setStatus(next);
+    setSort(next === "pending" ? "oldest_pending" : "newest");
+    setPage(1);
   };
 
   return (
     <div className="space-y-6">
       <AdminPageHeader title={t.documents.title} subtitle={t.documents.subtitle} />
 
-      {error ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-          {error}
+      <AdminCard>
+        <div className="flex flex-wrap gap-2">
+          {statusFilters.map((item) => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => updateStatus(item)}
+              className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                status === item
+                  ? "bg-[var(--logo-red)] text-white shadow-[0_10px_24px_rgba(239,43,50,0.22)]"
+                  : "bg-black/[0.04] text-muted-foreground hover:bg-black/[0.07]"
+              }`}
+            >
+              {t.documents.filters[item]}
+            </button>
+          ))}
         </div>
-      ) : null}
+
+        <div className="mt-4 grid gap-3 lg:grid-cols-[1fr_260px]">
+          <input
+            type="search"
+            value={search}
+            onChange={(event) => {
+              setSearch(event.target.value);
+              setPage(1);
+            }}
+            placeholder={t.documents.searchPlaceholder}
+            className="h-12 rounded-xl border border-black/10 bg-white px-4 text-sm outline-none focus:border-[var(--logo-red)]"
+          />
+          <select
+            value={sort}
+            onChange={(event) => {
+              setSort(event.target.value as DocumentSort);
+              setPage(1);
+            }}
+            className="h-12 rounded-xl border border-black/10 bg-white px-4 text-sm outline-none focus:border-[var(--logo-red)]"
+          >
+            {sortOptions.map((item) => (
+              <option key={item} value={item}>
+                {t.documents.sort[item]}
+              </option>
+            ))}
+          </select>
+        </div>
+      </AdminCard>
 
       {loading ? (
         <p className="text-sm text-muted-foreground">{t.documents.loading}</p>
-      ) : documents.length === 0 ? (
+      ) : response.documents.length === 0 ? (
         <AdminCard>
           <p className="text-sm text-muted-foreground">{t.documents.empty}</p>
         </AdminCard>
       ) : (
-        <div className="grid gap-4">
-          {documents.map((doc) => (
-            <AdminCard key={doc.id}>
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <h3 className="font-semibold">{doc.file_name}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {doc.document_type.replace("_", " ")} · User {doc.user_id.slice(0, 8)}
-                  </p>
-                </div>
-                <AdminBadge
-                  tone={
-                    doc.verification_status === "approved"
-                      ? "green"
-                      : doc.verification_status === "rejected"
-                        ? "red"
-                        : "amber"
-                  }
-                >
-                  {doc.verification_status}
-                </AdminBadge>
-              </div>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <AdminButton
-                  variant="secondary"
-                  disabled={openingId === doc.id}
-                  onClick={() => void openDocument(doc.id)}
-                >
-                  {t.view}
-                </AdminButton>
-                <AdminButton
-                  variant="secondary"
-                  disabled={openingId === doc.id}
-                  onClick={() => void openDocument(doc.id, true)}
-                >
-                  {t.download}
-                </AdminButton>
-                <AdminButton variant="primary" onClick={() => void setStatus(doc.id, "approved")}>
-                  {t.approve}
-                </AdminButton>
-                <AdminButton variant="danger" onClick={() => void setStatus(doc.id, "rejected")}>
-                  {t.reject}
-                </AdminButton>
-              </div>
-            </AdminCard>
-          ))}
-        </div>
+        <>
+          <div className="grid gap-4">
+            {response.documents.map((doc) => (
+              <AdminDocumentCard
+                key={doc.id}
+                doc={doc}
+                adminSecret={adminSecret}
+                onChanged={load}
+              />
+            ))}
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm text-muted-foreground">
+              {t.documents.resultCount
+                .replace("{count}", String(response.total))
+                .replace("{page}", String(response.page))
+                .replace("{totalPages}", String(response.totalPages))}
+            </p>
+            <div className="flex gap-2">
+              <AdminButton
+                variant="secondary"
+                disabled={response.page <= 1}
+                onClick={() => setPage((current) => Math.max(1, current - 1))}
+              >
+                {t.previous}
+              </AdminButton>
+              <AdminButton
+                variant="secondary"
+                disabled={response.page >= response.totalPages}
+                onClick={() => setPage((current) => current + 1)}
+              >
+                {t.next}
+              </AdminButton>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

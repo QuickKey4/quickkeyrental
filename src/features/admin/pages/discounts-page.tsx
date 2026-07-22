@@ -1,12 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Tag } from "lucide-react";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { formatPrice } from "@/lib/brand";
 import { interpolate } from "@/i18n/interpolate";
 import type { DiscountScope, DiscountType } from "@/lib/pricing.server";
@@ -29,6 +24,7 @@ import {
 } from "../components/admin-ui";
 import { useAdminI18n } from "../hooks/use-admin-i18n";
 import { useAdminSecret } from "../hooks/use-admin-user";
+import { formatAdminShortDate } from "../lib/admin-utils";
 
 type DurationPreset = "week" | "month" | "quarter" | "year" | "custom";
 
@@ -40,10 +36,7 @@ function previewEffectivePrice(
   discountType: DiscountType,
   discountValue: number,
 ): number {
-  const raw =
-    discountType === "percent"
-      ? base * (1 - discountValue / 100)
-      : base - discountValue;
+  const raw = discountType === "percent" ? base * (1 - discountValue / 100) : base - discountValue;
   return Math.max(0, Math.round(raw));
 }
 
@@ -70,13 +63,15 @@ function presetRange(preset: DurationPreset, customStart: string, customEnd: str
 }
 
 function formatDateRange(startsAt: string, endsAt: string, intlLocale: string) {
-  const fmt = new Intl.DateTimeFormat(intlLocale, { month: "short", day: "numeric" });
-  return `${fmt.format(new Date(startsAt))} → ${fmt.format(new Date(endsAt))}`;
+  return `${formatAdminShortDate(startsAt.slice(0, 10), intlLocale)} → ${formatAdminShortDate(
+    endsAt.slice(0, 10),
+    intlLocale,
+  )}`;
 }
 
 export function AdminDiscountsPage() {
   const adminSecret = useAdminSecret();
-  const { t, intlLocale } = useAdminI18n();
+  const { t, intlLocale, translateError } = useAdminI18n();
   const [data, setData] = useState<Awaited<ReturnType<typeof getAdminDiscounts>> | null>(null);
   const [loading, setLoading] = useState(true);
   const [showEnded, setShowEnded] = useState(false);
@@ -159,7 +154,7 @@ export function AdminDiscountsPage() {
       resetForm();
       load();
     } catch (e) {
-      setError(e instanceof Error ? e.message : t.errors.fallback);
+      setError(translateError(e instanceof Error ? e.message : ""));
     } finally {
       setSaving(false);
     }
@@ -245,7 +240,13 @@ export function AdminDiscountsPage() {
         ) : null}
       </AdminCard>
 
-      <Dialog open={formOpen} onOpenChange={(open) => { setFormOpen(open); if (!open) resetForm(); }}>
+      <Dialog
+        open={formOpen}
+        onOpenChange={(open) => {
+          setFormOpen(open);
+          if (!open) resetForm();
+        }}
+      >
         <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>{t.discounts.formTitle}</DialogTitle>

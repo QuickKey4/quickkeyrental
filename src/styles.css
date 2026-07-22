@@ -568,8 +568,14 @@
 .account-content-shell {
   box-sizing: border-box;
   width: 100%;
-  /* Gray gutter between viewport edge and the main white surface */
-  padding: 1.25cm 1.5cm;
+  padding: 0;
+}
+
+@media (min-width: 640px) {
+  .account-content-shell {
+    /* Gray gutter between viewport edge and the main white surface */
+    padding: 1.25rem;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -582,20 +588,23 @@
 .account-surface {
   box-sizing: border-box;
   width: 100%;
-  min-height: calc(100vh - 2.5cm);
+  min-height: calc(100svh - 4rem);
   background: #ffffff;
-  border-radius: 1.5rem;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow:
-    0 1px 2px rgba(16, 16, 16, 0.04),
-    0 12px 48px rgba(16, 16, 16, 0.07);
-  padding: 1.25rem;
+  border-radius: 0;
+  border: 0;
+  box-shadow: none;
+  padding: 1rem;
+  overflow-x: clip;
 }
 
 @media (min-width: 640px) {
   .account-surface {
-    padding: 1.75rem;
+    padding: 1.5rem;
     border-radius: 1.75rem;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow:
+      0 1px 2px rgba(16, 16, 16, 0.04),
+      0 12px 48px rgba(16, 16, 16, 0.07);
   }
 }
 
@@ -608,8 +617,47 @@
 
 .account-mobile-bar {
   box-sizing: border-box;
-  padding-left: 1.5cm;
-  padding-right: 1.5cm;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.account-login-shell {
+  box-sizing: border-box;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+.account-login-card {
+  box-sizing: border-box;
+  max-width: calc(100vw - 2rem);
+}
+
+.account-shell input,
+.account-shell select,
+.account-shell textarea,
+.account-login-shell input,
+.account-login-shell select,
+.account-login-shell textarea {
+  font-size: 16px;
+}
+
+.account-shell .field-input {
+  height: 3rem;
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #f8f8f6;
+  padding: 0 1rem;
+  font-size: 16px;
+  outline: none;
+  transition:
+    border-color 120ms ease,
+    background-color 120ms ease;
+}
+
+.account-shell .field-input:focus {
+  border-color: var(--logo-red);
+  background: #ffffff;
 }
 
 .account-shell::after {

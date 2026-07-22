@@ -11,6 +11,7 @@ type MagicLinkFormProps = {
   submitLabel: string;
   sentTitle: string;
   sentBody: string;
+  errorLabel: string;
   redirectPath?: string;
   shouldCreateUser?: boolean;
   onSent?: () => void;
@@ -22,6 +23,7 @@ export function MagicLinkForm({
   submitLabel,
   sentTitle,
   sentBody,
+  errorLabel,
   redirectPath,
   shouldCreateUser = true,
   onSent,
@@ -40,7 +42,7 @@ export function MagicLinkForm({
     setLoading(false);
 
     if (!result.ok) {
-      setError(result.error);
+      setError(errorLabel);
       return;
     }
 
@@ -50,9 +52,11 @@ export function MagicLinkForm({
 
   if (sent) {
     return (
-      <div className="rounded-xl border border-primary/25 bg-primary/5 p-5 text-left">
+      <div className="rounded-xl border border-primary/25 bg-primary/5 p-4 text-left sm:p-5">
         <p className="font-semibold text-foreground">{sentTitle}</p>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{sentBody}</p>
+        <p className="mt-2 text-base leading-relaxed text-muted-foreground sm:text-sm">
+          {sentBody}
+        </p>
       </div>
     );
   }
@@ -63,7 +67,7 @@ export function MagicLinkForm({
         <span className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
           {emailLabel}
         </span>
-        <span className="flex h-12 items-center gap-3 rounded-xl border border-border bg-background-secondary px-4 focus-within:border-[var(--logo-red)]">
+        <span className="flex h-12 min-w-0 items-center gap-3 rounded-xl border border-border bg-background-secondary px-4 focus-within:border-[var(--logo-red)]">
           <Mail className="size-4 shrink-0 text-[var(--logo-red)]" />
           <input
             type="email"
@@ -71,7 +75,7 @@ export function MagicLinkForm({
             onChange={(event) => setEmail(event.target.value)}
             autoComplete="email"
             required
-            className="flex-1 bg-transparent text-sm outline-none"
+            className="min-w-0 flex-1 bg-transparent text-base outline-none"
           />
         </span>
       </label>

@@ -19,7 +19,10 @@ export default defineEventHandler(async (event) => {
 
   const rawBody = await readRawBody(event, false);
   if (!rawBody) {
-    return new Response("Empty body", { status: 400 });
+    return new Response("success", {
+      status: 200,
+      headers: { "content-type": "text/plain; charset=utf-8" },
+    });
   }
 
   const bodyText = typeof rawBody === "string" ? rawBody : new TextDecoder().decode(rawBody);
@@ -27,7 +30,10 @@ export default defineEventHandler(async (event) => {
   const transactionId = parseTransactionId(params.get("transaction_id"));
 
   if (!transactionId) {
-    return new Response("success", { status: 200 });
+    return new Response("success", {
+      status: 200,
+      headers: { "content-type": "text/plain; charset=utf-8" },
+    });
   }
 
   try {
@@ -39,11 +45,17 @@ export default defineEventHandler(async (event) => {
 
     if (lookupError) {
       console.error("Sentoo webhook lookup failed:", lookupError.message);
-      return new Response("success", { status: 200 });
+      return new Response("success", {
+        status: 200,
+        headers: { "content-type": "text/plain; charset=utf-8" },
+      });
     }
 
     if (!bookingId) {
-      return new Response("success", { status: 200 });
+      return new Response("success", {
+        status: 200,
+        headers: { "content-type": "text/plain; charset=utf-8" },
+      });
     }
 
     const statusResult = await getSentooTransactionStatus(transactionId);

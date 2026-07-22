@@ -3,10 +3,10 @@ import { adminEs } from "./admin.es";
 
 export const es: Messages = {
   meta: {
-    siteTitle: "QuickKey Rental Curaçao",
+    siteTitle: "Quick Key Rental Curaçao",
     siteDescription:
       "Alquiler de coches asequible y fiable en Curaçao. Entrega en aeropuerto, hotel y recogida local.",
-    ogTitle: "QuickKey Rental Curaçao",
+    ogTitle: "Quick Key Rental Curaçao",
     ogDescription:
       "Alquiler de coches asequible y fiable en Curaçao. Entrega en aeropuerto, hotel y recogida local.",
     bookTitle: "Reserva tu coche | Quick Key Rental",
@@ -33,6 +33,23 @@ export const es: Messages = {
     colors: "Colores",
     previousSlide: "Diapositiva anterior",
     nextSlide: "Diapositiva siguiente",
+    pagination: {
+      label: "Paginación",
+      previous: "Anterior",
+      previousAria: "Ir a la página anterior",
+      next: "Siguiente",
+      nextAria: "Ir a la página siguiente",
+      more: "Más páginas",
+    },
+    sidebar: {
+      title: "Barra lateral",
+      description: "Muestra la barra lateral móvil.",
+      toggle: "Alternar barra lateral",
+    },
+    breadcrumb: {
+      label: "Ruta de navegación",
+      more: "Más",
+    },
   },
   brand: {
     location: "Aeropuerto de Curaçao (Hato)",
@@ -59,6 +76,16 @@ export const es: Messages = {
     notFoundBody: "La página que buscas no existe o ha sido movida.",
     loadTitle: "Esta página no cargó",
     loadBody: "Algo salió mal de nuestro lado. Puedes actualizar o volver al inicio.",
+  },
+  bookingUnavailable: {
+    eyebrow: "Quick Key Rental · Curaçao",
+    title: "La reserva online no está disponible temporalmente",
+    body: "Estamos actualizando nuestro sistema de reservas para que todo funcione de forma fluida y segura.",
+    urgent: "Para reservas urgentes, contáctanos por WhatsApp.",
+    cta: "Contactar por WhatsApp",
+    pauseLabel: "Pausa temporal",
+    directHelp: "Te ayudamos a reservar directamente.",
+    whatsappMessage: "Hola Quick Key, me gustaría hacer una reserva.",
   },
   hero: {
     eyebrow: "Alquiler de coches en Curaçao",
@@ -163,8 +190,7 @@ export const es: Messages = {
         name: "Jan Thiel",
         tabName: "Jan Thiel",
         cardTeaser: "Beach clubs, calas tranquilas y fácil aparcamiento.",
-        description:
-          "Relájate en Jan Thiel Beach con beach clubs, restaurantes y agua tranquila.",
+        description: "Relájate en Jan Thiel Beach con beach clubs, restaurantes y agua tranquila.",
         minutes: "20",
         km: "18",
         localTip: "Visita antes de las 10:00 para mejor aparcamiento.",
@@ -174,8 +200,7 @@ export const es: Messages = {
         name: "Westpunt",
         tabName: "Westpunt",
         cardTeaser: "Las playas más salvajes y la costa natural.",
-        description:
-          "Conduce a Grote Knip, Playa Kalki y la costa oeste más dramática de Curaçao.",
+        description: "Conduce a Grote Knip, Playa Kalki y la costa oeste más dramática de Curaçao.",
         minutes: "55",
         km: "48",
         localTip: "Lleva equipo de snorkel y efectivo para snacks.",
@@ -209,8 +234,7 @@ export const es: Messages = {
       hotel: "Hoteles y alojamientos",
       whatsapp: "Soporte WhatsApp",
     },
-    quote:
-      "El señor Melvin entregó el coche a tiempo en el aeropuerto. Muy amable y profesional.",
+    quote: "El señor Melvin entregó el coche a tiempo en el aeropuerto. Muy amable y profesional.",
     quoteAttribution: "Kayla Orr · reseña en Google",
     cta: "Comprobar disponibilidad",
   },
@@ -262,7 +286,8 @@ export const es: Messages = {
       depositBody:
         "Cada coche está asegurado. La opción 1 es un depósito reembolsable con franquicia estándar. Consulta nuestras condiciones de alquiler.",
       noDepositTitle: "Opción 2: Upgrade a todo riesgo",
-      noDepositBody: "La opción 2 añade cobertura a todo riesgo. Consulta nuestras condiciones de alquiler.",
+      noDepositBody:
+        "La opción 2 añade cobertura a todo riesgo. Consulta nuestras condiciones de alquiler.",
     },
     filters: { all: "Todos", agya: "Compacto", yaris: "Sedán" },
     badges: {
@@ -393,8 +418,7 @@ export const es: Messages = {
     eyebrow: "Tus vacaciones en la isla",
     titleLine1: "Sol afuera.",
     titleLine2: "Llaves en mano.",
-    subtitle:
-      "Playas, Willemstad, carreteras costeras. Te llevamos el coche cuando aterrizas.",
+    subtitle: "Playas, Willemstad, carreteras costeras. Te llevamos el coche cuando aterrizas.",
     photoCaption: "Curaçao · sol · carretera abierta",
     pickHint: "Elige un momento, mira a dónde te lleva tu coche",
     imageAlt: "Toyota de alquiler en un día soleado en Curaçao",
@@ -466,8 +490,16 @@ export const es: Messages = {
       body: "¿Vuelas a Curaçao? Podemos recibirte en el aeropuerto con tu coche listo, o entregarlo directamente en tu alojamiento.",
       badge: "Hato · Curaçao",
       cta: "Solicitar recogida en aeropuerto",
-      stats: { handover: "Entrega rápida", airport: "Aeropuerto Hato", delivery: "Entrega en hotel" },
-      perks: ["Todos los vehículos asegurados", "Automático · aire acondicionado", "Soporte WhatsApp"],
+      stats: {
+        handover: "Entrega rápida",
+        airport: "Aeropuerto Hato",
+        delivery: "Entrega en hotel",
+      },
+      perks: [
+        "Todos los vehículos asegurados",
+        "Automático · aire acondicionado",
+        "Soporte WhatsApp",
+      ],
       steps: { land: "Aterriza", meet: "Conoce a tu anfitrión", drive: "Conduce" },
     },
     statValues: {
@@ -490,6 +522,7 @@ export const es: Messages = {
     rating: "5,0 en Google",
     readMore: "Leer más",
     readLess: "Leer menos",
+    verifiedReview: "Reseña verificada",
     reviews: {
       kayla: {
         name: "Kayla Orr",
@@ -541,11 +574,12 @@ export const es: Messages = {
     rights: "© {year} {brand}. Todos los derechos reservados.",
     serving: "Curaçao · Aeropuerto Hato · Willemstad",
     securePayment: "Pago seguro",
-    localBanksShort: "Bancos locales",
+    localBanksShort: "Banco local",
   },
   contact: {
     panelTitle: "Conéctate con nosotros",
-    panelSubtitle: "WhatsApp y teléfono. Estamos disponibles antes, durante y después del alquiler.",
+    panelSubtitle:
+      "WhatsApp y teléfono. Estamos disponibles antes, durante y después del alquiler.",
     openMenu: "Abrir menú de contacto",
     closeMenu: "Cerrar menú de contacto",
     links: {
@@ -602,7 +636,7 @@ export const es: Messages = {
     summary: "Resumen",
     total: "Total",
     cancellation:
-      "Cancelación gratuita hasta 48 horas antes de la recogida. Después, se aplica una tarifa de un día de alquiler.",
+      "Las condiciones de cancelación pueden depender del tiempo restante antes de la recogida. Revisa las condiciones aplicables antes de confirmar tu reserva.",
     mobileSummary: {
       show: "Detalles",
       hide: "Cerrar",
@@ -618,11 +652,9 @@ export const es: Messages = {
       baggage: "Equipaje",
     },
     vehicleBaggage: {
-      "agya-1":
-        "Maletero 276L · caben 2 maletas medianas (20–24″) o 3 de mano. Justo con 3 maletas grandes.",
-      "agya-2":
-        "Maletero 276L · caben 2 maletas medianas (20–24″) o 3 de mano. Justo con 3 maletas grandes.",
-      "yaris-1": "Maletero 473L · caben 3 maletas grandes o 4 medianas con comodidad.",
+      "agya-1": "Caben 2 maletas medianas o 3 de mano. Justo con 3 maletas grandes.",
+      "agya-2": "Caben 2 maletas medianas o 3 de mano. Justo con 3 maletas grandes.",
+      "yaris-1": "Caben 3 maletas grandes o 4 medianas con comodidad.",
     },
     fuelPolicy: {
       title: "Política de combustible",
@@ -636,7 +668,7 @@ export const es: Messages = {
       customer: "Tus datos",
       driver: "Conductor",
       extras: "Seguro y extras",
-      review: "Revisar",
+      review: "Revisar y pagar",
       payment: "Pago",
       confirmation: "Confirmado",
     },
@@ -659,6 +691,21 @@ export const es: Messages = {
       returnDate: "Fecha de recogida",
       pickupTime: "Hora de entrega",
       returnTime: "Hora de recogida",
+      guidance: {
+        deliveryEyebrow: "Empieza aquí",
+        deliveryBody:
+          "Elige dónde debemos encontrarte. Los campos de dirección se adaptarán a tu elección.",
+        addressEyebrow: "Detalles del encuentro",
+        addressBody:
+          "Mantenlo práctico: hotel, aeropuerto/terminal de cruceros o una dirección completa es suficiente.",
+        datesEyebrow: "Fechas de alquiler",
+        datesTitle: "Selecciona entrega y devolución",
+        datesBody:
+          "El rango seleccionado se conserva al avanzar, y cambiarlo actualiza la disponibilidad.",
+        timeEyebrow: "Horario preferido",
+        timeTitle: "Elige horas de entrega y recogida",
+        timeBody: "Usaremos estos horarios para preparar la entrega y la recogida.",
+      },
     },
     deliveryTypes: {
       hotel: "Hotel",
@@ -669,24 +716,61 @@ export const es: Messages = {
     cars: {
       title: "Nuestra flota",
       subtitle: "Los tres coches aparecen abajo. Los agotados siguen visibles para comparar.",
-      unavailableHint: "Este coche está reservado para tus fechas. Prueba otras fechas u otra unidad.",
+      unavailableHint:
+        "Este coche está reservado para tus fechas. Prueba otras fechas u otra unidad.",
       unavailableHintWithResume:
         "Reservado hasta {blockedThrough}. Disponible de nuevo desde {nextAvailable}.",
       trySuggestedDates: "Probar {pickup} – {return}",
       select: "Seleccionar este coche",
       selected: "Seleccionado",
+      details: "Ver detalles",
       loadingAvailability: "Comprobando disponibilidad…",
       checkingAvailability: "Comprobando…",
-      availabilityError: "No pudimos comprobar la disponibilidad. Actualiza la página o inténtalo de nuevo.",
+      availabilityError:
+        "No pudimos comprobar la disponibilidad. Actualiza la página o inténtalo de nuevo.",
+      retryAvailability: "Reintentar",
+    },
+    hold: {
+      reserving: "Reservando tu coche…",
+      active: "Tu coche está reservado temporalmente",
+      remaining: "Quedan {time}",
+      reservedUntil: "Reservado hasta las {time} mientras completas la reserva.",
+      urgent: "Quedan menos de {time} para completar la reserva.",
+      expired:
+        "La reserva temporal de tu coche ha caducado. Elige de nuevo un coche disponible para continuar.",
+      missing: "Reserva tu coche de nuevo antes de continuar al pago.",
     },
     customer: {
       title: "Tus datos",
-      subtitle: "Enviaremos la confirmación de tu reserva a este email. No necesitas cuenta para reservar.",
+      subtitle: "Datos de contacto y del conductor principal para tu reserva. No necesitas cuenta.",
+      firstName: "Nombre",
+      lastName: "Apellidos",
       fullName: "Nombre completo (nombre y apellidos)",
       fullNameHint: "Solo letras. Usa el nombre de tu ID.",
       email: "Email",
       phone: "Teléfono / WhatsApp",
-      phoneHint: "Solo dígitos, 8–15 números (código de país opcional).",
+      phoneHint: "Elige el código de país e introduce tu número local.",
+      driverDateOfBirth: "Fecha de nacimiento del conductor",
+      driverLicense: "Número de carnet de conducir",
+      licensePlaceholder: "CW-2026-001",
+      ageConfirm:
+        "Confirmo que el conductor tiene al menos 23 años y 2+ años de experiencia conduciendo.",
+      arrivingByPlane: "¿Llegas a Curaçao en avión?",
+      arrivalHint: "Nos ayuda a seguir tu llegada aunque entreguemos el coche en tu hotel.",
+      yes: "Sí",
+      no: "No",
+      flightNumber: "Número de vuelo",
+      sections: {
+        contactEyebrow: "Contacto",
+        contactTitle: "¿Con quién confirmamos?",
+        contactBody:
+          "Usa el mismo nombre y datos de contacto que quieres en la confirmación del alquiler.",
+        driverEyebrow: "Conductor",
+        driverTitle: "Datos del conductor",
+        driverBody:
+          "Comprobaremos estos datos antes de la entrega, así que el carnet y la fecha de nacimiento deben coincidir con el conductor principal.",
+        arrivalEyebrow: "Llegada",
+      },
     },
     driver: {
       title: "Datos del conductor",
@@ -701,13 +785,20 @@ export const es: Messages = {
       title: "Elige tu cobertura",
       subtitle:
         "Elige una opción. El seguro diario se paga online; el depósito se gestiona en la entrega.",
-      depositTitle: "Opción 1: Depósito de seguridad",
+      depositTitle: "Depósito de seguridad",
       depositBody:
-        "Un depósito reembolsable de {amount} se paga al entregar el coche — no online. Verificamos que tu tarjeta pueda cubrir {amount} por daños o repostaje. Se devuelve si no hay daños.",
-      depositAtDelivery: "A pagar en la entrega — no incluido en el pago online",
-      dailyTitle: "Opción 2: Upgrade a todo riesgo",
-      dailyBodyAgya: "Upgrade a todo riesgo: $10/día (Agya).",
-      dailyBodyYaris: "Upgrade a todo riesgo: $13/día (Yaris).",
+        "En la entrega verificamos que tu tarjeta sea válida y pueda cubrir el depósito si hace falta.",
+      depositAmount: "{amount} de depósito",
+      depositAtDelivery: "No se cobra online",
+      depositBenefitNoDaily: "Sin coste diario extra de seguro",
+      depositBenefitNotOnline: "No se cobra online",
+      depositBenefitRefundable: "Reembolsable si no hay cargos aplicables",
+      dailyTitle: "Upgrade a todo riesgo",
+      dailyBodyAgya: "Reduce tu riesgo financiero durante el alquiler.",
+      dailyBodyYaris: "Reduce tu riesgo financiero durante el alquiler.",
+      dailyTotal: "{total} total por {days} días",
+      dailyBenefitOnline: "Se añade al pago online",
+      dailyBenefitAutoTotal: "El total se actualiza según la duración del alquiler",
       required: "Elige una opción de cobertura para continuar.",
     },
     extras: {
@@ -720,6 +811,9 @@ export const es: Messages = {
       additionalDriverTitle: "Conductor adicional (gratis)",
       additionalDriverBody:
         "Añade un segundo conductor autorizado sin coste extra. Necesitamos nombre completo y carnet.",
+      additionalDriverFirstName: "Nombre del conductor adicional",
+      additionalDriverLastName: "Apellidos del conductor adicional",
+      additionalDriverDateOfBirth: "Fecha de nacimiento del conductor adicional",
       additionalDriverName: "Nombre completo del conductor adicional",
       additionalDriverLicense: "Número de carnet del conductor adicional",
       enableAdditionalDriver: "Añadir conductor adicional",
@@ -727,15 +821,18 @@ export const es: Messages = {
     review: {
       title: "Revisa tu reserva",
       subtitle: "Confirma que todo es correcto antes del pago.",
+      edit: "Editar",
       payNow: "Proceder al pago",
       payNowTotal: "Total a pagar ahora",
       rental: "Alquiler",
       coverage: "Cobertura",
       deposit: "Depósito de seguridad",
       depositDueAtDelivery:
-        "Paga en la entrega cuando te entreguemos el coche. Solo verificamos que tu tarjeta pueda cubrir este importe — no se cobra con el alquiler online.",
+        "No se cobra online. La validez de la tarjeta se comprueba en la entrega.",
       dailyInsurance: "Upgrade a todo riesgo",
       optionalExtras: "Extras opcionales",
+      finalCheckEyebrow: "Última revisión",
+      preCheckoutEyebrow: "Antes del pago",
     },
     payment: {
       title: "Pagar con Sentoo",
@@ -747,33 +844,57 @@ export const es: Messages = {
       sentooBankTitle: "Banco local",
       sentooCardTitle: "Tarjeta de débito o crédito",
       sentooBankHint: "MCB, Orco, Banco di Caribe y otros bancos de Curaçao",
-      sentooCardHint: "Visa y Mastercard (débito y crédito)",
+      sentooCardHint: "Tarjetas Visa, American Express y Maestro",
       sentooSecureNote:
         "Los pagos se procesan de forma segura con Sentoo. Quick Key nunca guarda los datos de tu tarjeta.",
       secureCheckout: "Checkout cifrado",
       acceptedMethods: "Aceptamos",
-      localBanksShort: "Bancos locales",
+      localBanksShort: "Banco local",
       poweredBySentoo: "Pagos procesados de forma segura por Sentoo.",
       sentooCta: "Continuar a Sentoo",
       redirecting: "Redirigiendo a Sentoo…",
+      syncing: "Comprobando el estado del pago…",
+      recoveryActive: "Ya hay una sesión de pago abierta. Puedes retomarla o volver a tu reserva.",
+      recoveryFailed: "Ese pago no se completó. Puedes intentarlo de nuevo con seguridad.",
+      resumePayment: "Retomar pago",
+      returnToBooking: "Volver a la reserva",
+      cancelCheckout: "Cancelar checkout",
       retry: "Reintentar",
     },
     confirmation: {
       title: "Reserva confirmada",
+      checkingTitle: "Comprobando el estado del pago",
+      pendingTitle: "El pago sigue procesándose",
+      failedTitle: "Pago no completado",
       subtitle: "¡Gracias! Tu alquiler está confirmado. Pronto recibirás un email de confirmación.",
       subtitlePayAtArrival:
         "¡Gracias! Tu alquiler está confirmado. Paga cuando te entreguemos el coche. Pronto recibirás un email de confirmación.",
+      checkingSubtitle:
+        "Estamos verificando el estado final del pago con Sentoo antes de confirmar tu reserva.",
       subtitlePaymentPending:
         "Tu pago aún se está procesando. Confirmaremos tu reserva en cuanto Sentoo reciba el estado final.",
+      failedSubtitle:
+        "Sentoo no ha confirmado este pago. Tu reserva aún no está confirmada, pero puedes intentar pagar de nuevo con seguridad.",
+      greeting: "Gracias, {name}. Los detalles de tu reserva están listos.",
+      vehicle: "Coche",
+      rentalPeriod: "Periodo de alquiler",
+      delivery: "Entrega",
+      collection: "Recogida",
+      paidTotal: "Total pagado",
+      paymentPendingTotal: "Total",
       reference: "Referencia de reserva",
+      tryPaymentAgain: "Intentar pagar de nuevo",
       deliverCollect: "Entregar {pickup} · Recoger {return}",
       manageAccount: {
-        title: "¿Quieres gestionar tu reserva online?",
-        subtitle: "Crea tu cuenta QuickKey con un clic. Sin contraseña.",
+        title: "Gestiona tu reserva",
+        subtitle:
+          "Accede de forma segura a tu cuenta QuickKey. Sin contraseña ni formulario de registro.",
         email: "Dirección de email",
-        submit: "Enviar magic link",
+        emailNotice: "El enlace de acceso seguro se enviará a",
+        submit: "Ver y gestionar mi reserva",
         sentTitle: "Revisa tu email",
-        sentBody: "Haz clic en el enlace seguro de tu email para acceder a tu cuenta y gestionar esta reserva.",
+        sentBody:
+          "Enviamos un enlace seguro a {email}. Ábrelo para acceder a tu cuenta y gestionar esta reserva.",
         signedIn: "Has iniciado sesión. Consulta y gestiona tu reserva cuando quieras.",
         viewAccount: "Ver mi reserva",
         help: "¿Necesitas ayuda con tu reserva?",
@@ -788,16 +909,34 @@ export const es: Messages = {
       bookingNotFound: "Reserva no encontrada.",
       stripeNoUrl: "No se pudo iniciar el pago. Inténtalo de nuevo.",
       sentooNotConfigured: "El pago en línea no está disponible ahora. Inténtalo más tarde.",
-      sentooNoUrl: "No se pudo iniciar el pago con Sentoo. Inténtalo de nuevo.",
+      sentooNoUrl:
+        "No pudimos iniciar el pago seguro. Inténtalo de nuevo o contacta con Quick Key.",
+      holdExpired:
+        "La reserva temporal de tu coche ha caducado. Elige de nuevo un coche disponible para continuar.",
       required: "Este campo es obligatorio.",
+      requiredFields: "Completa {count} campos obligatorios.",
       email: "Introduce un email válido.",
       age: "Debes confirmar la edad mínima del conductor.",
+      firstName: "Introduce el nombre del arrendatario.",
+      lastName: "Introduce los apellidos del arrendatario.",
+      driverDateOfBirth:
+        "Introduce una fecha de nacimiento válida. El conductor debe tener al menos 23 años.",
+      arrivingByPlane: "Indica si llegas en avión.",
+      flightNumber: "Introduce tu número de vuelo si llegas en avión.",
       selectCar: "Selecciona un coche disponible para continuar.",
       deliveryAddress: "Indica la dirección donde debemos entregar tu coche.",
       collectionAddress: "Indica la dirección donde debemos recoger tu coche.",
+      pickupInPast: "Elige una hora de entrega que aún sea futura en Curaçao.",
+      holdRateLimited:
+        "Ya hay reservas activas desde esta conexión. Completa una o vuelve a intentarlo más tarde.",
+      paymentInProgress: "El pago ya se está preparando. Espera un momento e inténtalo de nuevo.",
       invalidName: "Introduce tu nombre y apellidos reales, solo letras (sin números).",
-      invalidPhone: "Introduce un teléfono válido con 8–15 dígitos.",
+      invalidPhone: "Introduce un teléfono internacional válido.",
       invalidLicense: "Introduce un número de carnet válido (letras, números, guiones).",
+      additionalDriverFirstName: "Introduce el nombre del conductor adicional.",
+      additionalDriverLastName: "Introduce los apellidos del conductor adicional.",
+      additionalDriverDateOfBirth:
+        "Introduce una fecha de nacimiento válida. El conductor adicional debe tener al menos 23 años.",
       additionalDriverName: "Introduce el nombre completo del conductor adicional.",
       additionalDriverLicense: "Introduce el carnet del conductor adicional.",
     },
@@ -816,7 +955,10 @@ export const es: Messages = {
       profileTitle: "Perfil | Quick Key Rental",
       driversTitle: "Conductores | Quick Key Rental",
       documentsTitle: "Documentos | Quick Key Rental",
+      rewardsTitle: "Rewards | Quick Key Rental",
       settingsTitle: "Ajustes | Quick Key Rental",
+      supportTitle: "Soporte | Quick Key Rental",
+      manageBookingTitle: "Gestionar reserva | Quick Key Rental",
     },
     nav: {
       title: "Mi cuenta",
@@ -826,17 +968,49 @@ export const es: Messages = {
       profile: "Perfil",
       drivers: "Conductores",
       documents: "Documentos",
+      rewards: "Rewards",
+      support: "Soporte",
       settings: "Ajustes",
+      logout: "Cerrar sesión",
     },
     support: { whatsapp: "Soporte por WhatsApp" },
+    supportPage: {
+      title: "¿Necesitas ayuda?",
+      subtitle: "Contacta con nuestro equipo en un toque. Estamos aquí para tu alquiler.",
+      call: "Llámanos",
+      email: "Envíanos un email",
+      note: "Para cambios, cancelaciones o entrega en aeropuerto, WhatsApp suele ser lo más rápido.",
+    },
     auth: {
       login: {
         title: "Accede a tu reserva",
         subtitle: "Introduce tu email y te enviaremos un enlace de acceso seguro.",
         email: "Dirección de email",
+        continue: "Continuar",
+        sendMagicLink: "Enviar magic link",
         submit: "Enviar magic link",
         sentTitle: "Revisa tu email",
-        sentBody: "Haz clic en el enlace seguro de tu email para acceder a tu cuenta. Sin contraseña.",
+        sentBody:
+          "Haz clic en el enlace seguro de tu email para acceder a tu cuenta. Sin contraseña.",
+        sentBodyLinked:
+          "Haz clic en el enlace de tu email para terminar de crear tu cuenta. Tus reservas se vincularán automáticamente.",
+        existingAccount:
+          "Encontramos tu cuenta. Te enviaremos un enlace de acceso seguro a tu email.",
+        existingWithBookings:
+          "Bienvenido de nuevo. Cualquier nueva reserva como invitado con este email se añadirá a tu cuenta cuando inicies sesión.",
+        bookingsFoundTitle: "Encontramos reserva(s) vinculadas a este email",
+        bookingsFoundBody:
+          "Tienes {count} reserva(s) activa(s) con este email. Crea tu cuenta para gestionarlas online.",
+        createAccount: "Crear cuenta",
+        createAccountHint:
+          "Te enviaremos un enlace seguro por email. Sin contraseña. Tus reservas se vincularán cuando inicies sesión.",
+        noBookingTitle: "No encontramos ninguna reserva para este email",
+        noBookingBody:
+          "No encontramos un alquiler vinculado a esta dirección. Reserva un coche primero y vuelve cuando quieras.",
+        bookACar: "Reservar coche",
+        useDifferentEmail: "Usar otro email",
+        lookupError: "No se pudo comprobar este email. Inténtalo de nuevo.",
+        sendError: "No se pudo enviar el enlace de acceso. Inténtalo de nuevo.",
         bookInstead: "Reservar un coche",
       },
       register: {
@@ -876,12 +1050,23 @@ export const es: Messages = {
       noUpcoming: "Aún no hay alquileres próximos.",
       bookNow: "Reservar coche",
       quickActions: "Acciones rápidas",
+      nextStepsTitle: "Antes de tu viaje",
       actions: {
         book: "Reservar coche",
         drivers: "Gestionar conductores",
         documents: "Subir documentos",
         bookings: "Ver reservas",
         profile: "Actualizar perfil",
+        support: "Pedir soporte",
+        whatsapp: "Escríbenos por WhatsApp",
+      },
+      nextSteps: {
+        confirmedTitle: "Revisa tu reserva",
+        confirmedBody: "Comprueba recogida, devolución y datos del coche antes de llegar.",
+        documentsTitle: "Prepara documentos",
+        documentsBody: "Ten tu licencia lista o sube documentos cuando se solicite.",
+        supportTitle: "¿Necesitas cambiar algo?",
+        supportBody: "Escribe a Quick Key por WhatsApp para ayuda personal.",
       },
       welcomeBack: "Bienvenido de nuevo, {name}",
       pickupLabel: "Recogida",
@@ -890,6 +1075,12 @@ export const es: Messages = {
       totalLabel: "Total",
       viewBooking: "Ver reserva",
       manageBooking: "Gestionar reserva",
+      tripReadyHint: "Los detalles de tu viaje en Curaçao están aquí.",
+      statusItems: {
+        booking: "Datos de reserva",
+        documents: "Documentos",
+        support: "Soporte WhatsApp",
+      },
       accountOverview: "Resumen de cuenta",
       memberSince: "Miembro desde",
       totalBookings: "Reservas totales",
@@ -897,6 +1088,7 @@ export const es: Messages = {
       supportTitle: "¿Necesitas ayuda?",
       contactUs: "Contáctanos",
       pastRentalsTitle: "Alquileres anteriores",
+      recentTitle: "Alquileres recientes",
       viewAll: "Ver todo",
       loading: "Cargando reservas…",
       newsletterTitle: "Ofertas y novedades",
@@ -914,15 +1106,19 @@ export const es: Messages = {
       unknownVehicle: "Vehículo de alquiler",
       loading: "Cargando reservas…",
       empty: "Aún no hay reservas en esta pestaña.",
+      emptyUpcoming: "No hay reservas próximas.",
+      emptyCompleted: "Aún no hay reservas completadas.",
+      emptyCancelled: "No hay reservas canceladas.",
       cancelConfirm: "¿Cancelar esta reserva? No se puede deshacer.",
       cancelError: "No se pudo cancelar. Contacta con soporte.",
       modifyWindowClosed:
-        "Los cambios solo están disponibles hasta 48 horas antes de la recogida. Aún puedes cancelar, pero dentro de 48 horas se aplica una tarifa de un día de alquiler.",
+        "Los cambios en línea pueden depender del tiempo restante antes de la recogida. Contacta con soporte para revisar las opciones de esta reserva.",
       cancellationDialog: {
         title: "¿Cancelar esta reserva?",
-        freeBody: "Cancelas con más de 48 horas de antelación, así que no hay tarifa de cancelación.",
+        freeBody:
+          "Según las condiciones de cancelación aplicables a esta reserva, no se muestra una tarifa de cancelación ahora.",
         feeBody:
-          "Cancelas dentro de las 48 horas previas a la recogida. Se aplica una tarifa de cancelación de {fee} (un día de alquiler).",
+          "Según las condiciones de cancelación aplicables a esta reserva, se muestra una tarifa de cancelación de {fee}.",
         feeAmount: "Tarifa de cancelación: {fee}",
         feeNotice:
           "Esta tarifa cubre los costes de preparación del vehículo reservado. Se cobrará según tu método de pago.",
@@ -949,19 +1145,24 @@ export const es: Messages = {
       returnDate: "Fecha de devolución",
       pickupLocation: "Dirección de recogida / entrega",
       dropoffLocation: "Dirección de devolución / recogida",
+      sameAsPickup: "Deja vacío si es igual que la recogida",
       vehicle: "Vehículo",
       vehicleHint: "Solo se muestran vehículos disponibles para tus fechas.",
       unavailable: "no disponible",
       save: "Guardar cambios",
       saved: "Tu reserva ha sido actualizada.",
       saveError: "No se pudo actualizar. Prueba otras fechas o contacta con soporte.",
+      addExtras: "Añadir extras",
+      currentTotal: "Total actual",
+      priceDelta: "Coste añadido",
+      newTotal: "Nuevo total",
       cancelBooking: "Cancelar reserva",
       cancelling: "Cancelando…",
       cancelConfirm: "¿Cancelar esta reserva? No se puede deshacer.",
       cancelError: "No se pudo cancelar.",
       cancelEdit: "Cancelar",
       notModifiable:
-        "Esta reserva ya no se puede cambiar en línea. Contáctanos si necesitas ayuda.",
+        "Los cambios en línea están disponibles solo si faltan más de 7 días para la recogida. Aún pueden ser posibles según disponibilidad y aprobación.",
       loading: "Cargando reserva…",
       notFound: "Reserva no encontrada.",
       loadError: "No se pudo cargar la reserva.",
@@ -976,6 +1177,7 @@ export const es: Messages = {
       },
       driverName: "Conductor principal",
       driverPhone: "Teléfono",
+      timeLabel: "Hora de recogida y devolución",
       licenseNumber: "Número de licencia",
       additionalDriver: "Conductor adicional",
       noExtras: "No hay extras seleccionados para esta reserva.",
@@ -989,8 +1191,7 @@ export const es: Messages = {
           title: "Opción 1: Depósito de seguridad",
           amount: "Hasta {amount} en tu tarjeta",
           payAtDelivery: "Verificado en la entrega en Curaçao",
-          body:
-            "Este depósito no se cobra en línea. Cuando entregamos tu coche en Curaçao, solo verificamos que tu tarjeta pueda cubrir hasta {amount}. No cobramos el importe completo al recoger el coche. Al devolverlo, cobramos solo el importe final por daños o combustible (por ejemplo $100 o $200). Si todo está en orden, no pagas nada extra.",
+          body: "Este depósito no se cobra en línea. Cuando entregamos tu coche en Curaçao, solo verificamos que tu tarjeta pueda cubrir hasta {amount}. No cobramos el importe completo al recoger el coche. Al devolverlo, cobramos solo el importe final por daños o combustible (por ejemplo $100 o $200). Si todo está en orden, no pagas nada extra.",
           reminder:
             "Importante: lleva una tarjeta de crédito a nombre del conductor principal. Comprobamos que pueda cubrir hasta {amount} en la entrega, no durante el pago en línea.",
         },
@@ -998,8 +1199,7 @@ export const es: Messages = {
           title: "Opción 2: Upgrade a todo riesgo",
           amount: "{total} ({rate}/día × {days} días)",
           paidOnline: "Pagado con tu reserva en línea",
-          body:
-            "Elegiste cobertura a todo riesgo. Esto se incluyó en tu pago en línea, así que no hay un cargo de seguro aparte al llegar a Curaçao.",
+          body: "Elegiste cobertura a todo riesgo. Esto se incluyó en tu pago en línea, así que no hay un cargo de seguro aparte al llegar a Curaçao.",
         },
       },
     },
@@ -1011,10 +1211,12 @@ export const es: Messages = {
       communicationPrefs: "Preferencias de comunicación",
       fullName: "Nombre completo",
       email: "Email",
-      emailHint: "Para cambiar tu email, introduce uno nuevo y confírmalo con el enlace que enviamos.",
+      emailHint:
+        "Para cambiar tu email, introduce uno nuevo y confírmalo con el enlace que enviamos.",
       newEmail: "Nuevo email",
       changeEmail: "Enviar enlace de verificación",
       emailSent: "Revisa tu nueva bandeja de entrada para el enlace de confirmación.",
+      emailChangeError: "No se pudo enviar el enlace de verificación. Inténtalo de nuevo.",
       phone: "Teléfono / WhatsApp",
       marketingTitle: "Mantente informado",
       marketingEmail: "Enviarme ofertas y novedades por email",
@@ -1025,7 +1227,8 @@ export const es: Messages = {
     },
     drivers: {
       title: "Conductores",
-      subtitle: "Guarda conductores para un checkout más rápido. Los datos deben coincidir con el contrato.",
+      subtitle:
+        "Guarda conductores para un checkout más rápido. Los datos deben coincidir con el contrato.",
       notice:
         "Los conductores guardados son para tu comodidad. El conductor principal de cada contrato debe coincidir con el carnet presentado en la recogida.",
       add: "Añadir conductor",
@@ -1045,24 +1248,55 @@ export const es: Messages = {
     documents: {
       title: "Documentos",
       subtitle: "Sube tu carnet o ID para un check-in más rápido.",
+      privacyTitle: "Revisión privada de documentos",
+      privacyBody:
+        "Usamos estos documentos solo para preparar la entrega y verificar al conductor principal o adicional. El personal autorizado puede revisarlos con acceso privado; los archivos subidos permanecen privados durante el ciclo del documento.",
+      guidance: [
+        "Sube un pasaporte, documento de identidad o carnet de conducir válido.",
+        "Asegúrate de que el documento completo sea visible.",
+        "Asegúrate de que el texto y la foto se puedan leer.",
+        "Sube el documento que coincide con el tipo seleccionado.",
+        "Estos documentos ayudan a Quick Key a preparar la entrega y el contrato de alquiler.",
+      ],
+      pickupAlternative:
+        "¿Prefieres no subirlos en línea? Puedes presentar los documentos originales válidos al recoger el vehículo.",
       type: "Tipo de documento",
       upload: "Subir documento",
       uploadError: "No se pudo subir el documento.",
       delete: "Eliminar",
       deleteConfirm: "¿Eliminar este documento?",
+      deletedOn: "Eliminado por Quick Key el {date}.",
+      deletedSecurely: "Quick Key eliminó este documento de forma segura.",
+      deletedReason: "Motivo",
+      rejectedReason: "Motivo",
+      reuploadGuidance: "Sube un reemplazo si este documento aún es necesario.",
       loading: "Cargando documentos…",
       empty: "Aún no hay documentos subidos.",
       types: {
-        drivers_license: "Carnet de conducir",
-        passport: "Pasaporte",
+        driver_license: "Carnet de conducir",
+        passport_id: "Pasaporte",
         id_card: "Documento de identidad",
-        other: "Otro",
       },
       verification: {
+        uploaded: "Pendiente de revisión",
         pending: "Pendiente de revisión",
+        verified: "Aprobado",
         approved: "Aprobado",
         rejected: "Rechazado",
+        deleted: "Eliminado por Quick Key",
       },
+    },
+    rewards: {
+      title: "QuickKey Rewards",
+      subtitle:
+        "Gana puntos con alquileres completados elegibles y canjéalos por crédito para futuros alquileres.",
+      balance: "Saldo actual",
+      points: "puntos",
+      rewards: "Opciones de recompensa",
+      credit: "{amount} de crédito de alquiler",
+      activity: "Actividad reciente",
+      loading: "Cargando rewards…",
+      empty: "Aún no hay actividad de puntos.",
     },
     settings: {
       title: "Ajustes",
@@ -1082,5 +1316,11 @@ export const es: Messages = {
     },
   },
   admin: adminEs,
-  logo: { quick: "Quick", key: "Key", rental: "Rental", curacao: "Curaçao", aria: "Quick Key Rental" },
+  logo: {
+    quick: "Quick",
+    key: "Key",
+    rental: "Rental",
+    curacao: "Curaçao",
+    aria: "Quick Key Rental",
+  },
 };

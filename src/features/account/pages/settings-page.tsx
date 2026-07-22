@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useI18n } from "@/i18n/provider";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
+import { AccountContent } from "../account-layout";
 import { useAuth } from "../auth-provider";
 
 export function SettingsPage() {
@@ -41,7 +42,7 @@ export function SettingsPage() {
     setDeleting(false);
 
     if (error) {
-      setDeleteError(error.message);
+      setDeleteError(copy.deleteError);
       return;
     }
 
@@ -50,7 +51,7 @@ export function SettingsPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <AccountContent className="space-y-8">
       <header>
         <h1 className="font-display text-3xl font-bold uppercase text-[var(--logo-black)]">
           {copy.title}
@@ -58,31 +59,30 @@ export function SettingsPage() {
         <p className="mt-2 text-sm text-muted-foreground">{copy.subtitle}</p>
       </header>
 
-      <section className="max-w-xl rounded-2xl border border-border bg-white p-6">
+      <section className="w-full rounded-2xl border border-border bg-white p-4 sm:max-w-xl sm:p-6">
         <h2 className="font-semibold text-[var(--logo-black)]">{copy.sessionTitle}</h2>
         <p className="mt-2 text-sm text-muted-foreground">{copy.sessionBody}</p>
         <button
           type="button"
           onClick={() => void handleSignOut()}
-          className="mt-4 inline-flex h-11 items-center gap-2 rounded-[4px] border border-border px-5 text-xs font-bold uppercase tracking-[0.1em] hover:bg-black/[0.03]"
+          className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-[4px] border border-border px-5 text-xs font-bold uppercase tracking-[0.1em] hover:bg-black/[0.03] sm:w-auto"
         >
           <LogOut className="size-4" />
           {copy.signOut}
         </button>
       </section>
 
-      <section className="max-w-xl rounded-2xl border border-destructive/30 bg-destructive/5 p-6">
+      <section className="w-full rounded-2xl border border-destructive/30 bg-destructive/5 p-4 sm:max-w-xl sm:p-6">
         <h2 className="font-semibold text-destructive">{copy.deleteTitle}</h2>
         <p className="mt-2 text-sm text-muted-foreground">{copy.deleteBody}</p>
         <p className="mt-4 text-sm">
-          {copy.deleteConfirmLabel}{" "}
-          <strong className="text-foreground">{copy.deletePhrase}</strong>
+          {copy.deleteConfirmLabel} <strong className="text-foreground">{copy.deletePhrase}</strong>
         </p>
         <input
           type="text"
           value={deleteConfirm}
           onChange={(event) => setDeleteConfirm(event.target.value)}
-          className="mt-3 h-11 w-full rounded-xl border border-border bg-white px-4 text-sm outline-none focus:border-destructive"
+          className="mt-3 h-12 w-full rounded-xl border border-border bg-white px-4 text-base outline-none focus:border-destructive sm:text-sm"
           placeholder={copy.deletePhrase}
         />
         {deleteError ? <p className="mt-2 text-sm text-destructive">{deleteError}</p> : null}
@@ -90,7 +90,7 @@ export function SettingsPage() {
           type="button"
           disabled={deleting}
           onClick={() => void handleDeleteAccount()}
-          className="mt-4 inline-flex h-11 items-center gap-2 rounded-[4px] bg-destructive px-5 text-xs font-bold uppercase tracking-[0.1em] text-white disabled:opacity-60"
+          className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-[4px] bg-destructive px-5 text-xs font-bold uppercase tracking-[0.1em] text-white disabled:opacity-60 sm:w-auto"
         >
           {deleting ? <Loader2 className="size-4 animate-spin" /> : null}
           {copy.deleteAccount}
@@ -102,6 +102,6 @@ export function SettingsPage() {
           </Link>
         </p>
       </section>
-    </div>
+    </AccountContent>
   );
 }

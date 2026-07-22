@@ -45,9 +45,14 @@ export function AccountLayout({ children }: AccountLayoutProps) {
         <header className="sticky top-0 z-30 border-b border-black/[0.06] bg-white/95 backdrop-blur-md lg:hidden">
           <div className="account-mobile-bar flex h-16 w-full items-center justify-between gap-3">
             <Link to="/" className="shrink-0" aria-label={messages.nav.homeAria}>
-              <Logo size="sm" />
+              <Logo
+                size="sm"
+                className="h-9 min-w-[7.5rem] max-w-[8.5rem] sm:h-10 sm:min-w-[9rem]"
+              />
             </Link>
-            <p className="truncate text-sm font-semibold text-[var(--logo-black)]">{firstName}</p>
+            <p className="min-w-0 flex-1 truncate text-center text-sm font-semibold text-[var(--logo-black)]">
+              {firstName}
+            </p>
             <button
               type="button"
               className="inline-flex size-10 items-center justify-center rounded-xl border border-black/10 text-[var(--logo-black)]"
@@ -97,11 +102,7 @@ export function AccountContent({
 }) {
   return (
     <div
-      className={cn(
-        "w-full",
-        size === "narrow" && "mx-auto max-w-3xl",
-        className,
-      )}
+      className={cn("min-w-0 w-full", size === "narrow" && "sm:mx-auto sm:max-w-3xl", className)}
     >
       {children}
     </div>

@@ -9,7 +9,6 @@ export type BookingStep =
   | "dates"
   | "cars"
   | "customer"
-  | "driver"
   | "extras"
   | "review"
   | "payment"
@@ -19,7 +18,6 @@ export const BOOKING_STEPS: BookingStep[] = [
   "dates",
   "cars",
   "customer",
-  "driver",
   "extras",
   "review",
   "payment",
@@ -59,24 +57,35 @@ export type BookingDraft = {
   returnTime: string;
   carId: string | null;
   fleetKey: VehicleKey | null;
+  lockedDailyPrice: number | null;
+  guestFirstName: string;
+  guestLastName: string;
   guestName: string;
   guestEmail: string;
   guestPhone: string;
+  driverDateOfBirth: string;
   driverLicense: string;
   driverAgeConfirmed: boolean;
+  arrivingByPlane: boolean | null;
   flightNumber: string;
   insuranceOption: InsuranceOption | null;
   selectedExtras: SelectedExtra[];
   additionalDriverEnabled: boolean;
+  additionalDriverFirstName: string;
+  additionalDriverLastName: string;
+  additionalDriverDateOfBirth: string;
   additionalDriverName: string;
   additionalDriverLicense: string;
   bookingId: string | null;
+  checkoutSessionId: string | null;
+  holdExpiresAt: string | null;
 };
 
 export const DEFAULT_PICKUP_TIME = "10:00";
 export const DEFAULT_RETURN_TIME = "10:00";
 
 export const SECURITY_DEPOSIT_AMOUNT = 500;
+export const ALL_RISK_INSURANCE_DAILY_RATE = 30;
 
 export const ADDITIONAL_DRIVER_EXTRA_ID = "b1111111-1111-4111-8111-111111111103";
 
@@ -91,16 +100,26 @@ export const INITIAL_BOOKING_DRAFT: BookingDraft = {
   returnTime: DEFAULT_RETURN_TIME,
   carId: null,
   fleetKey: null,
+  lockedDailyPrice: null,
+  guestFirstName: "",
+  guestLastName: "",
   guestName: "",
   guestEmail: "",
   guestPhone: "",
+  driverDateOfBirth: "",
   driverLicense: "",
   driverAgeConfirmed: false,
+  arrivingByPlane: null,
   flightNumber: "",
   insuranceOption: null,
   selectedExtras: [],
   additionalDriverEnabled: false,
+  additionalDriverFirstName: "",
+  additionalDriverLastName: "",
+  additionalDriverDateOfBirth: "",
   additionalDriverName: "",
   additionalDriverLicense: "",
   bookingId: null,
+  checkoutSessionId: null,
+  holdExpiresAt: null,
 };

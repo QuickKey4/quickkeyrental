@@ -1,7 +1,8 @@
 import type { BookingWithCar } from "@/features/account/account-queries";
 
 export const FREE_CANCELLATION_HOURS = 48;
-export const MODIFY_WINDOW_HOURS = FREE_CANCELLATION_HOURS;
+export const MODIFY_WINDOW_HOURS = 24 * 7;
+export const RENTAL_TIME_ZONE = "America/Curacao";
 
 type BookingLike = Pick<BookingWithCar, "status" | "pickup_date" | "pickup_time" | "return_date"> & {
   cars?: Pick<NonNullable<BookingWithCar["cars"]>, "daily_price"> | null;
@@ -12,7 +13,7 @@ export function pickupDateTime(
   booking: Pick<BookingWithCar, "pickup_date" | "pickup_time">,
 ): Date {
   const time = booking.pickup_time?.slice(0, 5) ?? "10:00";
-  return new Date(`${booking.pickup_date}T${time}:00`);
+  return new Date(`${booking.pickup_date}T${time}:00-04:00`);
 }
 
 export function hoursUntilPickup(booking: BookingLike, now = new Date()): number {

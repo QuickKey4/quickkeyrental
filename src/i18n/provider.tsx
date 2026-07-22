@@ -8,6 +8,7 @@ type I18nContextValue = {
   locale: SupportedLocale;
   messages: Messages;
   intlLocale: string;
+  setLocale: (locale: SupportedLocale) => void;
 };
 
 const I18nContext = createContext<I18nContextValue | null>(null);
@@ -19,6 +20,7 @@ type I18nProviderProps = {
 
 function resolveInitialLocale(serverLocale: SupportedLocale): SupportedLocale {
   if (typeof window === "undefined") return serverLocale;
+  window.localStorage.removeItem("quickkey-locale");
   return detectClientLocale();
 }
 
@@ -27,6 +29,7 @@ export function I18nProvider({ children, initialLocale = defaultLocale }: I18nPr
 
   useEffect(() => {
     const syncLocale = () => {
+      window.localStorage.removeItem("quickkey-locale");
       const detected = detectClientLocale();
       setLocale(detected);
       document.documentElement.lang = detected;
@@ -42,6 +45,10 @@ export function I18nProvider({ children, initialLocale = defaultLocale }: I18nPr
       locale,
       messages: getMessages(locale),
       intlLocale: localeToIntl[locale],
+      setLocale: (nextLocale) => {
+        document.documentElement.lang = nextLocale;
+        setLocale(nextLocale);
+      },
     }),
     [locale],
   );

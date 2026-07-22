@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { formatPrice } from "@/lib/brand";
 import { interpolate } from "@/i18n/interpolate";
 
-import { getAdminDashboard, updateAdminBooking } from "../api/admin.functions";
+import { getAdminDashboard } from "../api/admin.functions";
 import {
   AdminBadge,
   AdminButton,
@@ -17,6 +17,9 @@ import { useAdminI18n, operationalStatusLabel } from "../hooks/use-admin-i18n";
 import { useAdminSecret } from "../hooks/use-admin-user";
 import {
   bookingRef,
+  formatAdminDate,
+  formatAdminDateTime,
+  formatAdminShortDate,
   getOperationalStatus,
   todayKey,
   type AdminBooking,
@@ -27,7 +30,6 @@ export function AdminDashboardPage() {
   const { t, intlLocale } = useAdminI18n();
   const [data, setData] = useState<Awaited<ReturnType<typeof getAdminDashboard>> | null>(null);
   const [loading, setLoading] = useState(true);
-  const [confirmingId, setConfirmingId] = useState<string | null>(null);
 
   const timelineLabels = useMemo(
     () => [
@@ -52,17 +54,6 @@ export function AdminDashboardPage() {
 
   useEffect(load, [adminSecret]);
 
-  const confirmBooking = async (bookingId: string) => {
-    if (!adminSecret) return;
-    setConfirmingId(bookingId);
-    try {
-      await updateAdminBooking({ data: { adminSecret, bookingId, status: "confirmed" } });
-      load();
-    } finally {
-      setConfirmingId(null);
-    }
-  };
-
   if (loading) return <p className="text-sm text-muted-foreground">{t.dashboard.loading}</p>;
   if (!data) return <p className="text-sm text-destructive">{t.dashboard.loadError}</p>;
 
@@ -74,10 +65,18 @@ export function AdminDashboardPage() {
       <AdminPageHeader title={t.dashboard.title} subtitle={t.dashboard.subtitle} />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
-        <AdminMetricCard label={t.dashboard.todayPickups} value={data.metrics.todayPickups} tone="red" />
+        <AdminMetricCard
+          label={t.dashboard.todayPickups}
+          value={data.metrics.todayPickups}
+          tone="red"
+        />
         <AdminMetricCard label={t.dashboard.todayReturns} value={data.metrics.todayReturns} />
         <AdminMetricCard label={t.dashboard.carsRented} value={data.metrics.carsRented} />
-        <AdminMetricCard label={t.dashboard.availableCars} value={data.metrics.availableCars} tone="green" />
+        <AdminMetricCard
+          label={t.dashboard.availableCars}
+          value={data.metrics.availableCars}
+          tone="green"
+        />
         <AdminMetricCard label={t.dashboard.pendingBookings} value={data.metrics.pendingBookings} />
         <AdminMetricCard
           label={t.dashboard.monthlyRevenue}
@@ -108,8 +107,9 @@ export function AdminDashboardPage() {
             {data.discountSummary.active ? (
               <p className="mt-1 text-xs text-muted-foreground">
                 {interpolate(t.dashboard.discountEnds, {
-                  date: new Intl.DateTimeFormat(intlLocale, { month: "short", day: "numeric" }).format(
-                    new Date(data.discountSummary.active.ends_at),
+                  date: formatAdminShortDate(
+                    data.discountSummary.active.ends_at.slice(0, 10),
+                    intlLocale,
                   ),
                   count: String(data.discountSummary.active.daysLeft ?? 0),
                 })}
@@ -157,17 +157,14 @@ export function AdminDashboardPage() {
                 <div>
                   <p className="font-medium">{b.guest_name}</p>
                   <p className="text-xs text-muted-foreground">
-                    {bookingRef(b.id)} · {b.cars?.name ?? t.vehicle} · {b.pickup_date}
+                    {bookingRef(b.id)} · {b.cars?.name ?? t.vehicle} ·{" "}
+                    {formatAdminDate(b.pickup_date)}
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <AdminButton
-                    variant="primary"
-                    disabled={confirmingId === b.id}
-                    onClick={() => void confirmBooking(b.id)}
-                  >
-                    {t.confirm}
-                  </AdminButton>
+                  <AdminBadge tone={operationalBadgeTone(getOperationalStatus(b))}>
+                    {operationalStatusLabel(getOperationalStatus(b), t.status)}
+                  </AdminBadge>
                   <Link to="/admin/bookings/$bookingId" params={{ bookingId: b.id }}>
                     <AdminButton variant="secondary">{t.open}</AdminButton>
                   </Link>
@@ -226,7 +223,7 @@ export function AdminDashboardPage() {
                 >
                   <p className="font-medium">{b.cars?.name}</p>
                   <p className="text-xs text-muted-foreground">
-                    {b.guest_name} · {b.return_date} {b.return_time.slice(0, 5)}
+                    {b.guest_name} · {formatAdminDateTime(b.return_date, b.return_time)}
                   </p>
                 </Link>
               </li>
@@ -275,7 +272,7 @@ export function AdminDashboardPage() {
               <li key={c.email} className="text-sm">
                 <Link
                   to="/admin/customers/$email"
-                  params={{ email: encodeURIComponent(c.email) }}
+                  params={{ email: c.email }}
                   className="font-medium text-[var(--logo-black)] hover:text-[var(--logo-red)]"
                 >
                   {c.name}

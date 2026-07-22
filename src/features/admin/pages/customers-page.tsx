@@ -7,6 +7,7 @@ import { getAdminCustomers } from "../api/admin.functions";
 import { AdminCard, AdminPageHeader } from "../components/admin-ui";
 import { useAdminI18n } from "../hooks/use-admin-i18n";
 import { useAdminSecret } from "../hooks/use-admin-user";
+import { formatAdminDate } from "../lib/admin-utils";
 
 export function AdminCustomersPage() {
   const adminSecret = useAdminSecret();
@@ -56,7 +57,7 @@ export function AdminCustomersPage() {
                   <td className="px-4 py-3 font-medium">
                     <Link
                       to="/admin/customers/$email"
-                      params={{ email: encodeURIComponent(c.email) }}
+                      params={{ email: c.email }}
                       className="text-[var(--logo-red)] hover:underline"
                     >
                       {c.name}
@@ -66,7 +67,7 @@ export function AdminCustomersPage() {
                   <td className="px-4 py-3">{c.phone}</td>
                   <td className="px-4 py-3">{c.bookingsCount}</td>
                   <td className="px-4 py-3">{formatPrice(c.totalSpent, intlLocale)}</td>
-                  <td className="px-4 py-3">{c.lastRental}</td>
+                  <td className="px-4 py-3">{formatAdminDate(c.lastRental)}</td>
                 </tr>
               ))}
             </tbody>
