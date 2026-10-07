@@ -919,6 +919,8 @@ export const nl: Messages = {
       holdRateLimited:
         "Er zijn al actieve reserveringen vanaf deze verbinding. Rond er één af of probeer het later opnieuw.",
       paymentInProgress: "De betaling wordt al voorbereid. Wacht even en probeer het opnieuw.",
+      bookingDisabled:
+        "Online boeken is tijdelijk niet beschikbaar. Neem contact op met Quick Key via WhatsApp.",
       invalidName: "Vul je echte voor- en achternaam in, alleen letters (geen cijfers).",
       invalidPhone: "Vul een geldig internationaal telefoonnummer in.",
       invalidLicense: "Vul een geldig rijbewijsnummer in (letters, cijfers, streepjes).",

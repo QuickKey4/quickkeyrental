@@ -10,6 +10,7 @@ export function isPublicBookingDisabled() {
   return serverValue === "true" || import.meta.env.VITE_QUICKKEY_BOOKING_DISABLED === "true";
 }
 
+/** Client-only presence check — never trust this for authorization. */
 export function hasBookingTestCode(value?: string | null) {
   return Boolean(value?.trim());
 }
@@ -23,8 +24,21 @@ export function isValidBookingTestCode(value?: string | null) {
   return Boolean(expected && candidate && expected === candidate);
 }
 
+export function resolveBookingAccess(testCode?: string | null): {
+  allowed: boolean;
+  reason: "public" | "test" | "disabled";
+} {
+  if (!isPublicBookingDisabled()) {
+    return { allowed: true, reason: "public" };
+  }
+  if (isValidBookingTestCode(testCode)) {
+    return { allowed: true, reason: "test" };
+  }
+  return { allowed: false, reason: "disabled" };
+}
+
 export function assertPublicBookingEnabled(testCode?: string | null) {
-  if (isPublicBookingDisabled() && !isValidBookingTestCode(testCode)) {
+  if (!resolveBookingAccess(testCode).allowed) {
     throw new Error(BOOKING_DISABLED_MESSAGE);
   }
 }

@@ -50,6 +50,8 @@ export const pt = {
         "Já existem reservas ativas nesta ligação. Conclua uma ou tente novamente mais tarde.",
       paymentInProgress:
         "O pagamento já está a ser preparado. Aguarde um momento e tente novamente.",
+      bookingDisabled:
+        "As reservas online estão temporariamente indisponíveis. Contacte a Quick Key via WhatsApp.",
       sentooNoUrl:
         "Não conseguimos iniciar o pagamento seguro. Tente novamente ou contacte a Quick Key.",
     },

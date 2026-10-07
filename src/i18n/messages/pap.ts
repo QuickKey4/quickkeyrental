@@ -49,6 +49,8 @@ export const pap = {
       holdRateLimited:
         "Tin reservashonnan aktivo kaba for di e konekshon aki. Kompletá un of purba mas lat.",
       paymentInProgress: "E pago ta wordu prepará kaba. Warda un momentu i purba atrobe.",
+      bookingDisabled:
+        "Reservá online temporariamente no ta disponibel. Tuma kontakto ku Quick Key via WhatsApp.",
       sentooNoUrl: "Nos no por a start e pago sigur. Purba atrobe of tuma kontakto ku Quick Key.",
     },
     insurance: {

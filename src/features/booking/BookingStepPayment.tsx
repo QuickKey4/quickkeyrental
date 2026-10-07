@@ -121,12 +121,15 @@ export function BookingStepPayment({
     } catch (checkoutError) {
       const message = checkoutError instanceof Error ? checkoutError.message : book.errors.generic;
       const translated = translateBookError(message, book.errors);
+      const isBookingDisabled = translated === book.errors.bookingDisabled;
       setSentooError(
-        bookingTestCode && translated === book.errors.sentooNoUrl
-          ? message
-          : translated === book.errors.generic
-            ? book.errors.sentooNoUrl
-            : translated,
+        isBookingDisabled
+          ? translated
+          : bookingTestCode && translated === book.errors.sentooNoUrl
+            ? message
+            : translated === book.errors.generic
+              ? book.errors.sentooNoUrl
+              : translated,
       );
       setSentooLoading(false);
       checkoutInFlightRef.current = false;

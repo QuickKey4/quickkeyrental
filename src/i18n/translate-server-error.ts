@@ -50,6 +50,7 @@ type BookErrors = {
   pickupInPast?: string;
   holdRateLimited?: string;
   paymentInProgress?: string;
+  bookingDisabled?: string;
 };
 
 export function translateBookError(message: string, errors: BookErrors): string {
@@ -68,6 +69,8 @@ export function translateBookError(message: string, errors: BookErrors): string 
       "holdRateLimited",
     "Too many checkout hold attempts. Please wait and try again.": "holdRateLimited",
     "Payment setup is already in progress. Please wait a moment.": "paymentInProgress",
+    "Online booking is temporarily unavailable. Please contact Quick Key on WhatsApp.":
+      "bookingDisabled",
   };
 
   const key = exact[message];

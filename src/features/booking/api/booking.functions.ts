@@ -4,7 +4,7 @@ import { createServerFn } from "@tanstack/react-start";
 import Stripe from "stripe";
 import { z } from "zod";
 
-import { assertPublicBookingEnabled } from "@/lib/booking-lock";
+import { assertPublicBookingEnabled, resolveBookingAccess } from "@/lib/booking-lock";
 import { getServerConfig } from "@/lib/config.server";
 import { supportedLocales } from "@/i18n/config";
 import { resolveEffectiveDailyPrice } from "@/lib/pricing.server";
@@ -277,6 +277,22 @@ function publicBookingSummary(booking: BookingRecord) {
   const { checkout_session_id: _checkoutSessionId, ...safeBooking } = booking;
   return safeBooking;
 }
+
+export const getBookingAccess = createServerFn({ method: "GET" })
+  .inputValidator(
+    z.object({
+      code: z.string().optional(),
+      step: z.string().optional(),
+      bookingId: z.string().optional(),
+    }),
+  )
+  .handler(async ({ data }) => {
+    // Payment return URLs must still open confirmation while public booking is paused.
+    if (data.step === "confirmation" && data.bookingId?.trim()) {
+      return { allowed: true as const, reason: "confirmation" as const };
+    }
+    return resolveBookingAccess(data.code);
+  });
 
 export const createCheckoutHold = createServerFn({ method: "POST" })
   .inputValidator(holdInput)

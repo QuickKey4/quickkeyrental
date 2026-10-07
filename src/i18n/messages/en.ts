@@ -932,6 +932,8 @@ export const en = {
       holdRateLimited:
         "There are already active reservations from this connection. Complete one or try again later.",
       paymentInProgress: "Payment is already being prepared. Please wait a moment and try again.",
+      bookingDisabled:
+        "Online booking is temporarily unavailable. Please contact Quick Key on WhatsApp.",
       invalidName: "Enter your real first and last name using letters only (no numbers).",
       invalidPhone: "Enter a valid international phone number.",
       invalidLicense: "Enter a valid license number (letters, numbers, dashes).",

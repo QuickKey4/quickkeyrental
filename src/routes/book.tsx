@@ -3,12 +3,12 @@ import { ArrowLeft, MessageCircle } from "lucide-react";
 
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { getBookingAccess } from "@/features/booking/api/booking.functions";
 import { BookingFlow } from "@/features/booking/BookingFlow";
 import type { BookingStep } from "@/features/booking/bookingTypes";
 import { useBookingCopy } from "@/features/booking/useBookingCopy";
 import { useI18n } from "@/i18n/provider";
 import { getMessages } from "@/i18n/messages";
-import { hasBookingTestCode, isPublicBookingDisabled } from "@/lib/booking-lock";
 import { contactHrefs } from "@/lib/contact-links";
 
 type Search = {
@@ -46,6 +46,11 @@ export const Route = createFileRoute("/book")({
     attempt: typeof search.attempt === "string" ? search.attempt : undefined,
     code: typeof search.code === "string" ? search.code : undefined,
   }),
+  loaderDeps: ({ search: { code, step, bookingId } }) => ({ code, step, bookingId }),
+  loader: ({ deps }) =>
+    getBookingAccess({
+      data: { code: deps.code, step: deps.step, bookingId: deps.bookingId },
+    }),
   head: ({ match }) => {
     const locale = match.context.locale;
     const messages = getMessages(locale);
@@ -62,9 +67,8 @@ export const Route = createFileRoute("/book")({
 
 function BookPage() {
   const search = Route.useSearch();
+  const access = Route.useLoaderData();
   const copy = useBookingCopy();
-  const bookingDisabled = isPublicBookingDisabled();
-  const hasTestAccess = hasBookingTestCode(search.code);
 
   return (
     <main className="relative min-h-screen bg-white">
@@ -89,9 +93,7 @@ function BookPage() {
             </h1>
           </div>
 
-          {bookingDisabled && !hasTestAccess ? (
-            <BookingUnavailable />
-          ) : (
+          {access.allowed ? (
             <BookingFlow
               initialStep={search.step ?? "dates"}
               initialBookingId={search.bookingId}
@@ -104,6 +106,8 @@ function BookPage() {
                 to: search.to,
               }}
             />
+          ) : (
+            <BookingUnavailable />
           )}
         </div>
       </section>

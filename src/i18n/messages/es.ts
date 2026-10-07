@@ -934,6 +934,8 @@ export const es: Messages = {
       holdRateLimited:
         "Ya hay reservas activas desde esta conexión. Completa una o vuelve a intentarlo más tarde.",
       paymentInProgress: "El pago ya se está preparando. Espera un momento e inténtalo de nuevo.",
+      bookingDisabled:
+        "Las reservas online no están disponibles temporalmente. Contacta a Quick Key por WhatsApp.",
       invalidName: "Introduce tu nombre y apellidos reales, solo letras (sin números).",
       invalidPhone: "Introduce un teléfono internacional válido.",
       invalidLicense: "Introduce un número de carnet válido (letras, números, guiones).",
