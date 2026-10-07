@@ -720,6 +720,9 @@ export const es: Messages = {
         "Este coche está reservado para tus fechas. Prueba otras fechas u otra unidad.",
       unavailableHintWithResume:
         "Reservado hasta {blockedThrough}. Disponible de nuevo desde {nextAvailable}.",
+      allUnavailableTitle: "Todos los coches están reservados para estas fechas",
+      allUnavailableBody:
+        "Para probar, elige uno de estos próximos rangos disponibles y continúa el flujo.",
       trySuggestedDates: "Probar {pickup} – {return}",
       select: "Seleccionar este coche",
       selected: "Seleccionado",
@@ -847,6 +850,7 @@ export const es: Messages = {
       sentooCardHint: "Tarjetas Visa, American Express y Maestro",
       sentooSecureNote:
         "Los pagos se procesan de forma segura con Sentoo. Quick Key nunca guarda los datos de tu tarjeta.",
+      paymentBadgeAlt: "Paga online de forma segura con Sentoo, bancos locales, tarjetas e iDEAL",
       secureCheckout: "Checkout cifrado",
       acceptedMethods: "Aceptamos",
       localBanksShort: "Banco local",

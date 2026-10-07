@@ -100,6 +100,17 @@ export function BookingStepPayment({
     setSentooLoading(true);
     setSentooError("");
     try {
+      if (recoveryStatus === "failed") {
+        await cancelSentooCheckout({
+          data: { bookingId, checkoutSessionId, bookingTestCode },
+        }).catch(() => null);
+        if (typeof window !== "undefined") {
+          window.localStorage.removeItem(sentooAttemptKey(bookingId));
+        }
+        setShouldSyncRecovery(false);
+        setRecoveryStatus("idle");
+      }
+
       const result = await createSentooCheckout({
         data: { bookingId, checkoutSessionId, bookingTestCode },
       });
@@ -181,6 +192,14 @@ export function BookingStepPayment({
             {copy.sentooSecureNote}
           </p>
 
+          <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-[0_14px_32px_rgba(0,0,0,0.08)]">
+            <img
+              src="/sentoo-payment-badge.png"
+              alt={copy.paymentBadgeAlt}
+              className="h-auto w-full"
+            />
+          </div>
+
           {sentooError ? (
             <div className="rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
               {sentooError}
@@ -227,19 +246,13 @@ export function BookingStepPayment({
                     : copy.sentooCta
             }
           >
-            {sentooLoading ? (
-              copy.redirecting
-            ) : recoveryStatus === "active" ? (
-              copy.resumePayment
-            ) : recoveryStatus === "failed" ? (
-              copy.retry
-            ) : (
-              <img
-                src="/sentoo-payment-button-curacao-bes.svg"
-                alt={copy.sentooCta}
-                className="h-auto max-h-12 w-full max-w-md"
-              />
-            )}
+            {sentooLoading
+              ? copy.redirecting
+              : recoveryStatus === "active"
+                ? copy.resumePayment
+                : recoveryStatus === "failed"
+                  ? copy.retry
+                  : copy.sentooCta}
           </Button>
 
           {recoveryStatus === "active" || recoveryStatus === "failed" ? (

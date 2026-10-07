@@ -32,6 +32,10 @@ function formatDateKey(dateKey: string, intlLocale: string) {
   return formatShortDate(new Date(`${dateKey}T12:00:00`), intlLocale);
 }
 
+function uniqueDateKeys(dateKeys: Array<string | null>): string[] {
+  return Array.from(new Set(dateKeys.filter(Boolean) as string[])).sort();
+}
+
 function AvailabilitySkeleton() {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-3" aria-hidden="true">
@@ -76,6 +80,28 @@ export function BookingStepCars({
   const showError = isError && !isLoading;
   const showLoading = isLoading && !showError && !availabilityReady;
   const showResults = availabilityReady && !showError;
+  const allCarsSoldOut =
+    showResults && availability.length > 0 && availability.every((item) => !item.available);
+  const dateSuggestions = allCarsSoldOut
+    ? uniqueDateKeys(
+        uniqueDateKeys(availability.map((item) => item.nextAvailableDate)).flatMap(
+          (dateKey, index) => {
+            if (index > 0) return [dateKey];
+            return [
+              dateKey,
+              addDaysToDateKey(dateKey, tripDays),
+              addDaysToDateKey(dateKey, tripDays * 2),
+            ];
+          },
+        ),
+      )
+        .filter((dateKey) => dateKey !== pickupDate)
+        .slice(0, 4)
+        .map((dateKey) => ({
+          pickup: dateKey,
+          return: addDaysToDateKey(dateKey, tripDays),
+        }))
+    : [];
 
   return (
     <div>
@@ -102,140 +128,168 @@ export function BookingStepCars({
       {showLoading ? <AvailabilitySkeleton /> : null}
 
       {showResults ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          {availability.map((item) => {
-            const vehicle = getVehicle(fleet, item.fleetKey);
-            const isSelected = selectedCarId === item.car.id;
-            const isSoldOut = availabilityReady && !item.available;
-            const suggestedPickup = item.nextAvailableDate;
-            const suggestedReturn =
-              suggestedPickup && pickupDate && returnDate
-                ? addDaysToDateKey(suggestedPickup, tripDays)
-                : null;
+        <>
+          {allCarsSoldOut && dateSuggestions.length > 0 ? (
+            <div className="mb-5 rounded-2xl border border-primary/20 bg-primary/5 p-4">
+              <p className="font-display text-base font-bold text-[var(--logo-black)]">
+                {copy.allUnavailableTitle}
+              </p>
+              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                {copy.allUnavailableBody}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {dateSuggestions.map((suggestion) => (
+                  <button
+                    key={`${suggestion.pickup}-${suggestion.return}`}
+                    type="button"
+                    onClick={() => onSuggestDates(suggestion.pickup, suggestion.return)}
+                    className="rounded-full border border-primary/25 bg-white px-3 py-2 text-xs font-bold text-primary transition-colors hover:border-primary/50 hover:bg-primary/8"
+                  >
+                    {interpolate(copy.trySuggestedDates, {
+                      pickup: formatDateKey(suggestion.pickup, intlLocale),
+                      return: formatDateKey(suggestion.return, intlLocale),
+                    })}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : null}
 
-            const unavailableMessage =
-              isSoldOut && item.blockedThroughDate && item.nextAvailableDate
-                ? interpolate(copy.unavailableHintWithResume, {
-                    blockedThrough: formatDateKey(item.blockedThroughDate, intlLocale),
-                    nextAvailable: formatDateKey(item.nextAvailableDate, intlLocale),
-                  })
-                : copy.unavailableHint;
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {availability.map((item) => {
+              const vehicle = getVehicle(fleet, item.fleetKey);
+              const isSelected = selectedCarId === item.car.id;
+              const isSoldOut = availabilityReady && !item.available;
+              const suggestedPickup = item.nextAvailableDate;
+              const suggestedReturn =
+                suggestedPickup && pickupDate && returnDate
+                  ? addDaysToDateKey(suggestedPickup, tripDays)
+                  : null;
 
-            return (
-              <div
-                key={item.car.id}
-                className={cn(
-                  "overflow-hidden rounded-2xl border transition-colors",
-                  isSelected && item.available
-                    ? "border-primary bg-primary/8 shadow-[0_16px_36px_rgba(0,0,0,0.10)] ring-2 ring-primary/10"
-                    : "border-border hover:border-primary/35 hover:shadow-[0_12px_28px_rgba(0,0,0,0.07)]",
-                  isSoldOut && "opacity-90",
-                  "transition-all duration-200 motion-safe:hover:-translate-y-0.5",
-                )}
-              >
-                <div className="relative">
-                  <FleetPhoto
-                    src={vehicle.image}
-                    alt={vehicle.name}
-                    className="aspect-[4/3] w-full bg-background-secondary"
-                    fit="cover"
-                    objectPosition={vehicle.imageObjectPosition ?? "center 52%"}
-                  />
-                  {isSoldOut ? (
-                    <span className="absolute left-3 top-3 rounded-full bg-[var(--logo-black)] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white">
-                      {book.soldOut}
-                    </span>
-                  ) : null}
-                  {isSelected && item.available ? (
-                    <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white shadow-sm">
-                      <CheckCircle2 className="size-3" />
-                      {copy.selected}
-                    </span>
-                  ) : null}
-                </div>
+              const unavailableMessage =
+                isSoldOut && item.blockedThroughDate && item.nextAvailableDate
+                  ? interpolate(copy.unavailableHintWithResume, {
+                      blockedThrough: formatDateKey(item.blockedThroughDate, intlLocale),
+                      nextAvailable: formatDateKey(item.nextAvailableDate, intlLocale),
+                    })
+                  : copy.unavailableHint;
 
-                <div className="space-y-3 p-4">
-                  <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                      {vehicle.filterLabel}
-                    </p>
-                    <p className="font-display text-sm font-bold leading-tight">{vehicle.name}</p>
-                    <p className="text-xs text-muted-foreground">{vehicle.category}</p>
-                    <p className="mt-1 text-sm font-bold text-primary">
-                      {item.baseDailyPrice > Number(item.car.daily_price) ? (
-                        <>
-                          <span className="mr-2 text-xs font-semibold text-muted-foreground line-through">
-                            {formatPrice(item.baseDailyPrice, intlLocale)}
-                          </span>
-                        </>
-                      ) : null}
-                      {formatPrice(Number(item.car.daily_price), intlLocale)}
-                      {book.perDay}
-                    </p>
-                    {item.discountLabel ? (
-                      <p className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-[var(--logo-red)]">
-                        {book.limitedOffer}
-                      </p>
+              return (
+                <div
+                  key={item.car.id}
+                  className={cn(
+                    "overflow-hidden rounded-2xl border transition-colors",
+                    isSelected && item.available
+                      ? "border-primary bg-primary/8 shadow-[0_16px_36px_rgba(0,0,0,0.10)] ring-2 ring-primary/10"
+                      : "border-border hover:border-primary/35 hover:shadow-[0_12px_28px_rgba(0,0,0,0.07)]",
+                    isSoldOut && "opacity-90",
+                    "transition-all duration-200 motion-safe:hover:-translate-y-0.5",
+                  )}
+                >
+                  <div className="relative">
+                    <FleetPhoto
+                      src={vehicle.image}
+                      alt={vehicle.name}
+                      className="aspect-[4/3] w-full bg-background-secondary"
+                      fit="cover"
+                      objectPosition={vehicle.imageObjectPosition ?? "center 52%"}
+                    />
+                    {isSoldOut ? (
+                      <span className="absolute left-3 top-3 rounded-full bg-[var(--logo-black)] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white">
+                        {book.soldOut}
+                      </span>
+                    ) : null}
+                    {isSelected && item.available ? (
+                      <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white shadow-sm">
+                        <CheckCircle2 className="size-3" />
+                        {copy.selected}
+                      </span>
                     ) : null}
                   </div>
 
-                  {isSoldOut ? (
-                    <div className="space-y-2">
-                      <p className="text-xs leading-relaxed text-muted-foreground">
-                        {unavailableMessage}
+                  <div className="space-y-3 p-4">
+                    <div>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                        {vehicle.filterLabel}
                       </p>
-                      {suggestedPickup && suggestedReturn ? (
-                        <button
-                          type="button"
-                          onClick={() => onSuggestDates(suggestedPickup, suggestedReturn)}
-                          className="text-left text-xs font-semibold text-primary underline-offset-2 hover:underline"
-                        >
-                          {interpolate(copy.trySuggestedDates, {
-                            pickup: formatDateKey(suggestedPickup, intlLocale),
-                            return: formatDateKey(suggestedReturn, intlLocale),
-                          })}
-                        </button>
+                      <p className="font-display text-sm font-bold leading-tight">{vehicle.name}</p>
+                      <p className="text-xs text-muted-foreground">{vehicle.category}</p>
+                      <p className="mt-1 text-sm font-bold text-primary">
+                        {item.baseDailyPrice > Number(item.car.daily_price) ? (
+                          <>
+                            <span className="mr-2 text-xs font-semibold text-muted-foreground line-through">
+                              {formatPrice(item.baseDailyPrice, intlLocale)}
+                            </span>
+                          </>
+                        ) : null}
+                        {formatPrice(Number(item.car.daily_price), intlLocale)}
+                        {book.perDay}
+                      </p>
+                      {item.discountLabel ? (
+                        <p className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-[var(--logo-red)]">
+                          {book.limitedOffer}
+                        </p>
                       ) : null}
                     </div>
-                  ) : null}
 
-                  <button
-                    type="button"
-                    disabled={isSoldOut || isLoading || !availabilityReady}
-                    onClick={() => onSelect(item)}
-                    className={cn(
-                      "h-10 w-full rounded-[4px] text-xs font-bold uppercase tracking-[0.1em] transition-colors",
-                      isSoldOut
-                        ? "cursor-not-allowed bg-secondary text-muted-foreground"
-                        : isSelected
-                          ? "bg-[var(--logo-red)] text-white"
-                          : "border border-border bg-surface hover:border-primary/40",
-                      (isLoading || !availabilityReady) && !isSoldOut
-                        ? "cursor-wait opacity-80"
-                        : "",
-                    )}
-                  >
-                    {!availabilityReady
-                      ? copy.checkingAvailability
-                      : isSoldOut
-                        ? book.soldOut
-                        : isSelected
-                          ? copy.selected
-                          : copy.select}
-                  </button>
-                  <button
-                    type="button"
-                    disabled={isLoading || !availabilityReady}
-                    onClick={() => setDetailsCarId(item.car.id)}
-                    className="h-10 w-full rounded-[4px] border border-border bg-transparent text-xs font-bold uppercase tracking-[0.1em] transition-colors hover:border-primary/40 disabled:cursor-wait disabled:opacity-70"
-                  >
-                    {copy.details}
-                  </button>
+                    {isSoldOut ? (
+                      <div className="space-y-2">
+                        <p className="text-xs leading-relaxed text-muted-foreground">
+                          {unavailableMessage}
+                        </p>
+                        {suggestedPickup && suggestedReturn ? (
+                          <button
+                            type="button"
+                            onClick={() => onSuggestDates(suggestedPickup, suggestedReturn)}
+                            className="text-left text-xs font-semibold text-primary underline-offset-2 hover:underline"
+                          >
+                            {interpolate(copy.trySuggestedDates, {
+                              pickup: formatDateKey(suggestedPickup, intlLocale),
+                              return: formatDateKey(suggestedReturn, intlLocale),
+                            })}
+                          </button>
+                        ) : null}
+                      </div>
+                    ) : null}
+
+                    <button
+                      type="button"
+                      disabled={isSoldOut || isLoading || !availabilityReady}
+                      onClick={() => onSelect(item)}
+                      className={cn(
+                        "h-10 w-full rounded-[4px] text-xs font-bold uppercase tracking-[0.1em] transition-colors",
+                        isSoldOut
+                          ? "cursor-not-allowed bg-secondary text-muted-foreground"
+                          : isSelected
+                            ? "bg-[var(--logo-red)] text-white"
+                            : "border border-border bg-surface hover:border-primary/40",
+                        (isLoading || !availabilityReady) && !isSoldOut
+                          ? "cursor-wait opacity-80"
+                          : "",
+                      )}
+                    >
+                      {!availabilityReady
+                        ? copy.checkingAvailability
+                        : isSoldOut
+                          ? book.soldOut
+                          : isSelected
+                            ? copy.selected
+                            : copy.select}
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isLoading || !availabilityReady}
+                      onClick={() => setDetailsCarId(item.car.id)}
+                      className="h-10 w-full rounded-[4px] border border-border bg-transparent text-xs font-bold uppercase tracking-[0.1em] transition-colors hover:border-primary/40 disabled:cursor-wait disabled:opacity-70"
+                    >
+                      {copy.details}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        </>
       ) : null}
 
       <VehicleDetailSheet

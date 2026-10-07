@@ -725,6 +725,9 @@ export const en = {
         "This car is booked for your dates. Try different dates or choose another unit.",
       unavailableHintWithResume:
         "Reserved through {blockedThrough}. Available again from {nextAvailable}.",
+      allUnavailableTitle: "All cars are reserved for these dates",
+      allUnavailableBody:
+        "For testing, try one of these next available date ranges and continue the flow.",
       trySuggestedDates: "Try {pickup} – {return} instead",
       select: "Select this car",
       selected: "Selected",
@@ -847,6 +850,7 @@ export const en = {
       sentooCardHint: "Visa, American Express, and Maestro cards",
       sentooSecureNote:
         "Payments are processed securely by Sentoo. Quick Key never stores your card details.",
+      paymentBadgeAlt: "Pay securely online with Sentoo, local banks, cards, and iDEAL",
       secureCheckout: "Encrypted checkout",
       acceptedMethods: "We accept",
       localBanksShort: "Local Bank",

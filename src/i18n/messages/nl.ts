@@ -707,6 +707,9 @@ export const nl: Messages = {
       unavailableHint: "Deze auto is geboekt voor je data. Kies andere data of een andere unit.",
       unavailableHintWithResume:
         "Gereserveerd t/m {blockedThrough}. Weer beschikbaar vanaf {nextAvailable}.",
+      allUnavailableTitle: "Alle auto's zijn gereserveerd voor deze data",
+      allUnavailableBody:
+        "Gebruik voor testen een van deze eerstvolgende beschikbare periodes om verder te gaan.",
       trySuggestedDates: "Probeer {pickup} – {return}",
       select: "Selecteer deze auto",
       selected: "Geselecteerd",
@@ -832,6 +835,7 @@ export const nl: Messages = {
       sentooCardHint: "Visa, American Express en Maestro-kaarten",
       sentooSecureNote:
         "Betalingen worden veilig verwerkt door Sentoo. Quick Key slaat je kaartgegevens nooit op.",
+      paymentBadgeAlt: "Betaal veilig online met Sentoo, lokale banken, kaarten en iDEAL",
       secureCheckout: "Versleutelde checkout",
       acceptedMethods: "Wij accepteren",
       localBanksShort: "Lokale bank",
