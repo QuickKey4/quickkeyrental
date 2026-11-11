@@ -654,6 +654,7 @@ export const updateAdminFleetVehicle = createServerFn({ method: "POST" })
       carId: z.string().uuid(),
       licensePlate: z.string().optional(),
       mileage: z.number().int().optional(),
+      dailyPrice: z.number().positive().max(10_000).optional(),
       fleetStatus: z
         .enum(["available", "reserved", "on_rental", "maintenance", "disabled"])
         .optional(),
@@ -666,6 +667,7 @@ export const updateAdminFleetVehicle = createServerFn({ method: "POST" })
     const patch: Record<string, unknown> = {};
     if (data.licensePlate !== undefined) patch.license_plate = data.licensePlate;
     if (data.mileage !== undefined) patch.mileage = data.mileage;
+    if (data.dailyPrice !== undefined) patch.daily_price = Math.round(data.dailyPrice);
     if (data.fleetStatus) patch.fleet_status = data.fleetStatus;
     if (data.isActive !== undefined) patch.is_active = data.isActive;
 
