@@ -2,12 +2,27 @@ import { getSupabaseAdminClient } from "@/lib/supabase/admin.server";
 
 export type DiscountScope = "all" | "compact" | "sedan" | "car";
 export type DiscountType = "percent" | "fixed_amount";
+export type RatePeriodScope = DiscountScope;
 
 export type EffectiveDailyPrice = {
   basePrice: number;
   effectivePrice: number;
   discountId: string | null;
   discountLabel: string | null;
+};
+
+export type PricingRatePeriodRow = {
+  id: string;
+  name: string;
+  daily_price: number;
+  scope: RatePeriodScope;
+  car_id: string | null;
+  starts_at: string;
+  ends_at: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  created_by: string | null;
 };
 
 export type FleetPricingRow = {

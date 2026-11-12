@@ -9,50 +9,46 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as BookRouteImport } from './routes/book'
-import { Route as AdminRouteRouteImport } from './routes/admin/route'
-import { Route as AccountRouteRouteImport } from './routes/account/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AccountRouteRouteImport } from './routes/account/route'
+import { Route as AdminRouteRouteImport } from './routes/admin/route'
+import { Route as BookRouteImport } from './routes/book'
 import { Route as AccountIndexRouteImport } from './routes/account/index'
-import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
-import { Route as AdminSupportRouteImport } from './routes/admin/support'
-import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
-import { Route as AdminRewardsRouteImport } from './routes/admin/rewards'
-import { Route as AdminPaymentsRouteImport } from './routes/admin/payments'
-import { Route as AdminLoginRouteImport } from './routes/admin/login'
-import { Route as AdminFleetRouteImport } from './routes/admin/fleet'
-import { Route as AdminDocumentsRouteImport } from './routes/admin/documents'
-import { Route as AdminDiscountsRouteImport } from './routes/admin/discounts'
-import { Route as AdminCustomersRouteImport } from './routes/admin/customers'
-import { Route as AdminCalendarRouteImport } from './routes/admin/calendar'
-import { Route as AdminBookingsRouteImport } from './routes/admin/bookings'
-import { Route as AccountSupportRouteImport } from './routes/account/support'
-import { Route as AccountSettingsRouteImport } from './routes/account/settings'
-import { Route as AccountRewardsRouteImport } from './routes/account/rewards'
-import { Route as AccountResetPasswordRouteImport } from './routes/account/reset-password'
-import { Route as AccountRegisterRouteImport } from './routes/account/register'
-import { Route as AccountProfileRouteImport } from './routes/account/profile'
-import { Route as AccountLoginRouteImport } from './routes/account/login'
-import { Route as AccountForgotPasswordRouteImport } from './routes/account/forgot-password'
-import { Route as AccountDriversRouteImport } from './routes/account/drivers'
-import { Route as AccountDocumentsRouteImport } from './routes/account/documents'
 import { Route as AccountBookingsRouteImport } from './routes/account/bookings'
-import { Route as AdminCustomersIndexRouteImport } from './routes/admin/customers.index'
-import { Route as AdminBookingsIndexRouteImport } from './routes/admin/bookings.index'
+import { Route as AccountDocumentsRouteImport } from './routes/account/documents'
+import { Route as AccountDriversRouteImport } from './routes/account/drivers'
+import { Route as AccountForgotPasswordRouteImport } from './routes/account/forgot-password'
+import { Route as AccountLoginRouteImport } from './routes/account/login'
+import { Route as AccountProfileRouteImport } from './routes/account/profile'
+import { Route as AccountRegisterRouteImport } from './routes/account/register'
+import { Route as AccountResetPasswordRouteImport } from './routes/account/reset-password'
+import { Route as AccountRewardsRouteImport } from './routes/account/rewards'
+import { Route as AccountSettingsRouteImport } from './routes/account/settings'
+import { Route as AccountSupportRouteImport } from './routes/account/support'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminBookingsRouteImport } from './routes/admin/bookings'
+import { Route as AdminCalendarRouteImport } from './routes/admin/calendar'
+import { Route as AdminCustomersRouteImport } from './routes/admin/customers'
+import { Route as AdminDiscountsRouteImport } from './routes/admin/discounts'
+import { Route as AdminDocumentsRouteImport } from './routes/admin/documents'
+import { Route as AdminFleetRouteImport } from './routes/admin/fleet'
+import { Route as AdminLoginRouteImport } from './routes/admin/login'
+import { Route as AdminPaymentsRouteImport } from './routes/admin/payments'
+import { Route as AdminPricesRouteImport } from './routes/admin/prices'
+import { Route as AdminRewardsRouteImport } from './routes/admin/rewards'
+import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
+import { Route as AdminSupportRouteImport } from './routes/admin/support'
+import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 import { Route as AccountBookingsIndexRouteImport } from './routes/account/bookings.index'
-import { Route as AdminCustomersEmailRouteImport } from './routes/admin/customers.$email'
-import { Route as AdminBookingsBookingIdRouteImport } from './routes/admin/bookings.$bookingId'
 import { Route as AccountBookingsBookingIdRouteImport } from './routes/account/bookings.$bookingId'
+import { Route as AdminBookingsIndexRouteImport } from './routes/admin/bookings.index'
+import { Route as AdminBookingsBookingIdRouteImport } from './routes/admin/bookings.$bookingId'
+import { Route as AdminCustomersIndexRouteImport } from './routes/admin/customers.index'
+import { Route as AdminCustomersEmailRouteImport } from './routes/admin/customers.$email'
 
-const BookRoute = BookRouteImport.update({
-  id: '/book',
-  path: '/book',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminRouteRoute = AdminRouteRouteImport.update({
-  id: '/admin',
-  path: '/admin',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountRouteRoute = AccountRouteRouteImport.update({
@@ -60,129 +56,19 @@ const AccountRouteRoute = AccountRouteRouteImport.update({
   path: '/account',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AdminRouteRoute = AdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminRouteRoute,
+const BookRoute = BookRouteImport.update({
+  id: '/book',
+  path: '/book',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AccountIndexRoute = AccountIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AccountRouteRoute,
-} as any)
-const AuthCallbackRoute = AuthCallbackRouteImport.update({
-  id: '/auth/callback',
-  path: '/auth/callback',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminSupportRoute = AdminSupportRouteImport.update({
-  id: '/support',
-  path: '/support',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminSettingsRoute = AdminSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminRewardsRoute = AdminRewardsRouteImport.update({
-  id: '/rewards',
-  path: '/rewards',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminPaymentsRoute = AdminPaymentsRouteImport.update({
-  id: '/payments',
-  path: '/payments',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminLoginRoute = AdminLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminFleetRoute = AdminFleetRouteImport.update({
-  id: '/fleet',
-  path: '/fleet',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminDocumentsRoute = AdminDocumentsRouteImport.update({
-  id: '/documents',
-  path: '/documents',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminDiscountsRoute = AdminDiscountsRouteImport.update({
-  id: '/discounts',
-  path: '/discounts',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminCustomersRoute = AdminCustomersRouteImport.update({
-  id: '/customers',
-  path: '/customers',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminCalendarRoute = AdminCalendarRouteImport.update({
-  id: '/calendar',
-  path: '/calendar',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminBookingsRoute = AdminBookingsRouteImport.update({
-  id: '/bookings',
-  path: '/bookings',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AccountSupportRoute = AccountSupportRouteImport.update({
-  id: '/support',
-  path: '/support',
-  getParentRoute: () => AccountRouteRoute,
-} as any)
-const AccountSettingsRoute = AccountSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AccountRouteRoute,
-} as any)
-const AccountRewardsRoute = AccountRewardsRouteImport.update({
-  id: '/rewards',
-  path: '/rewards',
-  getParentRoute: () => AccountRouteRoute,
-} as any)
-const AccountResetPasswordRoute = AccountResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => AccountRouteRoute,
-} as any)
-const AccountRegisterRoute = AccountRegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => AccountRouteRoute,
-} as any)
-const AccountProfileRoute = AccountProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => AccountRouteRoute,
-} as any)
-const AccountLoginRoute = AccountLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => AccountRouteRoute,
-} as any)
-const AccountForgotPasswordRoute = AccountForgotPasswordRouteImport.update({
-  id: '/forgot-password',
-  path: '/forgot-password',
-  getParentRoute: () => AccountRouteRoute,
-} as any)
-const AccountDriversRoute = AccountDriversRouteImport.update({
-  id: '/drivers',
-  path: '/drivers',
-  getParentRoute: () => AccountRouteRoute,
-} as any)
-const AccountDocumentsRoute = AccountDocumentsRouteImport.update({
-  id: '/documents',
-  path: '/documents',
   getParentRoute: () => AccountRouteRoute,
 } as any)
 const AccountBookingsRoute = AccountBookingsRouteImport.update({
@@ -190,30 +76,130 @@ const AccountBookingsRoute = AccountBookingsRouteImport.update({
   path: '/bookings',
   getParentRoute: () => AccountRouteRoute,
 } as any)
-const AdminCustomersIndexRoute = AdminCustomersIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminCustomersRoute,
+const AccountDocumentsRoute = AccountDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => AccountRouteRoute,
 } as any)
-const AdminBookingsIndexRoute = AdminBookingsIndexRouteImport.update({
+const AccountDriversRoute = AccountDriversRouteImport.update({
+  id: '/drivers',
+  path: '/drivers',
+  getParentRoute: () => AccountRouteRoute,
+} as any)
+const AccountForgotPasswordRoute = AccountForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => AccountRouteRoute,
+} as any)
+const AccountLoginRoute = AccountLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AccountRouteRoute,
+} as any)
+const AccountProfileRoute = AccountProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AccountRouteRoute,
+} as any)
+const AccountRegisterRoute = AccountRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => AccountRouteRoute,
+} as any)
+const AccountResetPasswordRoute = AccountResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AccountRouteRoute,
+} as any)
+const AccountRewardsRoute = AccountRewardsRouteImport.update({
+  id: '/rewards',
+  path: '/rewards',
+  getParentRoute: () => AccountRouteRoute,
+} as any)
+const AccountSettingsRoute = AccountSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AccountRouteRoute,
+} as any)
+const AccountSupportRoute = AccountSupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => AccountRouteRoute,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AdminBookingsRoute,
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminBookingsRoute = AdminBookingsRouteImport.update({
+  id: '/bookings',
+  path: '/bookings',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminCalendarRoute = AdminCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminCustomersRoute = AdminCustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminDiscountsRoute = AdminDiscountsRouteImport.update({
+  id: '/discounts',
+  path: '/discounts',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminDocumentsRoute = AdminDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminFleetRoute = AdminFleetRouteImport.update({
+  id: '/fleet',
+  path: '/fleet',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminPaymentsRoute = AdminPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminPricesRoute = AdminPricesRouteImport.update({
+  id: '/prices',
+  path: '/prices',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminRewardsRoute = AdminRewardsRouteImport.update({
+  id: '/rewards',
+  path: '/rewards',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminSupportRoute = AdminSupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AccountBookingsIndexRoute = AccountBookingsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AccountBookingsRoute,
-} as any)
-const AdminCustomersEmailRoute = AdminCustomersEmailRouteImport.update({
-  id: '/$email',
-  path: '/$email',
-  getParentRoute: () => AdminCustomersRoute,
-} as any)
-const AdminBookingsBookingIdRoute = AdminBookingsBookingIdRouteImport.update({
-  id: '/$bookingId',
-  path: '/$bookingId',
-  getParentRoute: () => AdminBookingsRoute,
 } as any)
 const AccountBookingsBookingIdRoute =
   AccountBookingsBookingIdRouteImport.update({
@@ -221,6 +207,26 @@ const AccountBookingsBookingIdRoute =
     path: '/$bookingId',
     getParentRoute: () => AccountBookingsRoute,
   } as any)
+const AdminBookingsIndexRoute = AdminBookingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminBookingsRoute,
+} as any)
+const AdminBookingsBookingIdRoute = AdminBookingsBookingIdRouteImport.update({
+  id: '/$bookingId',
+  path: '/$bookingId',
+  getParentRoute: () => AdminBookingsRoute,
+} as any)
+const AdminCustomersIndexRoute = AdminCustomersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminCustomersRoute,
+} as any)
+const AdminCustomersEmailRoute = AdminCustomersEmailRouteImport.update({
+  id: '/$email',
+  path: '/$email',
+  getParentRoute: () => AdminCustomersRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -246,6 +252,7 @@ export interface FileRoutesByFullPath {
   '/admin/fleet': typeof AdminFleetRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/payments': typeof AdminPaymentsRoute
+  '/admin/prices': typeof AdminPricesRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/support': typeof AdminSupportRoute
@@ -278,6 +285,7 @@ export interface FileRoutesByTo {
   '/admin/fleet': typeof AdminFleetRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/payments': typeof AdminPaymentsRoute
+  '/admin/prices': typeof AdminPricesRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/support': typeof AdminSupportRoute
@@ -316,6 +324,7 @@ export interface FileRoutesById {
   '/admin/fleet': typeof AdminFleetRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/payments': typeof AdminPaymentsRoute
+  '/admin/prices': typeof AdminPricesRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/support': typeof AdminSupportRoute
@@ -355,6 +364,7 @@ export interface FileRouteTypes {
     | '/admin/fleet'
     | '/admin/login'
     | '/admin/payments'
+    | '/admin/prices'
     | '/admin/rewards'
     | '/admin/settings'
     | '/admin/support'
@@ -387,6 +397,7 @@ export interface FileRouteTypes {
     | '/admin/fleet'
     | '/admin/login'
     | '/admin/payments'
+    | '/admin/prices'
     | '/admin/rewards'
     | '/admin/settings'
     | '/admin/support'
@@ -424,6 +435,7 @@ export interface FileRouteTypes {
     | '/admin/fleet'
     | '/admin/login'
     | '/admin/payments'
+    | '/admin/prices'
     | '/admin/rewards'
     | '/admin/settings'
     | '/admin/support'
@@ -448,18 +460,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/book': {
-      id: '/book'
-      path: '/book'
-      fullPath: '/book'
-      preLoaderRoute: typeof BookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account': {
@@ -469,179 +474,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/': {
-      id: '/admin/'
-      path: '/'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof AdminRouteRoute
+    '/book': {
+      id: '/book'
+      path: '/book'
+      fullPath: '/book'
+      preLoaderRoute: typeof BookRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/account/': {
       id: '/account/'
       path: '/'
       fullPath: '/account/'
       preLoaderRoute: typeof AccountIndexRouteImport
-      parentRoute: typeof AccountRouteRoute
-    }
-    '/auth/callback': {
-      id: '/auth/callback'
-      path: '/auth/callback'
-      fullPath: '/auth/callback'
-      preLoaderRoute: typeof AuthCallbackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/support': {
-      id: '/admin/support'
-      path: '/support'
-      fullPath: '/admin/support'
-      preLoaderRoute: typeof AdminSupportRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/settings': {
-      id: '/admin/settings'
-      path: '/settings'
-      fullPath: '/admin/settings'
-      preLoaderRoute: typeof AdminSettingsRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/rewards': {
-      id: '/admin/rewards'
-      path: '/rewards'
-      fullPath: '/admin/rewards'
-      preLoaderRoute: typeof AdminRewardsRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/payments': {
-      id: '/admin/payments'
-      path: '/payments'
-      fullPath: '/admin/payments'
-      preLoaderRoute: typeof AdminPaymentsRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/login': {
-      id: '/admin/login'
-      path: '/login'
-      fullPath: '/admin/login'
-      preLoaderRoute: typeof AdminLoginRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/fleet': {
-      id: '/admin/fleet'
-      path: '/fleet'
-      fullPath: '/admin/fleet'
-      preLoaderRoute: typeof AdminFleetRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/documents': {
-      id: '/admin/documents'
-      path: '/documents'
-      fullPath: '/admin/documents'
-      preLoaderRoute: typeof AdminDocumentsRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/discounts': {
-      id: '/admin/discounts'
-      path: '/discounts'
-      fullPath: '/admin/discounts'
-      preLoaderRoute: typeof AdminDiscountsRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/customers': {
-      id: '/admin/customers'
-      path: '/customers'
-      fullPath: '/admin/customers'
-      preLoaderRoute: typeof AdminCustomersRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/calendar': {
-      id: '/admin/calendar'
-      path: '/calendar'
-      fullPath: '/admin/calendar'
-      preLoaderRoute: typeof AdminCalendarRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/bookings': {
-      id: '/admin/bookings'
-      path: '/bookings'
-      fullPath: '/admin/bookings'
-      preLoaderRoute: typeof AdminBookingsRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/account/support': {
-      id: '/account/support'
-      path: '/support'
-      fullPath: '/account/support'
-      preLoaderRoute: typeof AccountSupportRouteImport
-      parentRoute: typeof AccountRouteRoute
-    }
-    '/account/settings': {
-      id: '/account/settings'
-      path: '/settings'
-      fullPath: '/account/settings'
-      preLoaderRoute: typeof AccountSettingsRouteImport
-      parentRoute: typeof AccountRouteRoute
-    }
-    '/account/rewards': {
-      id: '/account/rewards'
-      path: '/rewards'
-      fullPath: '/account/rewards'
-      preLoaderRoute: typeof AccountRewardsRouteImport
-      parentRoute: typeof AccountRouteRoute
-    }
-    '/account/reset-password': {
-      id: '/account/reset-password'
-      path: '/reset-password'
-      fullPath: '/account/reset-password'
-      preLoaderRoute: typeof AccountResetPasswordRouteImport
-      parentRoute: typeof AccountRouteRoute
-    }
-    '/account/register': {
-      id: '/account/register'
-      path: '/register'
-      fullPath: '/account/register'
-      preLoaderRoute: typeof AccountRegisterRouteImport
-      parentRoute: typeof AccountRouteRoute
-    }
-    '/account/profile': {
-      id: '/account/profile'
-      path: '/profile'
-      fullPath: '/account/profile'
-      preLoaderRoute: typeof AccountProfileRouteImport
-      parentRoute: typeof AccountRouteRoute
-    }
-    '/account/login': {
-      id: '/account/login'
-      path: '/login'
-      fullPath: '/account/login'
-      preLoaderRoute: typeof AccountLoginRouteImport
-      parentRoute: typeof AccountRouteRoute
-    }
-    '/account/forgot-password': {
-      id: '/account/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/account/forgot-password'
-      preLoaderRoute: typeof AccountForgotPasswordRouteImport
-      parentRoute: typeof AccountRouteRoute
-    }
-    '/account/drivers': {
-      id: '/account/drivers'
-      path: '/drivers'
-      fullPath: '/account/drivers'
-      preLoaderRoute: typeof AccountDriversRouteImport
-      parentRoute: typeof AccountRouteRoute
-    }
-    '/account/documents': {
-      id: '/account/documents'
-      path: '/documents'
-      fullPath: '/account/documents'
-      preLoaderRoute: typeof AccountDocumentsRouteImport
       parentRoute: typeof AccountRouteRoute
     }
     '/account/bookings': {
@@ -651,19 +502,173 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountBookingsRouteImport
       parentRoute: typeof AccountRouteRoute
     }
-    '/admin/customers/': {
-      id: '/admin/customers/'
-      path: '/'
-      fullPath: '/admin/customers/'
-      preLoaderRoute: typeof AdminCustomersIndexRouteImport
-      parentRoute: typeof AdminCustomersRoute
+    '/account/documents': {
+      id: '/account/documents'
+      path: '/documents'
+      fullPath: '/account/documents'
+      preLoaderRoute: typeof AccountDocumentsRouteImport
+      parentRoute: typeof AccountRouteRoute
     }
-    '/admin/bookings/': {
-      id: '/admin/bookings/'
+    '/account/drivers': {
+      id: '/account/drivers'
+      path: '/drivers'
+      fullPath: '/account/drivers'
+      preLoaderRoute: typeof AccountDriversRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/forgot-password': {
+      id: '/account/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/account/forgot-password'
+      preLoaderRoute: typeof AccountForgotPasswordRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/login': {
+      id: '/account/login'
+      path: '/login'
+      fullPath: '/account/login'
+      preLoaderRoute: typeof AccountLoginRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/profile': {
+      id: '/account/profile'
+      path: '/profile'
+      fullPath: '/account/profile'
+      preLoaderRoute: typeof AccountProfileRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/register': {
+      id: '/account/register'
+      path: '/register'
+      fullPath: '/account/register'
+      preLoaderRoute: typeof AccountRegisterRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/reset-password': {
+      id: '/account/reset-password'
+      path: '/reset-password'
+      fullPath: '/account/reset-password'
+      preLoaderRoute: typeof AccountResetPasswordRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/rewards': {
+      id: '/account/rewards'
+      path: '/rewards'
+      fullPath: '/account/rewards'
+      preLoaderRoute: typeof AccountRewardsRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/settings': {
+      id: '/account/settings'
+      path: '/settings'
+      fullPath: '/account/settings'
+      preLoaderRoute: typeof AccountSettingsRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/support': {
+      id: '/account/support'
+      path: '/support'
+      fullPath: '/account/support'
+      preLoaderRoute: typeof AccountSupportRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/admin/': {
+      id: '/admin/'
       path: '/'
-      fullPath: '/admin/bookings/'
-      preLoaderRoute: typeof AdminBookingsIndexRouteImport
-      parentRoute: typeof AdminBookingsRoute
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/bookings': {
+      id: '/admin/bookings'
+      path: '/bookings'
+      fullPath: '/admin/bookings'
+      preLoaderRoute: typeof AdminBookingsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/calendar': {
+      id: '/admin/calendar'
+      path: '/calendar'
+      fullPath: '/admin/calendar'
+      preLoaderRoute: typeof AdminCalendarRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/customers': {
+      id: '/admin/customers'
+      path: '/customers'
+      fullPath: '/admin/customers'
+      preLoaderRoute: typeof AdminCustomersRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/discounts': {
+      id: '/admin/discounts'
+      path: '/discounts'
+      fullPath: '/admin/discounts'
+      preLoaderRoute: typeof AdminDiscountsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/documents': {
+      id: '/admin/documents'
+      path: '/documents'
+      fullPath: '/admin/documents'
+      preLoaderRoute: typeof AdminDocumentsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/fleet': {
+      id: '/admin/fleet'
+      path: '/fleet'
+      fullPath: '/admin/fleet'
+      preLoaderRoute: typeof AdminFleetRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/payments': {
+      id: '/admin/payments'
+      path: '/payments'
+      fullPath: '/admin/payments'
+      preLoaderRoute: typeof AdminPaymentsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/prices': {
+      id: '/admin/prices'
+      path: '/prices'
+      fullPath: '/admin/prices'
+      preLoaderRoute: typeof AdminPricesRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/rewards': {
+      id: '/admin/rewards'
+      path: '/rewards'
+      fullPath: '/admin/rewards'
+      preLoaderRoute: typeof AdminRewardsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/support': {
+      id: '/admin/support'
+      path: '/support'
+      fullPath: '/admin/support'
+      preLoaderRoute: typeof AdminSupportRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/account/bookings/': {
       id: '/account/bookings/'
@@ -672,12 +677,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountBookingsIndexRouteImport
       parentRoute: typeof AccountBookingsRoute
     }
-    '/admin/customers/$email': {
-      id: '/admin/customers/$email'
-      path: '/$email'
-      fullPath: '/admin/customers/$email'
-      preLoaderRoute: typeof AdminCustomersEmailRouteImport
-      parentRoute: typeof AdminCustomersRoute
+    '/account/bookings/$bookingId': {
+      id: '/account/bookings/$bookingId'
+      path: '/$bookingId'
+      fullPath: '/account/bookings/$bookingId'
+      preLoaderRoute: typeof AccountBookingsBookingIdRouteImport
+      parentRoute: typeof AccountBookingsRoute
+    }
+    '/admin/bookings/': {
+      id: '/admin/bookings/'
+      path: '/'
+      fullPath: '/admin/bookings/'
+      preLoaderRoute: typeof AdminBookingsIndexRouteImport
+      parentRoute: typeof AdminBookingsRoute
     }
     '/admin/bookings/$bookingId': {
       id: '/admin/bookings/$bookingId'
@@ -686,12 +698,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBookingsBookingIdRouteImport
       parentRoute: typeof AdminBookingsRoute
     }
-    '/account/bookings/$bookingId': {
-      id: '/account/bookings/$bookingId'
-      path: '/$bookingId'
-      fullPath: '/account/bookings/$bookingId'
-      preLoaderRoute: typeof AccountBookingsBookingIdRouteImport
-      parentRoute: typeof AccountBookingsRoute
+    '/admin/customers/': {
+      id: '/admin/customers/'
+      path: '/'
+      fullPath: '/admin/customers/'
+      preLoaderRoute: typeof AdminCustomersIndexRouteImport
+      parentRoute: typeof AdminCustomersRoute
+    }
+    '/admin/customers/$email': {
+      id: '/admin/customers/$email'
+      path: '/$email'
+      fullPath: '/admin/customers/$email'
+      preLoaderRoute: typeof AdminCustomersEmailRouteImport
+      parentRoute: typeof AdminCustomersRoute
     }
   }
 }
@@ -781,6 +800,7 @@ interface AdminRouteRouteChildren {
   AdminFleetRoute: typeof AdminFleetRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminPaymentsRoute: typeof AdminPaymentsRoute
+  AdminPricesRoute: typeof AdminPricesRoute
   AdminRewardsRoute: typeof AdminRewardsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSupportRoute: typeof AdminSupportRoute
@@ -796,6 +816,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminFleetRoute: AdminFleetRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminPaymentsRoute: AdminPaymentsRoute,
+  AdminPricesRoute: AdminPricesRoute,
   AdminRewardsRoute: AdminRewardsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminSupportRoute: AdminSupportRoute,
@@ -816,13 +837,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

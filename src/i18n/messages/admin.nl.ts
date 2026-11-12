@@ -36,6 +36,7 @@ export const adminNl: AdminMessages = {
     calendar: "Kalender",
     customers: "Klanten",
     payments: "Betalingen",
+    prices: "Prijzen",
     discounts: "Kortingen",
     documents: "Documenten",
     rewards: "Rewards",
@@ -261,7 +262,9 @@ export const adminNl: AdminMessages = {
     currentlyRented: "Momenteel verhuurd aan",
     editPlateMileage: "Kenteken / km bewerken",
     editVehicle: "Prijs / kenteken / km bewerken",
-    dailyPrice: "Dagprijs (USD)",
+    dailyPrice: "Standaard dagprijs (USD)",
+    dailyPriceHint:
+      "Alleen de standaardprijs. Voor dec–jan of andere seizoenen: gebruik Prijzen — geboekte reserveringen blijven vast.",
     invalidDailyPrice: "Vul een geldige dagprijs in groter dan 0.",
     licensePlate: "Kenteken",
     mileageKm: "Kilometerstand (km)",
@@ -424,6 +427,51 @@ export const adminNl: AdminMessages = {
     emailBody: "Stuur e-mail vanuit je mailprogramma.",
     tip: "Tip: open een boeking in Boekingen om de klant direct te bereiken via WhatsApp, telefoon of e-mail.",
   },
+  prices: {
+    title: "Prijzen",
+    subtitle:
+      "Plan seizoensprijzen per datum. Nieuwe boekingen gebruiken deze tarieven voor hun ophaaldatum.",
+    loading: "Prijzen laden…",
+    newPeriod: "Nieuwe prijsperiode",
+    lockNote:
+      "Bevestigde boekingen houden de prijs waarvoor ze geboekt zijn. Wijzigingen gelden alleen voor nieuwe boekingen.",
+    activeSection: "Actief ({count})",
+    scheduledSection: "Gepland ({count})",
+    endedSection: "Beëindigd ({count})",
+    noActive: "Geen actieve prijsperiodes.",
+    noScheduled: "Geen geplande prijsperiodes.",
+    noEnded: "Nog geen beëindigde prijsperiodes.",
+    formTitle: "Nieuwe prijsperiode",
+    save: "Prijsperiode opslaan",
+    saving: "Opslaan…",
+    endNow: "Nu beëindigen",
+    ending: "Beëindigen…",
+    previewTitle: "Voorbeeld voor passende auto’s",
+    status: {
+      active: "Actief",
+      scheduled: "Gepland",
+      ended: "Beëindigd",
+    },
+    scope: {
+      all: "Alle voertuigen",
+      compact: "Compact",
+      sedan: "Sedan",
+      car: "Voertuig",
+    },
+    fields: {
+      name: "Naam",
+      namePlaceholder: "bijv. Hoogseizoen dec–jan",
+      dailyPrice: "Dagprijs (USD)",
+      scope: "Geldt voor",
+      startDate: "Startdatum",
+      endDate: "Einddatum",
+    },
+    errors: {
+      nameRequired: "Vul een naam in voor deze prijsperiode.",
+      amountInvalid: "Vul een geldige dagprijs in groter dan 0.",
+      datesRequired: "Kies een start- en einddatum.",
+    },
+  },
   discounts: {
     title: "Kortingen",
     subtitle:
@@ -518,6 +566,7 @@ export const adminNl: AdminMessages = {
     customersTitle: "Klanten — QuickKey Admin",
     customerDetailTitle: "Klantprofiel — QuickKey Admin",
     paymentsTitle: "Betalingen — QuickKey Admin",
+    pricesTitle: "Prijzen — QuickKey Admin",
     discountsTitle: "Kortingen — QuickKey Admin",
     documentsTitle: "Documenten — QuickKey Admin",
     rewardsTitle: "Rewards — QuickKey Admin",
@@ -539,5 +588,7 @@ export const adminNl: AdminMessages = {
     discountPercentTooHigh: "Percentagekorting mag niet hoger zijn dan 100%.",
     discountOverlap:
       "Er staat al een andere korting gepland voor deze categorie in deze periode. Beëindig die eerst of kies andere data.",
+    ratePeriodOverlap:
+      "Er staat al een andere prijsperiode gepland voor deze categorie in deze periode. Beëindig die eerst of kies andere data.",
   },
 };

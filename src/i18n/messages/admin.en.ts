@@ -34,6 +34,7 @@ export const adminEn = {
     calendar: "Calendar",
     customers: "Customers",
     payments: "Payments",
+    prices: "Prices",
     discounts: "Discounts",
     documents: "Documents",
     rewards: "Rewards",
@@ -258,7 +259,9 @@ export const adminEn = {
     currentlyRented: "Currently rented by",
     editPlateMileage: "Edit plate / mileage",
     editVehicle: "Edit price / plate / mileage",
-    dailyPrice: "Daily price (USD)",
+    dailyPrice: "Default daily price (USD)",
+    dailyPriceHint:
+      "Default rate only. For Dec–Jan or other seasons, use Prices — already booked stays locked.",
     invalidDailyPrice: "Enter a valid daily price greater than 0.",
     licensePlate: "License plate",
     mileageKm: "Mileage (km)",
@@ -419,6 +422,51 @@ export const adminEn = {
     emailBody: "Send email from your mail client.",
     tip: "Tip: Open any booking from the Bookings section to contact that customer directly via WhatsApp, phone, or email with their details pre-filled.",
   },
+  prices: {
+    title: "Prices",
+    subtitle:
+      "Schedule seasonal daily rates by date. New bookings use these rates for their pickup date.",
+    loading: "Loading prices…",
+    newPeriod: "New rate period",
+    lockNote:
+      "Already confirmed bookings keep the price they booked at. Changing rates only affects new bookings.",
+    activeSection: "Active ({count})",
+    scheduledSection: "Scheduled ({count})",
+    endedSection: "Ended ({count})",
+    noActive: "No active rate periods.",
+    noScheduled: "No scheduled rate periods.",
+    noEnded: "No ended rate periods yet.",
+    formTitle: "New rate period",
+    save: "Save rate period",
+    saving: "Saving…",
+    endNow: "End now",
+    ending: "Ending…",
+    previewTitle: "Preview for matching cars",
+    status: {
+      active: "Active",
+      scheduled: "Scheduled",
+      ended: "Ended",
+    },
+    scope: {
+      all: "All vehicles",
+      compact: "Compact",
+      sedan: "Sedan",
+      car: "Vehicle",
+    },
+    fields: {
+      name: "Name",
+      namePlaceholder: "e.g. High season Dec–Jan",
+      dailyPrice: "Daily price (USD)",
+      scope: "Applies to",
+      startDate: "Start date",
+      endDate: "End date",
+    },
+    errors: {
+      nameRequired: "Enter a name for this rate period.",
+      amountInvalid: "Enter a valid daily price greater than 0.",
+      datesRequired: "Choose a start and end date.",
+    },
+  },
   discounts: {
     title: "Discounts",
     subtitle: "Schedule promos by category. Prices return automatically when the discount ends.",
@@ -513,6 +561,7 @@ export const adminEn = {
     customersTitle: "Customers — QuickKey Admin",
     customerDetailTitle: "Customer Profile — QuickKey Admin",
     paymentsTitle: "Payments — QuickKey Admin",
+    pricesTitle: "Prices — QuickKey Admin",
     discountsTitle: "Discounts — QuickKey Admin",
     documentsTitle: "Documents — QuickKey Admin",
     rewardsTitle: "Rewards — QuickKey Admin",
@@ -534,6 +583,8 @@ export const adminEn = {
     discountPercentTooHigh: "Percent discount cannot exceed 100%.",
     discountOverlap:
       "Another discount is already scheduled for this category during these dates. End it first or choose different dates.",
+    ratePeriodOverlap:
+      "Another rate period is already scheduled for this category during these dates. End it first or choose different dates.",
   },
 } as const;
 

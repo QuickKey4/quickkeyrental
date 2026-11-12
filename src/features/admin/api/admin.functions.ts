@@ -11,6 +11,8 @@ import {
   type DiscountScope,
   type DiscountType,
   type PricingDiscountRow,
+  type PricingRatePeriodRow,
+  type RatePeriodScope,
 } from "@/lib/pricing.server";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin.server";
 import type { Tables } from "@/lib/supabase/database.types";
@@ -559,7 +561,9 @@ export const updateAdminBooking = createServerFn({ method: "POST" })
 
       const days = daysBetweenInclusive(nextPickup, nextReturn);
       const pricing =
-        nextCarId !== existing.car_id ? await resolveEffectiveDailyPrice(nextCarId) : null;
+        nextCarId !== existing.car_id
+          ? await resolveEffectiveDailyPrice(nextCarId, new Date(`${nextPickup}T12:00:00`))
+          : null;
       const dailyRate =
         pricing?.effectivePrice ??
         Number(existing.priced_daily_rate ?? car.daily_price ?? Number(existing.subtotal) / days);
@@ -1387,4 +1391,127 @@ export const endAdminDiscount = createServerFn({ method: "POST" })
 
     if (error) throw new Error(error.message);
     return enrichDiscount(row as PricingDiscountRow);
+  });
+
+function ratePeriodStatus(row: PricingRatePeriodRow, now = Date.now()) {
+  const starts = new Date(row.starts_at).getTime();
+  const ends = new Date(row.ends_at).getTime();
+  if (!row.is_active || ends <= now) return "ended" as const;
+  if (starts > now) return "scheduled" as const;
+  return "active" as const;
+}
+
+function enrichRatePeriod(row: PricingRatePeriodRow) {
+  return {
+    ...row,
+    daily_price: Number(row.daily_price),
+    status: ratePeriodStatus(row),
+  };
+}
+
+export type AdminRatePeriod = ReturnType<typeof enrichRatePeriod>;
+
+export const getAdminRatePeriods = createServerFn({ method: "POST" })
+  .inputValidator(adminCtx)
+  .handler(async ({ data }) => {
+    assertAdminSecret(data.adminSecret);
+    const supabase = getSupabaseAdminClient();
+
+    const [{ data: rows, error }, { data: cars, error: carsError }] = await Promise.all([
+      supabase.from("pricing_rate_periods").select("*").order("starts_at", { ascending: false }),
+      supabase.from("cars").select("id, name, image_url, daily_price").eq("is_active", true),
+    ]);
+
+    if (error) throw new Error(error.message);
+    if (carsError) throw new Error(carsError.message);
+
+    const enriched = ((rows ?? []) as PricingRatePeriodRow[]).map(enrichRatePeriod);
+    const previewCars: AdminDiscountPreviewCar[] = (cars ?? []).map((car) => ({
+      fleetKey: car.image_url ?? "",
+      name: car.name,
+      basePrice: Number(car.daily_price),
+      scope: (car.image_url?.startsWith("agya")
+        ? "compact"
+        : car.image_url?.startsWith("yaris")
+          ? "sedan"
+          : "all") as DiscountScope,
+    }));
+
+    return {
+      active: enriched.filter((d) => d.status === "active"),
+      scheduled: enriched.filter((d) => d.status === "scheduled"),
+      ended: enriched.filter((d) => d.status === "ended"),
+      previewCars,
+    };
+  });
+
+const createRatePeriodInput = adminCtx.extend({
+  name: z.string().trim().min(1).max(120),
+  dailyPrice: z.number().positive().max(10_000),
+  scope: z.enum(["all", "compact", "sedan"]),
+  startsAt: z.string().datetime(),
+  endsAt: z.string().datetime(),
+});
+
+export const createAdminRatePeriod = createServerFn({ method: "POST" })
+  .inputValidator(createRatePeriodInput)
+  .handler(async ({ data }) => {
+    assertAdminSecret(data.adminSecret);
+
+    if (new Date(data.endsAt).getTime() <= new Date(data.startsAt).getTime()) {
+      throw new Error("End date must be after start date.");
+    }
+
+    const supabase = getSupabaseAdminClient();
+    const { data: hasOverlap, error: overlapError } = await supabase.rpc(
+      "pricing_rate_period_has_overlap",
+      {
+        p_scope: data.scope,
+        p_car_id: null,
+        p_starts_at: data.startsAt,
+        p_ends_at: data.endsAt,
+        p_exclude_id: null,
+      },
+    );
+
+    if (overlapError) throw new Error(overlapError.message);
+    if (hasOverlap) {
+      throw new Error(
+        "Another rate period is already scheduled for this category during these dates. End it first or choose different dates.",
+      );
+    }
+
+    const { data: row, error } = await supabase
+      .from("pricing_rate_periods")
+      .insert({
+        name: data.name,
+        daily_price: Math.round(data.dailyPrice),
+        scope: data.scope as RatePeriodScope,
+        starts_at: data.startsAt,
+        ends_at: data.endsAt,
+        is_active: true,
+      })
+      .select("*")
+      .single();
+
+    if (error) throw new Error(error.message);
+    return enrichRatePeriod(row as PricingRatePeriodRow);
+  });
+
+export const endAdminRatePeriod = createServerFn({ method: "POST" })
+  .inputValidator(adminCtx.extend({ ratePeriodId: z.string().uuid() }))
+  .handler(async ({ data }) => {
+    assertAdminSecret(data.adminSecret);
+    const supabase = getSupabaseAdminClient();
+    const now = new Date().toISOString();
+
+    const { data: row, error } = await supabase
+      .from("pricing_rate_periods")
+      .update({ is_active: false, ends_at: now, updated_at: now })
+      .eq("id", data.ratePeriodId)
+      .select("*")
+      .single();
+
+    if (error) throw new Error(error.message);
+    return enrichRatePeriod(row as PricingRatePeriodRow);
   });

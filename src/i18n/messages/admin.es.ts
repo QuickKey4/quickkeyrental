@@ -36,6 +36,7 @@ export const adminEs: AdminMessages = {
     calendar: "Calendario",
     customers: "Clientes",
     payments: "Pagos",
+    prices: "Precios",
     discounts: "Descuentos",
     documents: "Documentos",
     rewards: "Rewards",
@@ -260,7 +261,9 @@ export const adminEs: AdminMessages = {
     currentlyRented: "Actualmente alquilado por",
     editPlateMileage: "Editar matrícula / km",
     editVehicle: "Editar precio / matrícula / km",
-    dailyPrice: "Precio diario (USD)",
+    dailyPrice: "Precio diario base (USD)",
+    dailyPriceHint:
+      "Solo el precio base. Para dic–ene u otras temporadas, usa Precios — las reservas ya hechas se mantienen.",
     invalidDailyPrice: "Introduce un precio diario válido mayor que 0.",
     licensePlate: "Matrícula",
     mileageKm: "Kilometraje (km)",
@@ -423,6 +426,51 @@ export const adminEs: AdminMessages = {
     emailBody: "Envía email desde tu cliente de correo.",
     tip: "Consejo: abre cualquier reserva en la sección Reservas para contactar al cliente por WhatsApp, teléfono o email con sus datos.",
   },
+  prices: {
+    title: "Precios",
+    subtitle:
+      "Programa tarifas de temporada por fechas. Las nuevas reservas usan estas tarifas según la fecha de entrega.",
+    loading: "Cargando precios…",
+    newPeriod: "Nuevo período de tarifa",
+    lockNote:
+      "Las reservas ya confirmadas mantienen el precio con el que se reservaron. Los cambios solo afectan a reservas nuevas.",
+    activeSection: "Activos ({count})",
+    scheduledSection: "Programados ({count})",
+    endedSection: "Finalizados ({count})",
+    noActive: "No hay períodos de tarifa activos.",
+    noScheduled: "No hay períodos de tarifa programados.",
+    noEnded: "Aún no hay períodos finalizados.",
+    formTitle: "Nuevo período de tarifa",
+    save: "Guardar período",
+    saving: "Guardando…",
+    endNow: "Terminar ahora",
+    ending: "Terminando…",
+    previewTitle: "Vista previa de vehículos",
+    status: {
+      active: "Activo",
+      scheduled: "Programado",
+      ended: "Finalizado",
+    },
+    scope: {
+      all: "Todos los vehículos",
+      compact: "Compacto",
+      sedan: "Sedán",
+      car: "Vehículo",
+    },
+    fields: {
+      name: "Nombre",
+      namePlaceholder: "p. ej. Temporada alta dic–ene",
+      dailyPrice: "Precio diario (USD)",
+      scope: "Aplica a",
+      startDate: "Fecha de inicio",
+      endDate: "Fecha de fin",
+    },
+    errors: {
+      nameRequired: "Introduce un nombre para este período.",
+      amountInvalid: "Introduce un precio diario válido mayor que 0.",
+      datesRequired: "Elige fecha de inicio y fin.",
+    },
+  },
   discounts: {
     title: "Descuentos",
     subtitle: "Programa promociones por categoría. Los precios vuelven solos al terminar.",
@@ -516,6 +564,7 @@ export const adminEs: AdminMessages = {
     customersTitle: "Clientes — QuickKey Admin",
     customerDetailTitle: "Perfil de cliente — QuickKey Admin",
     paymentsTitle: "Pagos — QuickKey Admin",
+    pricesTitle: "Precios — QuickKey Admin",
     discountsTitle: "Descuentos — QuickKey Admin",
     documentsTitle: "Documentos — QuickKey Admin",
     rewardsTitle: "Rewards — QuickKey Admin",
@@ -537,5 +586,7 @@ export const adminEs: AdminMessages = {
     discountPercentTooHigh: "El descuento porcentual no puede superar el 100%.",
     discountOverlap:
       "Ya hay otro descuento programado para esta categoría durante estas fechas. Finalízalo primero o elige otras fechas.",
+    ratePeriodOverlap:
+      "Ya hay otro período de tarifa programado para esta categoría durante estas fechas. Finalízalo primero o elige otras fechas.",
   },
 };

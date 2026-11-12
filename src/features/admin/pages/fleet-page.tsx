@@ -168,6 +168,7 @@ export function AdminFleetPage() {
                         className={adminInputClassName}
                       />
                     </AdminField>
+                    <p className="text-xs text-muted-foreground">{t.fleet.dailyPriceHint}</p>
                     <AdminField label={t.fleet.licensePlate}>
                       <input
                         type="text"

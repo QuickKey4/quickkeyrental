@@ -18,6 +18,8 @@ export function translateAdminError(message: string, errors: AdminErrors): strin
     "Percent discount cannot exceed 100%.": "discountPercentTooHigh",
     "Another discount is already scheduled for this category during these dates. End it first or choose different dates.":
       "discountOverlap",
+    "Another rate period is already scheduled for this category during these dates. End it first or choose different dates.":
+      "ratePeriodOverlap",
   };
 
   const key = exact[message];

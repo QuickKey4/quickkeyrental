@@ -387,7 +387,10 @@ export const createPendingBooking = createServerFn({ method: "POST" })
 
     await assertCarAvailableForPeriod(data.carId, data.pickupDate, data.returnDate, data.bookingId);
 
-    const pricing = await resolveEffectiveDailyPrice(data.carId);
+    const pricing = await resolveEffectiveDailyPrice(
+      data.carId,
+      new Date(`${data.pickupDate}T12:00:00`),
+    );
     const dailyRate = pricing?.effectivePrice ?? Number(car.daily_price);
     const fleetKey = fleetKeyFromCar(car);
     const pricedExtras = data.selectedExtras.filter((extra) => extra.quantity > 0);

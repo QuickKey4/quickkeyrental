@@ -446,6 +446,56 @@ export type Database = {
           },
         ];
       };
+      pricing_rate_periods: {
+        Row: {
+          car_id: string | null;
+          created_at: string;
+          created_by: string | null;
+          daily_price: number;
+          ends_at: string;
+          id: string;
+          is_active: boolean;
+          name: string;
+          scope: string;
+          starts_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          car_id?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          daily_price: number;
+          ends_at: string;
+          id?: string;
+          is_active?: boolean;
+          name: string;
+          scope: string;
+          starts_at: string;
+          updated_at?: string;
+        };
+        Update: {
+          car_id?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          daily_price?: number;
+          ends_at?: string;
+          id?: string;
+          is_active?: boolean;
+          name?: string;
+          scope?: string;
+          starts_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "pricing_rate_periods_car_id_fkey";
+            columns: ["car_id"];
+            isOneToOne: false;
+            referencedRelation: "cars";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       profiles: {
         Row: {
           created_at: string;
@@ -1055,6 +1105,16 @@ export type Database = {
         Returns: Json;
       };
       pricing_discount_has_overlap: {
+        Args: {
+          p_car_id: string | null;
+          p_ends_at: string;
+          p_exclude_id?: string | null;
+          p_scope: string;
+          p_starts_at: string;
+        };
+        Returns: boolean;
+      };
+      pricing_rate_period_has_overlap: {
         Args: {
           p_car_id: string | null;
           p_ends_at: string;
