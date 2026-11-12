@@ -31,7 +31,6 @@ export function AdminFleetPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [plateDraft, setPlateDraft] = useState("");
   const [mileageDraft, setMileageDraft] = useState("");
-  const [priceDraft, setPriceDraft] = useState("");
   const [error, setError] = useState("");
 
   const load = () => {
@@ -68,18 +67,12 @@ export function AdminFleetPage() {
     setEditingId(car.id);
     setPlateDraft(car.license_plate ?? "");
     setMileageDraft(car.mileage != null ? String(car.mileage) : "");
-    setPriceDraft(String(Number(car.daily_price)));
     setError("");
   };
 
   const saveEdit = async (carId: string) => {
     if (!adminSecret) return;
     const mileage = mileageDraft.trim() ? Number.parseInt(mileageDraft, 10) : undefined;
-    const dailyPrice = Number.parseFloat(priceDraft);
-    if (!Number.isFinite(dailyPrice) || dailyPrice <= 0) {
-      setError(t.fleet.invalidDailyPrice);
-      return;
-    }
     setError("");
     try {
       await updateAdminFleetVehicle({
@@ -88,7 +81,6 @@ export function AdminFleetPage() {
           carId,
           licensePlate: plateDraft.trim(),
           mileage: Number.isFinite(mileage) ? mileage : undefined,
-          dailyPrice,
         },
       });
       setEditingId(null);
@@ -158,17 +150,6 @@ export function AdminFleetPage() {
 
                 {isEditing ? (
                   <div className="mt-3 space-y-3">
-                    <AdminField label={t.fleet.dailyPrice}>
-                      <input
-                        type="number"
-                        min={1}
-                        step={1}
-                        value={priceDraft}
-                        onChange={(e) => setPriceDraft(e.target.value)}
-                        className={adminInputClassName}
-                      />
-                    </AdminField>
-                    <p className="text-xs text-muted-foreground">{t.fleet.dailyPriceHint}</p>
                     <AdminField label={t.fleet.licensePlate}>
                       <input
                         type="text"
@@ -197,12 +178,18 @@ export function AdminFleetPage() {
                   </div>
                 ) : (
                   <dl className="mt-3 space-y-1 text-sm text-muted-foreground">
-                    <div className="flex justify-between">
+                    <div className="flex justify-between gap-3">
                       <span>{t.fleet.dailyPrice}</span>
-                      <span className="font-medium text-foreground">
+                      <span className="text-right font-medium text-foreground">
                         ${Number(car.daily_price).toFixed(0)} / day
                       </span>
                     </div>
+                    <p className="text-xs text-muted-foreground">
+                      {t.fleet.dailyPriceHint}{" "}
+                      <Link to="/admin/prices" className="font-semibold text-[var(--logo-red)]">
+                        {t.nav.prices}
+                      </Link>
+                    </p>
                     <div className="flex justify-between">
                       <span>{t.fleet.plate}</span>
                       <span className="font-medium text-foreground">
@@ -225,7 +212,7 @@ export function AdminFleetPage() {
                 <div className="mt-4 flex flex-wrap gap-2">
                   {!isEditing ? (
                     <AdminButton variant="ghost" onClick={() => startEdit(car)}>
-                      {t.fleet.editVehicle}
+                      {t.fleet.editPlateMileage}
                     </AdminButton>
                   ) : null}
                   <AdminButton

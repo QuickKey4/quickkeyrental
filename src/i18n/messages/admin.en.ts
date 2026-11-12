@@ -260,8 +260,7 @@ export const adminEn = {
     editPlateMileage: "Edit plate / mileage",
     editVehicle: "Edit price / plate / mileage",
     dailyPrice: "Default daily price (USD)",
-    dailyPriceHint:
-      "Default rate only. For Dec–Jan or other seasons, use Prices — already booked stays locked.",
+    dailyPriceHint: "To change rates for dates, use",
     invalidDailyPrice: "Enter a valid daily price greater than 0.",
     licensePlate: "License plate",
     mileageKm: "Mileage (km)",

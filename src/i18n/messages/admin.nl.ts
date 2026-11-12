@@ -263,8 +263,7 @@ export const adminNl: AdminMessages = {
     editPlateMileage: "Kenteken / km bewerken",
     editVehicle: "Prijs / kenteken / km bewerken",
     dailyPrice: "Standaard dagprijs (USD)",
-    dailyPriceHint:
-      "Alleen de standaardprijs. Voor dec–jan of andere seizoenen: gebruik Prijzen — geboekte reserveringen blijven vast.",
+    dailyPriceHint: "Prijzen per periode wijzig je via",
     invalidDailyPrice: "Vul een geldige dagprijs in groter dan 0.",
     licensePlate: "Kenteken",
     mileageKm: "Kilometerstand (km)",

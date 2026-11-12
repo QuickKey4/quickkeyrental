@@ -262,8 +262,7 @@ export const adminEs: AdminMessages = {
     editPlateMileage: "Editar matrícula / km",
     editVehicle: "Editar precio / matrícula / km",
     dailyPrice: "Precio diario base (USD)",
-    dailyPriceHint:
-      "Solo el precio base. Para dic–ene u otras temporadas, usa Precios — las reservas ya hechas se mantienen.",
+    dailyPriceHint: "Para cambiar tarifas por fechas, usa",
     invalidDailyPrice: "Introduce un precio diario válido mayor que 0.",
     licensePlate: "Matrícula",
     mileageKm: "Kilometraje (km)",
