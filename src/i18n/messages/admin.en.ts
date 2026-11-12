@@ -442,6 +442,7 @@ export const adminEn = {
     endNow: "End now",
     ending: "Ending…",
     previewTitle: "Preview for matching cars",
+    defaultWas: "default",
     status: {
       active: "Active",
       scheduled: "Scheduled",

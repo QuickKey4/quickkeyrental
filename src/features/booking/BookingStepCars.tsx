@@ -215,7 +215,7 @@ export function BookingStepCars({
                       <p className="font-display text-sm font-bold leading-tight">{vehicle.name}</p>
                       <p className="text-xs text-muted-foreground">{vehicle.category}</p>
                       <p className="mt-1 text-sm font-bold text-primary">
-                        {item.baseDailyPrice > Number(item.car.daily_price) ? (
+                        {item.discountId && item.baseDailyPrice > Number(item.car.daily_price) ? (
                           <>
                             <span className="mr-2 text-xs font-semibold text-muted-foreground line-through">
                               {formatPrice(item.baseDailyPrice, intlLocale)}
@@ -225,7 +225,7 @@ export function BookingStepCars({
                         {formatPrice(Number(item.car.daily_price), intlLocale)}
                         {book.perDay}
                       </p>
-                      {item.discountLabel ? (
+                      {item.discountId && item.discountLabel ? (
                         <p className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-[var(--logo-red)]">
                           {book.limitedOffer}
                         </p>

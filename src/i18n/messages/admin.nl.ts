@@ -447,6 +447,7 @@ export const adminNl: AdminMessages = {
     endNow: "Nu beëindigen",
     ending: "Beëindigen…",
     previewTitle: "Voorbeeld voor passende auto’s",
+    defaultWas: "standaard",
     status: {
       active: "Actief",
       scheduled: "Gepland",

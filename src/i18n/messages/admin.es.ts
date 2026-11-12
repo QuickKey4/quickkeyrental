@@ -446,6 +446,7 @@ export const adminEs: AdminMessages = {
     endNow: "Terminar ahora",
     ending: "Terminando…",
     previewTitle: "Vista previa de vehículos",
+    defaultWas: "base",
     status: {
       active: "Activo",
       scheduled: "Programado",

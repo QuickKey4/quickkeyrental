@@ -121,7 +121,7 @@ begin
   if v_period.id is not null then
     effective_price := round(v_period.daily_price);
     discount_id := null;
-    discount_label := v_period.name;
+    discount_label := null;
     return next;
     return;
   end if;

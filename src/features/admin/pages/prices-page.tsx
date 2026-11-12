@@ -296,13 +296,13 @@ export function AdminPricesPage() {
                     <li key={car.fleetKey || car.name} className="flex justify-between text-sm">
                       <span>{car.name}</span>
                       <span className="font-medium">
-                        {car.basePrice !== car.seasonal ? (
-                          <span className="mr-2 text-muted-foreground line-through">
-                            {formatPrice(car.basePrice, intlLocale)}
-                          </span>
-                        ) : null}
                         {formatPrice(car.seasonal, intlLocale)}
                         <span className="text-muted-foreground"> / day</span>
+                        {car.basePrice !== car.seasonal ? (
+                          <span className="ml-2 font-normal text-muted-foreground">
+                            ({t.prices.defaultWas} {formatPrice(car.basePrice, intlLocale)})
+                          </span>
+                        ) : null}
                       </span>
                     </li>
                   ))}
