@@ -4,13 +4,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { faqKeysForLocale } from "@/lib/faq";
+import { faqKeys } from "@/lib/faq";
 import { useI18n } from "@/i18n/provider";
 
 export function FaqSection() {
-  const { locale, messages } = useI18n();
+  const { messages } = useI18n();
   const f = messages.faq;
-  const keys = faqKeysForLocale(locale);
 
   return (
     <section id="faq" className="scroll-mt-28 bg-white px-5 py-14 md:px-8 md:py-20">
@@ -31,7 +30,7 @@ export function FaqSection() {
           collapsible
           className="rounded-lg border border-black/[0.08] bg-[#f7f7f7] px-5 md:px-6"
         >
-          {keys.map((key) => {
+          {faqKeys.map((key) => {
             const item = f.items[key];
             const paragraphs = item.answer.split(/\n\n+/);
             return (
