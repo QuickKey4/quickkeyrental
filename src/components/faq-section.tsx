@@ -32,13 +32,22 @@ export function FaqSection() {
         >
           {faqKeys.map((key) => {
             const item = f.items[key];
+            const paragraphs = item.answer.split(/\n\n+/);
             return (
               <AccordionItem key={key} value={key} className="border-black/[0.08]">
                 <AccordionTrigger className="py-5 text-left font-display text-base font-bold uppercase tracking-[0.02em] text-[var(--logo-black)] hover:no-underline md:text-lg">
                   {item.question}
                 </AccordionTrigger>
                 <AccordionContent className="pb-5 text-sm leading-relaxed text-black/65 md:text-[0.9375rem]">
-                  {item.answer}
+                  {paragraphs.length === 1 ? (
+                    item.answer
+                  ) : (
+                    <div className="space-y-3">
+                      {paragraphs.map((paragraph) => (
+                        <p key={paragraph}>{paragraph}</p>
+                      ))}
+                    </div>
+                  )}
                 </AccordionContent>
               </AccordionItem>
             );

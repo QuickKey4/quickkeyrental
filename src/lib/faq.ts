@@ -1,4 +1,11 @@
-export const faqKeys = ["instant", "insured", "concierge", "support", "airport", "pristine"] as const;
+export const faqKeys = [
+  "instant",
+  "insured",
+  "concierge",
+  "support",
+  "airport",
+  "pristine",
+] as const;
 
 export type FaqKey = (typeof faqKeys)[number];
 
