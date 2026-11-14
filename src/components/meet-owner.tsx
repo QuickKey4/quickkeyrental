@@ -9,6 +9,29 @@ import { useI18n } from "@/i18n/provider";
 const highlightIcons = [Plane, Truck, MessageCircle] as const;
 const highlightKeys = ["airport", "hotel", "whatsapp"] as const;
 
+function CopyParagraphs({
+  text,
+  className,
+  gapClassName = "space-y-4",
+}: {
+  text: string;
+  className: string;
+  gapClassName?: string;
+}) {
+  const paragraphs = text.split(/\n\n+/);
+  if (paragraphs.length === 1) {
+    return <p className={className}>{text}</p>;
+  }
+
+  return (
+    <div className={`${className} ${gapClassName}`}>
+      {paragraphs.map((paragraph) => (
+        <p key={paragraph}>{paragraph}</p>
+      ))}
+    </div>
+  );
+}
+
 export function MeetOwner() {
   const { messages } = useI18n();
   const m = messages.meetOwner;
@@ -57,13 +80,20 @@ export function MeetOwner() {
             <br />
             <span className="text-[var(--logo-red)]">{m.titleLine2}</span>
           </h2>
-          <p className="mt-5 max-w-lg text-base leading-relaxed text-black/65 md:text-lg">{m.body}</p>
+          <CopyParagraphs
+            text={m.body}
+            className="mt-5 max-w-lg text-base leading-relaxed text-black/65 md:text-lg"
+          />
 
           <div className="mt-6 rounded-lg border border-black/[0.08] bg-[#f7f7f7] p-5 md:p-6">
             <h3 className="font-display text-lg font-bold uppercase tracking-[0.04em] text-[var(--logo-black)] md:text-xl">
               {m.teamTitle}
             </h3>
-            <p className="mt-3 text-sm leading-relaxed text-black/70 md:text-base">{m.teamBody}</p>
+            <CopyParagraphs
+              text={m.teamBody}
+              className="mt-3 text-sm leading-relaxed text-black/70 md:text-base"
+              gapClassName="space-y-3"
+            />
           </div>
 
           <blockquote className="mt-8 rounded-lg border border-black/[0.08] bg-[#f7f7f7] p-5">

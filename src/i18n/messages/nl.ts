@@ -142,15 +142,15 @@ export const nl: Messages = {
     steps: {
       book: {
         title: "Boek online",
-        body: "Kies je data, waar we je ontmoeten en je auto. Klaar in een paar minuten.",
+        body: "Kies je data, locatie en auto. Binnen enkele minuten geregeld.",
       },
       pickup: {
         title: "Wij komen naar je toe",
-        body: "We ontmoeten je op de luchthaven, bij je hotel of accommodatie. Snel en persoonlijk.",
+        body: "Ophalen waar het jou uitkomt. Snel, persoonlijk en zonder gedoe.",
       },
       explore: {
-        title: "Verken Curaçao",
-        body: "Stranden, Willemstad, de westkust. Op jouw tempo.",
+        title: "Ontdek Curaçao",
+        body: "Stap in en verken het eiland op jouw tempo.",
       },
     },
   },
@@ -224,10 +224,10 @@ export const nl: Messages = {
     eyebrow: "Lokaal team",
     titleLine1: "Persoonlijke",
     titleLine2: "service.",
-    body: "Quick Key Rental is een familiebedrijf op Curaçao. We brengen je auto naar Hato Airport, je hotel, resort of appartement. Bereik ons via WhatsApp voor, tijdens of na je huur.",
+    body: "Quick Key is een familiebedrijf op Curaçao. Het team zorgt ervoor dat je auto klaarstaat waar jij hem nodig hebt: op de luchthaven, bij je hotel of bij je accommodatie.\n\nTijdens je reis blijven we bereikbaar via WhatsApp. Zo huur je eenvoudig, persoonlijk en zonder gedoe.",
     teamTitle: "Ons team",
     teamBody:
-      "We zijn een klein lokaal team dat het eiland goed kent. Geboren op Curaçao, en graag helpen we je op weg.",
+      "Achter Quick Key Rental staat een klein, betrokken team met liefde voor Curaçao. We combineren lokale kennis met een professionele aanpak, zodat jij met vertrouwen de weg op kunt.\n\nBorn in Curaçao. Inspired by the world. Committed to serving the island.",
     imageAlt: "Quick Key huurauto klaar voor persoonlijke overdracht op Curaçao Airport",
     imageCaption: "Luchthaven ophalen · Hato Airport",
     highlights: {
@@ -419,27 +419,28 @@ export const nl: Messages = {
     eyebrow: "Jouw vakantie op het eiland",
     titleLine1: "Zon erbij.",
     titleLine2: "Sleutels in hand.",
-    subtitle: "Strand, Willemstad, kustwegen. We brengen de auto wanneer je landt.",
+    subtitle:
+      "Curaçao staat bekend om zijn stranden, kleurrijke Willemstad en prachtige kustwegen. Wij brengen de auto naar je toe, zodat je vakantie begint zodra je aankomt.",
     photoCaption: "Curaçao · zon · open weg",
-    pickHint: "Kies een moment, zie waar je auto je brengt",
+    pickHint: "Stap in en ontdek Curaçao.",
     imageAlt: "Toyota huurauto op een zonnige dag op Curaçao",
     cta: "Beschikbaarheid checken",
     moments: {
       beach: {
         title: "Stranddagen",
-        body: "Jan Thiel, Mambo of je eigen verborgen baaitje.",
+        body: "Jan Thiel, Mambo of je eigen rustige baai.",
       },
       town: {
         title: "Willemstad",
-        body: "Parkeer makkelijk en verken de kleurrijke boulevard.",
+        body: "Parkeer gemakkelijk en wandel langs de kleurrijke straten en boulevard.",
       },
       coast: {
         title: "Kustritten",
-        body: "Westpunt, Christoffel of volg gewoon de kust.",
+        body: "Rijd richting Westpunt, Christoffel of volg de kust op je eigen tempo.",
       },
       handover: {
         title: "Makkelijk begin",
-        body: "Ophalen op luchthaven, hotel of accommodatie.",
+        body: "Bij je accommodatie of op Hato. Wij ontmoeten je daar.",
       },
     },
   },
@@ -449,31 +450,34 @@ export const nl: Messages = {
     titleLine2: "voor je boekt.",
     items: {
       instant: {
-        question: "Hoe werkt de verzekering?",
+        question: "Zijn de auto's verzekerd?",
         answer:
-          "Elke auto is verzekerd. Optie 1: borg en standaard eigen risico. Optie 2: all-risk upgrade. Zie onze huurvoorwaarden voor het volledige plaatje.",
+          "Ja, al onze auto's zijn verzekerd. Tijdens het huren kun je kiezen uit twee opties: huren met borg en eigen risico, of het eigen risico afkopen met onze allrisk-optie voor extra zekerheid. Bekijk onze voorwaarden voor de exacte regels en uitzonderingen.",
       },
       insured: {
         question: "Bezorgen jullie bij mijn accommodatie?",
         answer:
-          "We bezorgen en halen voertuigen op bij hotels, resorts, appartementen en andere accommodaties.",
+          "Ja, wij bezorgen en halen de auto op bij hotels, resorts, appartementen en andere accommodaties op Curaçao.",
       },
       concierge: {
         question: "Welke auto's verhuren jullie?",
-        answer: "Toyota Agya en Toyota Yaris. Automaat, met airconditioning.",
+        answer:
+          "Rijd zorgeloos over Curaçao in onze nieuwe Toyota Agya- en Yaris-modellen, voorzien van airco, automaat en alles wat je nodig hebt voor een comfortabele ervaring op het eiland.",
       },
       support: {
         question: "Hoe kan ik jullie bereiken?",
-        answer: "WhatsApp of telefoon. We zijn er voor, tijdens en na je huur.",
+        answer:
+          "Je kunt ons eenvoudig bereiken via WhatsApp of telefoon. We helpen je graag voor, tijdens en na je huurperiode.",
       },
       airport: {
         question: "Kunnen jullie ophalen op de luchthaven?",
-        answer: "Ophalen op de luchthaven is beschikbaar op Hato Airport.",
+        answer:
+          "Ja, wij bieden airport pick-up bij Hato Airport, zodat je bij aankomst snel en gemakkelijk de weg op kunt.",
       },
       pristine: {
         question: "Mag iedereen in ons gezelschap rijden?",
         answer:
-          "Alleen bestuurders op het huurcontract mogen rijden. De hoofdbestuurder is gratis. Extra bestuurders kun je gratis toevoegen bij het boeken (volledige naam en rijbewijs). Wie niet op het contract staat, mag niet rijden.",
+          "Alleen bestuurders die op het huurcontract staan, mogen de auto besturen. De hoofdbestuurder is gratis inbegrepen. Extra bestuurders kunnen kosteloos worden toegevoegd wanneer zij bij het boeken hun volledige naam en rijbewijsgegevens doorgeven.\n\nWie niet op het contract staat, mag niet rijden.",
       },
     },
   },
