@@ -17,7 +17,10 @@ export function useFleet() {
       const onSale = row.effectivePrice < row.basePrice;
       return {
         ...vehicle,
-        price: row.effectivePrice,
+        // Advertise the base daily rate as the starting price. A higher
+        // seasonal effective rate is not that floor. Discounts still use
+        // the lower effective price, with the base kept for strikethrough.
+        price: onSale ? row.effectivePrice : row.basePrice,
         regularPrice: onSale ? row.basePrice : undefined,
       };
     });

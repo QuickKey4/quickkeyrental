@@ -19,7 +19,7 @@ export function VehicleDailyRate({ vehicle, size = "card", className }: VehicleD
       <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-black/45">
         {messages.fleet.specs.dailyRate}
       </p>
-      <div className="mt-1 flex flex-wrap items-baseline gap-2">
+      <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
         {onSale ? (
           <p
             className={cn(
@@ -32,12 +32,24 @@ export function VehicleDailyRate({ vehicle, size = "card", className }: VehicleD
         ) : null}
         <p
           className={cn(
-            "font-display font-bold leading-none text-[var(--logo-red)]",
+            "min-w-0 font-display font-bold leading-none text-[var(--logo-red)]",
             size === "card" ? "text-2xl" : "text-3xl",
           )}
         >
-          {formatPrice(vehicle.price, intlLocale)}
-          <span className="ml-1 text-xs font-semibold text-black/45">{messages.common.perDay}</span>
+          <span
+            className={cn(
+              "mr-1.5 align-baseline font-sans font-medium leading-none text-black/45",
+              size === "card" ? "text-[11px] sm:text-xs" : "text-sm",
+            )}
+          >
+            {messages.common.priceFrom}
+          </span>
+          <span className="whitespace-nowrap">
+            {formatPrice(vehicle.price, intlLocale)}
+            <span className="ml-1 text-xs font-semibold text-black/45">
+              {messages.common.perDay}
+            </span>
+          </span>
         </p>
       </div>
       {onSale ? (

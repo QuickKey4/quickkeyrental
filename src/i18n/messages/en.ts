@@ -21,6 +21,7 @@ export const en = {
     continue: "Continue",
     learnMore: "Learn more",
     perDay: "/ day",
+    priceFrom: "From",
     seats: "seats",
     day: "day",
     days: "days",
