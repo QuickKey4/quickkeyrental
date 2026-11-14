@@ -18,6 +18,7 @@ export const pt = {
     continue: "Continuar",
     back: "Voltar",
     total: "Total",
+    priceFrom: "A partir de",
   },
   bookingUnavailable: {
     eyebrow: "Quick Key Rental · Curaçao",

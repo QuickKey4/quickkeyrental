@@ -22,6 +22,7 @@ export const nl: Messages = {
     continue: "Doorgaan",
     learnMore: "Meer info",
     perDay: "/ dag",
+    priceFrom: "Vanaf",
     seats: "zitplaatsen",
     day: "dag",
     days: "dagen",

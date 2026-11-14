@@ -22,6 +22,7 @@ export const es: Messages = {
     continue: "Continuar",
     learnMore: "Saber más",
     perDay: "/ día",
+    priceFrom: "Desde",
     seats: "asientos",
     day: "día",
     days: "días",

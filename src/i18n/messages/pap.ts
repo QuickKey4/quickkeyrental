@@ -18,6 +18,7 @@ export const pap = {
     continue: "Sigui",
     back: "Bai bek",
     total: "Total",
+    priceFrom: "For di",
   },
   bookingUnavailable: {
     eyebrow: "Quick Key Rental · Kòrsou",
